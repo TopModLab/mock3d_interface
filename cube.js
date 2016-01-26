@@ -1,3 +1,11 @@
+/****************** For SliderBar Parameter ******************/
+
+var styleBright = 0,
+    styleDark = 1;
+
+var styleBrightLoc, styleDarkLoc;
+
+/****************** For Basic shader ******************/
 
 var gl;
 var points = [];
@@ -88,7 +96,7 @@ window.onload = function init()
 
     // Associate out shader variables with our data buffer
     var vPosition = gl.getAttribLocation( program, "vPosition" );
-    gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 );
+    gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 ); 
     gl.enableVertexAttribArray( vPosition );
 
     // Vertex normals
@@ -135,7 +143,8 @@ window.onload = function init()
     gl.uniform1i(gl.getUniformLocation(program, "uSamplerBackground"), 4);
 
     mouseLoc = gl.getUniformLocation( program, "uMouse");
-
+    styleBrightLoc = gl.getUniformLocation( program, "styleBright");
+    styleDarkLoc = gl.getUniformLocation( program, "styleDark");
 
     render();
 };
@@ -207,27 +216,27 @@ function initTextures() {
     darkTexture = gl.createTexture();
     darkImage = new Image();
     darkImage.onload = function() { handleTextureLoaded(darkImage, darkTexture); }
-    darkImage.src = "images/dark.png";
+    darkImage.src = image1.src;
 
     lightTexture = gl.createTexture();
     lightImage = new Image();
     lightImage.onload = function() { handleTextureLoaded(lightImage, lightTexture); }
-    lightImage.src = "images/light.png";
-
+    lightImage.src = image2.src;
+    
     normalTexture = gl.createTexture();
     normalImage = new Image();
     normalImage.onload = function() { handleTextureLoaded(normalImage, normalTexture); }
-    normalImage.src = "images/normal.png";
+    normalImage.src = image3.src;
 
     reflectTexture = gl.createTexture();
     reflectImage = new Image();
     reflectImage.onload = function() { handleTextureLoaded(reflectImage, reflectTexture); }
-    reflectImage.src = "images/reflect.png";
+    reflectImage.src = image4.src;
 
     refractTexture = gl.createTexture();
     refractImage = new Image();
     refractImage.onload = function() { handleTextureLoaded(refractImage, refractTexture); }
-    refractImage.src = "images/refract.png";
+    refractImage.src = image5.src;
 }
 
 function handleTextureLoaded(image, texture) {
@@ -246,6 +255,8 @@ function render() {
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT );
 
     gl.uniform2fv(mouseLoc, flatten(mouseXY) );
+    gl.uniform1f(styleBrightLoc, styleBright);
+    gl.uniform1f(styleDarkLoc, styleDark);
 
     gl.drawArrays( gl.TRIANGLES, 0, numVertices );
     requestAnimFrame(render);
