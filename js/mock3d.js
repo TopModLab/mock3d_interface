@@ -15,8 +15,6 @@ $("#styleControl_slider").slider({ min: 0, max: 1, value: [styleBright, styleDar
 $("#styleControl_slider").on("slide", function(slideEvt) {
 	styleBright = slideEvt.value[0];
 	styleDark = slideEvt.value[1];
-	console.log("styleBright: " + styleBright + "   styleDark: " + styleDark);
-	
 });
 
 

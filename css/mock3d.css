@@ -212,7 +212,31 @@ label{margin-bottom:0;}
 .imgThumb_container{width:102px; height:102px; 
 					margin:0 auto;
 					text-align: center;
+					position: relative;
 					}
+
+.btn-file {
+  position: absolute;
+  overflow: hidden;
+  width:102px;
+  height:102px;
+  cursor: pointer;
+  					
+}
+.btn-file input[type=file] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 100px;
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  background: red;
+  cursor: inherit;
+  display: block;
+  
+}
+
 .imgThumb {width:102px; height:102px; 
 			border:1px solid #ccc; 
 			display: block;
