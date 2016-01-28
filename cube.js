@@ -213,30 +213,37 @@ function colorCube() {
 }
 
 function initTextures() {
-    darkTexture = gl.createTexture();
-    darkImage = new Image();
-    darkImage.onload = function() { handleTextureLoaded(darkImage, darkTexture); }
-    darkImage.src = image1.src;
-
-    lightTexture = gl.createTexture();
-    lightImage = new Image();
-    lightImage.onload = function() { handleTextureLoaded(lightImage, lightTexture); }
-    lightImage.src = image2.src;
     
+
     normalTexture = gl.createTexture();
     normalImage = new Image();
     normalImage.onload = function() { handleTextureLoaded(normalImage, normalTexture); }
-    normalImage.src = image3.src;
-
+    
+    lightTexture = gl.createTexture();
+    lightImage = new Image();
+    lightImage.onload = function() { handleTextureLoaded(lightImage, lightTexture); }
+    
+    darkTexture = gl.createTexture();
+    darkImage = new Image();
+    darkImage.onload = function() { handleTextureLoaded(darkImage, darkTexture); }
+    
     reflectTexture = gl.createTexture();
     reflectImage = new Image();
     reflectImage.onload = function() { handleTextureLoaded(reflectImage, reflectTexture); }
-    reflectImage.src = image4.src;
-
+    
     refractTexture = gl.createTexture();
     refractImage = new Image();
     refractImage.onload = function() { handleTextureLoaded(refractImage, refractTexture); }
+    
+    normalImage.src = image3.src;
+    lightImage.src = image2.src;
+    darkImage.src = image1.src;
+    reflectImage.src = image4.src;
     refractImage.src = image5.src;
+
+
+
+
 }
 
 function handleTextureLoaded(image, texture) {
@@ -248,7 +255,7 @@ function handleTextureLoaded(image, texture) {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     gl.generateMipmap(gl.TEXTURE_2D);
-    //gl.bindTexture(gl.TEXTURE_2D, null);
+    gl.bindTexture(gl.TEXTURE_2D, null);
 }
 
 function render() {
