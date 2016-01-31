@@ -19,20 +19,6 @@
     <!-- Custom styles for this template -->
     <link href="css/mock3d.css" rel="stylesheet">
 
-    <script>
-        var r0 = 1.0;
-        var g0 = 1.0;
-        var b0 = 1.0;
-
-        var r1 = 1.0;
-        var g1 = 1.0;
-        var b1 = 1.0;
-
-        var rSpec = 1.0;
-        var gSpec = 1.0;
-        var bSpec = 1.0;
-    </script>
-
     <script id="vertex-shader" type="x-shader/x-vertex">
         attribute vec4 vPosition;
         attribute vec3 vNormal;
@@ -47,7 +33,6 @@
         void main()
         {
             gl_Position = vPosition;
-
 
             vec4 transformedNormal = vec4(vNormal, 1.0) /* + vec4(0.0, 0.0, 0.5, 0.0) */;
             fNormal = normalize(transformedNormal.xyz);
@@ -65,85 +50,119 @@
     <script id="fragment-shader" type="x-shader/x-fragment">
         precision mediump float;
 
-        varying vec3 vLight;
         varying vec2 f_texcoord;
-        varying vec3 fNormal;
-
-        uniform sampler2D uSamplerColor0, uSamplerColor1, uSamplerNormal, uSamplerForeground, uSamplerBackground;
+        varying vec3 fNormal;//(0,0,1)
+        varying vec3 vLight;
+        
+        uniform sampler2D uSamplerColor0, uSamplerColor1, uSamplerNormal, uSamplerForeground,uSamplerBackground;
 
         vec3 lightColor = vec3(1,1,1);
 
         uniform float styleBright, styleDark;
+        uniform float logIOR;
 
-        vec3 normal()
+        vec4 normal()
         {
             vec4 normalMap = texture2D(uSamplerNormal, vec2(f_texcoord.s, f_texcoord.t) );
             vec3 normalDisplace = normalMap.rgb;
             normalDisplace = 2.0*normalDisplace - 1.0;
             normalDisplace = normalize(normalDisplace);
-            return normalize(fNormal + normalDisplace);
+            return vec4(normalize(fNormal + normalDisplace), normalMap.a);
         }
 
-        vec3 diffuse(vec3 nn)
+        vec4 diffuse(vec3 n)
         {
-            float cosTheta = max( dot(nn, vLight), 0.0);
+            float cosTheta = max( dot(n, vLight), 0.0);
             vec4 c0 = texture2D(uSamplerColor0, vec2(f_texcoord.s, f_texcoord.t) );
             vec4 c1 = texture2D(uSamplerColor1, vec2(f_texcoord.s, f_texcoord.t) );
             float t = (cosTheta - styleDark) / (styleBright - styleDark);
-            return vec3( t * c0.rgb + (1.0 - t) * c1.rgb) * lightColor;
+            vec3 color =( t * c0.rgb + (1.0 - t) * c1.rgb) * lightColor;
+            return vec4 ( color, c1.a);//alpha base on bright image
             //return vec3( (1.0 - cosTheta)*c0.rgb +  cosTheta * c1.rgb) * lightColor;
         }
 
-        vec3 spec(vec3 nn)
+        vec3 spec(vec3 n)
         {
             vec3 specColor = vec3(0.5,0.5,0.5);
             vec3 viewVector = vec3(0.0, 0.0, 1.0);
             vec3 LVector = normalize(vLight);
-            vec3 RVector = 2.0 * dot(nn, LVector) * nn - LVector;
+            vec3 RVector = 2.0 * dot(n, LVector) * n - LVector;
             float spec = pow(dot(RVector, viewVector), 500.0);
             return specColor * spec * lightColor;
         }
 
-        vec3 reflect(vec3 nn)
+        vec3 reflect(vec3 n)
         {
             // Reflected texture is treated as if it is on a hemisphere 1 unit
             // away from the surface.
             float reflectIntensity = 1.0;
-            vec2 reflCoord = f_texcoord + nn.xy * vLight.xy;
+            vec2 reflCoord = f_texcoord + n.xy * vLight.xy;
             vec4 reflColor = texture2D(uSamplerForeground, reflCoord);
             return reflColor.rgb * reflectIntensity;
         }
 
-        vec3 refract(vec3 nn)
+        vec3 refract(vec3 n)
         {
             float refractIntensity = 1.0;
-            float ior = 1.5;
-            float cos1 = dot(-nn, vec3(0,0,1)); //vLight
-            float cos2 = sqrt(1.0 - ior * ior * (1.0 - (cos1 * cos1)) );
-            vec3 refract = ior * vec3(0,0,1) + (ior * cos1 - cos2) * nn; // vec3(0,0,1) -> vLight
-            vec2 refrCoord = f_texcoord + refract.xy;
+            float ior = pow(2.0, logIOR);
+            float cos1 = dot(n, vec3(0, 0, 1.0)); //vLight
+            float cos2 = sqrt(1.0 + ior * ior * ( (cos1 * cos1) - 1.0 ));
+            vec3 refract = -1.0 * ior * vec3(0, 0, 1.0) + (ior * cos1 - cos2) * n; // vec3(0,0,1) -> vLight
+            vec2 refrCoord = f_texcoord + refract.xy/refract.z;
             vec4 refrColor = texture2D(uSamplerBackground, refrCoord);
             return refrColor.rgb * refractIntensity;
         }
-
-        vec3 fresnelBlend(vec3 nn, vec3 refl, vec3 refr)
+        /*Conrad's refraction
+        vec3 refract(vec3 n)
         {
-            float cos = dot(nn, vec3(0,0,1) );
+            float refractIntensity = 1.0;
+            float ior = 1.5;
+            float cos1 = dot(-n, vec3(0,0,1)); //vLight
+            float cos2 = sqrt(1.0 - ior * ior * (1.0 - (cos1 * cos1)) );
+            vec3 refract = ior * vec3(0,0,1) + (ior * cos1 - cos2) * n; // vec3(0,0,1) -> vLight
+            vec2 refrCoord = f_texcoord + refract.xy/refract.z;
+            vec4 refrColor = texture2D(uSamplerBackground, refrCoord);
+            return refrColor.rgb * refractIntensity;
+        }*/
+
+        vec3 fresnelBlend(vec3 n, vec3 refl, vec3 refr)
+        {
+            float cos = dot(n, vec3(0,0,1) );
             return refl * (1.0 - cos) + refr * cos;
+            
         }
 
         void main()
         {
           
-          vec3 nn = normal();
-            vec3 diffuse = diffuse(nn);
-            vec3 specular = spec(nn);
-            vec3 refl = reflect(nn);
-            vec3 refr = refract(nn);
-            vec3 fresnel = fresnelBlend(nn, refl, refr);
-            //gl_FragColor = vec4(diffuse + specular + 0.5 * fresnel, 1.0);
-            gl_FragColor = vec4(diffuse + 0.5 * fresnel, 1.0);
+          vec4 nn = normal();
+          vec3 n = nn.xyz;
+          
+          vec4 diffuse = diffuse(n);
+          vec4 background = texture2D(uSamplerBackground, vec2(f_texcoord.s, f_texcoord.t) );
+          vec3 backgroundColor = background.rgb;
 
+          vec3 refl = reflect(n);
+          vec3 refr = refract(n);
+          vec3 fresnel = fresnelBlend(n, refl, refr);
+
+          float a = diffuse.a;
+          vec3 finalColor = fresnel * (1.0 - a) + diffuse.rgb * a;
+
+          float b = nn.a;
+          vec3 compBackground = backgroundColor * (1.0 - b) + finalColor * b;
+
+          gl_FragColor = vec4(compBackground, 1.0);
+          //gl_FragColor = vec4(finalColor, 1.0);
+          
+          /*
+          vec3 diffuse = diffuse(n).rgb;
+          vec3 specular = spec(n);
+          vec3 refl = reflect(n);
+          vec3 refr = refract(n);
+          vec3 fresnel = fresnelBlend(n, refl, refr);
+          gl_FragColor = vec4(diffuse + specular + 0.5 * fresnel, 1.0);
+          */
         }
     </script>
   -->
@@ -276,7 +295,7 @@
                        	 <input type="text" class="form-control mytextbox text-center" id="alphaInRed_val" value="1">
                        </div>
                        <div class="slider_box">
-                       	 <input id="alphaInRed_slider" data-slider-id='customSlider' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.01" data-slider-value="1"/>
+                       	 <input id="alphaInRed_slider" data-slider-id='customSlider' type="text"/>
                        </div>
                   </div>
                   <div class="slider_container">
@@ -285,7 +304,7 @@
                        	 <input type="text" class="form-control mytextbox text-center" id="alphaInGreen_val" value="1">
                        </div>
                        <div class="slider_box">
-                       	 <input id="alphaInGreen_slider" data-slider-id='customSlider' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.01" data-slider-value="1"/>
+                       	 <input id="alphaInGreen_slider" data-slider-id='customSlider' type="text"/>
                        </div>
                   </div>
                   <div class="slider_container">
@@ -294,7 +313,7 @@
                        	 <input type="text" class="form-control mytextbox text-center" id="alphaInBlue_val" value="1">
                        </div>
                        <div class="slider_box">
-                       	 <input id="alphaInBlue_slider" data-slider-id='customSlider' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.01" data-slider-value="1"/>
+                       	 <input id="alphaInBlue_slider" data-slider-id='customSlider' type="text"/>
                        </div>
                   </div>
             	</div>	
@@ -366,7 +385,7 @@
                        	 <input type="text" class="form-control mytextbox text-center" id="sha_sampleSize_val" value="1">
                        </div>
                        <div class="slider_box">
-                       	 <input id="sha_sampleSize_slider" data-slider-id='customSlider' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.01" data-slider-value="1"/>
+                       	 <input id="sha_sampleSize_slider" data-slider-id='customSlider' type="text"/>
                        </div>
                   </div>
                   <div class="slider_container">
@@ -375,7 +394,7 @@
                        	 <input type="text" class="form-control mytextbox text-center" id="sha_numberOfSample_val" value="1">
                        </div>
                        <div class="slider_box">
-                       	 <input id="sha_numberOfSample_slider" data-slider-id='customSlider' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.01" data-slider-value="1"/>
+                       	 <input id="sha_numberOfSample_slider" data-slider-id='customSlider' type="text"/>
                        </div>
                   </div>
             	</div>	
@@ -400,7 +419,7 @@
                        	 <input type="text" class="form-control mytextbox text-center" id="amb_sampleSize_val" value="1">
                        </div>
                        <div class="slider_box">
-                       	 <input id="amb_sampleSize_slider" data-slider-id='customSlider' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.01" data-slider-value="1"/>
+                       	 <input id="amb_sampleSize_slider" data-slider-id='customSlider' type="text"/>
                        </div>
                   </div>
                   <div class="slider_container">
@@ -409,7 +428,7 @@
                        	 <input type="text" class="form-control mytextbox text-center" id="amb_numberOfSample_val" value="1">
                        </div>
                        <div class="slider_box">
-                       	 <input id="amb_numberOfSample_slider" data-slider-id='customSlider' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.01" data-slider-value="1"/>
+                       	 <input id="amb_numberOfSample_slider" data-slider-id='customSlider' type="text"/>
                        </div>
                   </div>
             	</div>	
@@ -435,10 +454,10 @@
                   <div class="slider_container">
                        <span class="h6 inlineBlock"> Refraction </span>
                        <div class="pull-right">
-                       	 <input type="text" class="form-control mytextbox text-center" id="refraction_val" value="1">
+                       	 <input type="text" class="form-control mytextbox text-center" id="refraction_val">
                        </div>
                        <div class="slider_box">
-                       	 <input id="refraction_slider" data-slider-id='customSlider' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.01" data-slider-value="1"/>
+                       	 <input id="refraction_slider" data-slider-id='customSlider' type="text" />
                        </div>
                   </div>
                   <div class="slider_container">
@@ -447,7 +466,7 @@
                        	 <input type="text" class="form-control mytextbox text-center" id="translucency_val" value="1">
                        </div>
                        <div class="slider_box">
-                       	 <input id="translucency_slider" data-slider-id='customSlider' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.01" data-slider-value="1"/>
+                       	 <input id="translucency_slider" data-slider-id='customSlider' type="text"/>
                        </div>
                   </div>
             	</div>	
@@ -484,7 +503,7 @@
                        	 <input type="text" class="form-control mytextbox text-center" id="bluriness_val" value="1">
                        </div>
                        <div class="slider_box">
-                       	 <input id="bluriness_slider" data-slider-id='customSlider' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.01" data-slider-value="1"/>
+                       	 <input id="bluriness_slider" data-slider-id='customSlider' type="text"/>
                        </div>
                   </div>
             	</div>	
@@ -501,7 +520,7 @@
                        	 <input type="text" class="form-control mytextbox text-center" id="smQuality_val" value="1">
                        </div>
                        <div class="slider_box">
-                       	 <input id="smQuality_slider" data-slider-id='customSlider' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.01" data-slider-value="1"/>
+                       	 <input id="smQuality_slider" data-slider-id='customSlider' type="text"/>
                        </div>
                   </div>
             	</div>	
@@ -526,7 +545,7 @@
     <!-- More -->
     <script type="text/javascript" src="dragndrop.js"></script>
     <script type="text/javascript" src="cube.js"></script>
-     <script src="js/mock3d.js"></script> 
+    <script type="text/javascript" src="sliders.js"></script> 
    
     
   </body>

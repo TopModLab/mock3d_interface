@@ -25,8 +25,9 @@ UPLOADinit = function()
 	*/
 	
 	image1.src = "images/dark.png"; //dark
-	image2.src = "images/light.png"; //bright
-	image3.src = "images/normal.png"; //shape map
+	image2.src = "images/light_(alpha50).png"; //bright
+	//image3.src = "images/normal.png"; //shape map
+	image3.src = "images/Holmer/Holmer_shape_clean.png"; //shape map
 	
 	/*
 	image1.src = "images/Holmer/Holmer_dark.png"; //dark
@@ -34,9 +35,9 @@ UPLOADinit = function()
 	image3.src = "images/Holmer/Holmer_shape.png"; //shape map
 	*/
 	
-	//image4.src = "image/";
-	//image5.src = "image/";
-
+	image5.src = "images/trees.png";  //refraction
+	image4.src = "images/reflect_red.png";//reflection
+	
 
 	//load default images in thumb
 	
@@ -89,16 +90,12 @@ function addEventListeners()
 	container2.addEventListener('dragenter', cancel, false);
 	container2.addEventListener('dragexit', cancel, false);
 	container2.addEventListener('drop', dropFile, false);
-	container2.addEventListener('load', dropFile, false);
-
+	
 	var container3 = $container3[0];
 	container3.addEventListener('dragover', cancel, false);
 	container3.addEventListener('dragenter', cancel, false);
 	container3.addEventListener('dragexit', cancel, false);
 	container3.addEventListener('drop', dropFile, false);
-
-	
-
 
 	var container4 = $container4[0];
 	container4.addEventListener('dragover', cancel, false);
