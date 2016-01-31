@@ -3,7 +3,7 @@
 var styleBright = 0,
     styleDark = 1;
 
-var logIOR = 0.5;
+var logIOR = 0.1;
 
 var styleBrightLoc, styleDarkLoc;
 var logIORLoc;
@@ -131,6 +131,7 @@ window.onload = function init()
 
 
     initTextures();
+
 
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, normalTexture);
