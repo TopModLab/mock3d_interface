@@ -2,16 +2,15 @@
  * Base structure
  */
 
+/* blue: #337ab7 */
 /* Move down content because we have a fixed navbar that is 50px tall */
 body {
   padding-top: 50px;
 }
-
-
 /*
  * Global add-ons
  */
-
+a {color:#500000;}
 .sub-header {
   padding-bottom: 10px;
   border-bottom: 1px solid #eee;
@@ -68,6 +67,7 @@ label{margin-bottom:0;}
 .sidebar-right{right:0; border-left: 1px solid #eee;}
 
 
+
 .main_button_container{
 	margin:-5px; margin-bottom:15px;
 	list-style:none;
@@ -75,8 +75,51 @@ label{margin-bottom:0;}
 	position:relative;}
 
 .main_button{width:100%;display:block; padding:5px; font-size:11px;float:left;}
-.btn-mycustom{display:block; width:100%; font-size:12px;}
 
+.btn-default{
+	background: #E8E8E8;
+	background-image: -webkit-linear-gradient(top, #F9F9F9 0%, #E8E8E8 100%);
+  background-image: -o-linear-gradient(top, #F9F9F9 0%, #E8E8E8 100%);
+  background-image: linear-gradient(to bottom, #F9F9F9 0%, #E8E8E8 100%);
+  background-repeat: repeat-x;
+  filter: none; 
+}
+.btn-default:hover{
+	background: #D2D2D2;
+	background-image: -webkit-linear-gradient(top, #EAEAEA 0%, #D2D2D2 100%);
+  background-image: -o-linear-gradient(top, #EAEAEA 0%, #D2D2D2 100%);
+  background-image: linear-gradient(to bottom, #EAEAEA 0%, #D2D2D2 100%);
+  background-repeat: repeat-x;
+  filter: none; 
+}
+
+
+.btn-mycustom{display:block; width:100%; font-size:12px;
+	background: #E8E8E8;
+	background-image: -webkit-linear-gradient(top, #FFFFFF 0%, #F7F7F7 100%);
+  background-image: -o-linear-gradient(top, #FFFFFF 0%, #F7F7F7 100%);
+  background-image: linear-gradient(to bottom, #FFFFFF 0%, #F7F7F7 100%);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff149bdf', endColorstr='#ff0480be', GradientType=0);
+  filter: none; 
+}
+.btn-mycustom:hover{
+	background: #E8E8E8;
+	background-image: -webkit-linear-gradient(top, #F9F9F9 0%, #E8E8E8 100%);
+  background-image: -o-linear-gradient(top, #F9F9F9 0%, #E8E8E8 100%);
+  background-image: linear-gradient(to bottom, #F9F9F9 0%, #E8E8E8 100%);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff149bdf', endColorstr='#ff0480be', GradientType=0);
+  filter: none; 
+}
+
+
+.btn-addLight input{padding:3px 12px; 
+	color:#710000; border: solid 1px #B58686;
+	
+	}
+.btn-addLight input:hover{color:#500000; border: solid 1px #710000;
+	}
 
 
 .myAccordion{
@@ -108,21 +151,52 @@ label{margin-bottom:0;}
 	background-color:#428bca;
 }
 	
-	
-
 .myControlTitle:after {
 	line-height:20px;
 	font-size:10px;
-    font-family: "Glyphicons Halflings";
-    content: "\e114";
-    float: right;
-    margin-left: 15px;
+  font-family: "Glyphicons Halflings";
+  content: "\e114";
+  float: right;
+  margin-left: 15px;
   }
   /* Icon when the collapsible content is hidden */
 .myControlTitle.collapsed:after {
     content: "\e080";
 	}
-	
+
+
+.myControlTitle.myLightsTitle{
+	height:32px;
+	line-height: 12px;
+}
+.myControlTitle.myLightsTitle:after{
+	line-height: 12px;
+
+}
+
+
+#lights_container{
+	margin: 20px 20px;
+	margin-bottom: -5px;
+}
+
+#accordion_Lights .panel{
+	margin-bottom: 10px;
+}
+
+#accordion_Lights .panel .myLightsTitle{
+	background:#710000;
+	color:#fff;
+}
+
+#accordion_Lights .panel .collapsed{
+	background:#ccc;
+	color:#500000;
+}
+
+#accordion_Lights .lightBox{border:solid 1px #eee;}
+
+
 
 .canvas_container{
  	padding:0;
@@ -264,14 +338,91 @@ label{margin-bottom:0;}
 */
 
 .checkbox {margin-top:0; margin-bottom:0;}
-.checkbox_container{display:inline-block;}
-.checkbox label{padding-left:0;width:100%;}
-.checkbox input[type="checkbox"]{position:relative; margin:10px 0; }
+.checkbox_container{
+  display:block;
+  width:12px;
+  height:30px;
+  line-height: 7px;
+  }
+.checkbox label{padding-left:0;width:100%; }
+.checkbox input[type="checkbox"]{
+  position:relative; 
+  display: none;
+  cursor: pointer;
+  font-size: 14px;
+
+  }
+
+input[type="checkbox"] + .pseudoCheckbox{
+  display: inline-block;
+  width:12px;
+  height:12px;
+  border: solid 1px #ccc;
+  border-radius: 3px;
+  margin:10px 0; 
+  font-size: 14px;
+
+  background: #E8E8E8;
+  background-image: -webkit-linear-gradient(top, #E8E8E8 0%, #F8F8F8 20%, #FFFFFF 100%);
+    background-image: -o-linear-gradient(top, #E8E8E8 0%, #F8F8F8 20%, #FFFFFF 100%);
+    background-image: linear-gradient(to bottom, top, #E8E8E8 0%, #F8F8F8 20%, #FFFFFF 100%);
+    background-repeat: repeat-x;
+    filter: none; 
+}
+.checkbox label:hover input[type=checkbox] + .pseudoCheckbox:after {
+    font-family: "Glyphicons Halflings";
+    content:"\e013";
+
+    display:inline-block;
+    width: 15px;
+    height:15px;
+
+    color: #ccc;
+    line-height: 7px;
+    margin-left: -1px;
+
+    -webkit-transition: color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+       -o-transition: color ease-in-out .15s, box-shadow ease-in-out .15s;
+          transition: color ease-in-out .15s, box-shadow ease-in-out .15s;
+    
+}
+.checkbox label input[type=checkbox]:checked + .pseudoCheckbox:after {
+    font-family: "Glyphicons Halflings";
+    content:"\e013";
+
+    display:inline-block;
+    width: 15px;
+    height:15px;
+
+    color: #500000;
+    line-height: 7px;
+    margin-left: -1px;
+    
+}
+
+
+/*
+.form-control {
+  
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+  -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+       -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+          transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+.form-control:focus {
+  border-color: #500000;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
+          box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
+}
+*/
+
 
 
 .inlineBlock{display:inline-block;}
 
-.mytextbox{width:44px; display:inline-block; padding:5px 5px; height:24px; margin-top:5px;}
+.mytextbox{width:44px; display:inline-block; padding:5px 5px; height:24px; margin-top:5px; margin-bottom: 5px;}
 
 .slider_container{padding-bottom:8px;}
 .slider_box{padding:0 10px;}
@@ -285,7 +436,13 @@ label{margin-bottom:0;}
    			background: #CCC;
   		}
 		#customSlider .slider-handle {
-   			background: linear-gradient(to bottom, #149bdf 0%, #0480be 100%);
+   			background-color: #710000;
+  			background-image: -webkit-linear-gradient(top, #A00101 0%, #500000 100%);
+  			background-image: -o-linear-gradient(top, #A00101 0%, #500000 100%);
+  			background-image: linear-gradient(to bottom, #A00101 0%, #500000 100%);
+  			background-repeat: repeat-x;
+  			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff149bdf', endColorstr='#ff0480be', GradientType=0);
+  			filter: none;
   		}
 
 		#customSlider .slider-handle {

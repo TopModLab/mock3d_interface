@@ -40,11 +40,13 @@ $("#amb_numberOfSample_slider").slider({min: 0, max: 1, value: 1, step: 0.01, fo
 /**Refraction**/
 var refr_slider = $("#refraction_slider");
 var refr_val = $("#refraction_val");
-
 refr_slider.attr("data-slider-min",-1).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", logIOR).attr("data-slider-tooltip","hide").slider({});
-
 bindSliderValParam (refr_slider, refr_val, "logIOR");
 
+var refr_BGdis_slider = $("#refr_BGdis_slider");
+var refr_BGdis_val = $("#refr_BGdis_val");
+refr_BGdis_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", BGdis).attr("data-slider-tooltip","hide").slider({});
+bindSliderValParam (refr_BGdis_slider, refr_BGdis_val, "BGdis");
 
 
 
@@ -54,7 +56,22 @@ bindSliderValParam (refr_slider, refr_val, "logIOR");
 $("#translucency_slider").slider({min: 0, max: 1, value: 1, step: 0.01, focus: true});
 
 /**Reflection**/
+var refr_FGdis_slider = $("#refr_FGdis_slider");
+var refr_FGdis_val = $("#refr_FGdis_val");
+refr_FGdis_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", FGdis).attr("data-slider-tooltip","hide").slider({});
+bindSliderValParam (refr_FGdis_slider, refr_FGdis_val, "FGdis");
+
+
+var refr_FGshiftLR_slider = $("#refr_FGshiftLR_slider");
+var refr_FGshiftLR_val = $("#refr_FGshiftLR_val");
+refr_FGshiftLR_slider.attr("data-slider-min", -1).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", FGshiftLR).attr("data-slider-tooltip","hide").slider({});
+bindSliderValParam (refr_FGshiftLR_slider, refr_FGshiftLR_val, "FGshiftLR");
+
+
 $("#bluriness_slider").slider({min: 0, max: 1, value: 1, step: 0.01, focus: true});
+
+
+
 
 /*Quality**/
 $("#smQuality_slider").slider({min: 0, max: 1, value: 1, step: 0.01, focus: true});

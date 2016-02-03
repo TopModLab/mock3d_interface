@@ -4,9 +4,17 @@ var styleBright = 0,
     styleDark = 1;
 
 var logIOR = 0.1;
+var BGdis = 0.5;
+
+var mirror = 1;
+var FGdis = 0.5;
+var FGshiftLR = 0;
 
 var styleBrightLoc, styleDarkLoc;
-var logIORLoc;
+var logIORLoc, BGdisLoc;
+var mirrorLoc, FGdisLoc, FGshiftLRLoc;
+
+    
 
 
 /****************** For Basic shader ******************/
@@ -153,11 +161,15 @@ window.onload = function init()
     gl.bindTexture(gl.TEXTURE_2D, reflectTexture);
     gl.uniform1i(gl.getUniformLocation(program, "uSamplerForeground"), 4);
 
-    
     mouseLoc = gl.getUniformLocation( program, "uMouse");
     styleBrightLoc = gl.getUniformLocation( program, "styleBright");
     styleDarkLoc = gl.getUniformLocation( program, "styleDark");
     logIORLoc = gl.getUniformLocation( program, "logIOR");
+    BGdisLoc = gl.getUniformLocation( program, "BGdis");
+    FGdisLoc = gl.getUniformLocation( program, "FGdis");
+    mirrorLoc = gl.getUniformLocation( program, "mirror");
+    FGshiftLRLoc = gl.getUniformLocation( program, "FGshiftLR");
+
 
     render();
 };
@@ -210,10 +222,17 @@ function handleTextureLoaded(image, texture) {
 function render() {
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT );
 
+    var mirrorElem = $('#mirrowSelect:checked');
+    mirror = (mirrorElem.val())?1:0;
+
     gl.uniform2fv(mouseLoc, flatten(mouseXY) );//use flatten() to extract data from JS Array, send it to WebGL functions
     gl.uniform1f(styleBrightLoc, styleBright);
     gl.uniform1f(styleDarkLoc, styleDark);
     gl.uniform1f(logIORLoc, logIOR);
+    gl.uniform1f(BGdisLoc, BGdis);
+    gl.uniform1f(FGdisLoc, FGdis);
+    gl.uniform1i(mirrorLoc, mirror);
+    gl.uniform1f(FGshiftLRLoc, FGshiftLR);
 
     gl.drawArrays( gl.TRIANGLES, 0, numVertices );
     requestAnimFrame(render);
