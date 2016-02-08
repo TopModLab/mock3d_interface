@@ -13,7 +13,7 @@
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet"> <!--have bootstrap.min.css-->
-	   <link href="css/offcanvas.css" rel="stylesheet"> <!--have bootstrap.min.css-->
+	<link href="css/offcanvas.css" rel="stylesheet"> <!--have bootstrap.min.css-->
     <link href="css/bootstrap-slider.css" rel="stylesheet"> <!--have bootstrap.min.css-->
 	
     <!-- Custom styles for this template -->
@@ -174,8 +174,12 @@
 
             float b = nn.a;
             vec3 compBackground = backgroundColor * (1.0 - b) + finalColor * b;
+            
+            vec4 normalMap = texture2D(uSamplerNormal, vec2(f_texcoord.s, f_texcoord.t) );
+            vec4 heightField = vec4(normalMap.z, normalMap.z, normalMap.z, 1.0); 
+            gl_FragColor = heightField;
+            
             gl_FragColor = vec4(compBackground, 1.0);
-            //gl_FragColor = vec4(finalColor, 1.0);
             
             /*
             vec3 diffuse = diffuse(n).rgb;

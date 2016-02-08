@@ -58,12 +58,27 @@ window.onload = function init()
 
 
     /* MOUSE STUFF */
+
     var context = canvas.getContext('2d');
-    canvas.addEventListener('mousemove', function(evt) {
+    var mouseFlag = 0;
+    canvas.addEventListener("mousedown", function(evt){
+        mouseFlag = 1;
+        setMousePos(canvas, evt);
+    }, false);
+    canvas.addEventListener("mousemove", function(evt){
+        if(mouseFlag === 1){
+            setMousePos(canvas, evt);
+        }
+    }, false);
+    canvas.addEventListener("mouseup", function(){
+        mouseFlag = 0;    
+    }, false);
+    
+    function setMousePos(canvas, evt){
         mouseXY[0] = getMousePos(canvas, evt).x;
         mouseXY[1] = getMousePos(canvas, evt).y;
         //console.log(mouseXY[0]+" "+mouseXY[1]);
-    })
+    }
 
     function getMousePos(canvas, evt) {
         var rect = canvas.getBoundingClientRect();
