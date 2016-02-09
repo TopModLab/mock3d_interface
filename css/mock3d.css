@@ -6,7 +6,7 @@
 /* Move down content because we have a fixed navbar that is 50px tall */
 body {
   padding-top: 50px;
-  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif!important;
+
 }
 /*
  * Global add-ons
@@ -42,7 +42,7 @@ a {color:#500000;}
 label{margin-bottom:0;}
 
 .h7{display:block;
-	font-size: 11px;
+	font-size: 10px;
     margin-top: 10px;
     margin-bottom: 10px;
 }
@@ -112,7 +112,7 @@ label{margin-bottom:0;}
 	padding:0;
 	position:relative;}
 
-.main_button{width:100%;display:block; padding:5px; font-size:11px;float:left;}
+.main_button{width:100%;display:block; padding:5px; font-size:10px;float:left;}
 
 .btn-default{
 	background: #E8E8E8;
@@ -183,6 +183,7 @@ label{margin-bottom:0;}
 
 .myControlTitle {
     background-color:#CCC;
+    font-size:13px;
   }
   /* Icon when the collapsible content is hidden */
 .myControlTitle .collapsed {
@@ -191,7 +192,7 @@ label{margin-bottom:0;}
 	
 .myControlTitle:after {
 	line-height:20px;
-	font-size:10px;
+	font-size:9px;
   font-family: "Glyphicons Halflings";
   content: "\e114";
   float: right;
@@ -204,8 +205,11 @@ label{margin-bottom:0;}
 
 
 .myControlTitle.myLightsTitle{
-	height:32px;
-	line-height: 12px;
+	height:28px;
+	line-height: 8px;
+  font-size: 12px;
+  font-weight: 300;
+  text-align: center;
 }
 .myControlTitle.myLightsTitle:after{
 	line-height: 12px;
@@ -214,7 +218,7 @@ label{margin-bottom:0;}
 
 
 #lights_container{
-	margin: 20px 20px;
+	margin: 20px 0px;
 	margin-bottom: -5px;
 }
 
@@ -232,7 +236,7 @@ label{margin-bottom:0;}
 	color:#500000;
 }
 
-#accordion_Lights .lightBox{border:solid 1px #eee;}
+#accordion_Lights .lightBox{border:solid 0px #eee;}
 
 
 
@@ -362,7 +366,7 @@ input[type="checkbox"] + .pseudoCheckbox{
   width:12px;
   height:12px;
   border: solid 1px #ccc;
-  border-radius: 3px;
+  border-radius: 2px;
   margin:10px 0; 
   font-size: 14px;
 
@@ -439,7 +443,7 @@ input[type="checkbox"] + .pseudoCheckbox{
 #customSlider .slider-selection {
    			background: #CCC;
   		}
-		#customSlider .slider-handle {
+#customSlider .slider-handle {
    			background-color: #710000;
   			background-image: -webkit-linear-gradient(top, #A00101 0%, #500000 100%);
   			background-image: -o-linear-gradient(top, #A00101 0%, #500000 100%);
@@ -449,13 +453,20 @@ input[type="checkbox"] + .pseudoCheckbox{
   			filter: none;
   		}
 
-		#customSlider .slider-handle {
+#customSlider .slider-handle {
 			border-bottom-color: blue;
 		}
-		#customSlider {
+#customSlider {
 			width:100%;
 			
 		}
 	
 
-		
+#customSlider .slider-track {
+  
+  border-radius: 3px;
+	}	
+#customSlider .slider-selection{
+  
+  border-radius: 3px;
+  } 
