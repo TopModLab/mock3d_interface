@@ -1,7 +1,15 @@
 /****************** For SliderBar Parameter ******************/
 
+var lightColor =[1.0, 1.0 ,1.0];
+var pointLight = 0;
+var showSpec = 0;
+
 var styleBright = 0,
     styleDark = 1;
+
+var alphaR = .7,
+    alphaG = .1,
+    alphaB = .8;
 
 var logIOR = 0.1;
 var BGdis = 0.5;
@@ -10,7 +18,11 @@ var mirror = 1;
 var FGdis = 0.5;
 var FGshiftLR = 0;
 
+var lightColorLoc;
+var pointLightLoc;
+var showSpecLoc;
 var styleBrightLoc, styleDarkLoc;
+var alphaRLoc, alphaGLoc, alphaBLoc;
 var logIORLoc, BGdisLoc;
 var mirrorLoc, FGdisLoc, FGshiftLRLoc;
 
@@ -25,28 +37,23 @@ var colors = [];
 var normals = [];
 var texCoords = [];
 
-
 var numVertices = 36;
 
 var theta = [0, 0, 0];
-var mouseLoc;
 
 var color0Loc;
 var color1Loc;
 var colorSpecLoc;
 
-var mouseXY = [0, 0];
+var mouseXY = [0.3, -0.3];
+var mouseLoc;
 
-var darkTexture;
-var darkImage;
-var lightTexture;
-var lightImage;
-var normalTexture;
-var normalImage;
-var reflectTexture;
-var reflectImage;
-var refractTexture;
-var refractImage;
+var darkTexture, darkImage;
+var lightTexture, lightImage;
+var normalTexture, normalImage;
+var reflectTexture, reflectImage;
+var refractTexture, refractImage;
+var alphaTexture, alphaImage;
 
 window.onload = function init()
 {
@@ -176,9 +183,19 @@ window.onload = function init()
     gl.bindTexture(gl.TEXTURE_2D, reflectTexture);
     gl.uniform1i(gl.getUniformLocation(program, "uSamplerForeground"), 4);
 
+    gl.activeTexture(gl.TEXTURE5); 
+    gl.bindTexture(gl.TEXTURE_2D, alphaTexture);
+    gl.uniform1i(gl.getUniformLocation(program, "uSamplerAlpha"), 5);
+
     mouseLoc = gl.getUniformLocation( program, "uMouse");
+    showSpecLoc = gl.getUniformLocation( program, "showSpec");
+    pointLightLoc = gl.getUniformLocation( program, "pointLight");
+    lightColorLoc = gl.getUniformLocation (program, "lightColor");
     styleBrightLoc = gl.getUniformLocation( program, "styleBright");
     styleDarkLoc = gl.getUniformLocation( program, "styleDark");
+    alphaRLoc = gl.getUniformLocation( program, "alphaR");
+    alphaGLoc = gl.getUniformLocation( program, "alphaG");
+    alphaBLoc = gl.getUniformLocation( program, "alphaB");
     logIORLoc = gl.getUniformLocation( program, "logIOR");
     BGdisLoc = gl.getUniformLocation( program, "BGdis");
     FGdisLoc = gl.getUniformLocation( program, "FGdis");
@@ -212,12 +229,16 @@ function initTextures() {
     reflectImage = new Image();
     reflectImage.onload = function() { handleTextureLoaded(reflectImage, reflectTexture); }
     
+    alphaTexture = gl.createTexture();
+    alphaImage = new Image();
+    alphaImage.onload = function() { handleTextureLoaded(alphaImage, alphaTexture); }
     
     normalImage.src = image3.src;
     lightImage.src = image2.src;
     darkImage.src = image1.src;
     refractImage.src = image5.src;
     reflectImage.src = image4.src;
+    alphaImage.src = image6.src;
 
 }
 
@@ -237,12 +258,25 @@ function handleTextureLoaded(image, texture) {
 function render() {
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT );
 
-    var mirrorElem = $('#mirrowSelect:checked');
+    var mirrorElem = $('#mirrorSelect:checked');
     mirror = (mirrorElem.val())?1:0;
 
-    gl.uniform2fv(mouseLoc, flatten(mouseXY) );//use flatten() to extract data from JS Array, send it to WebGL functions
+    var showSpecElem = $('#specSelect:checked');
+    showSpec = (showSpecElem.val())?1:0;
+
+    var pointLightElem = $('#pointLightSelect:checked');
+    pointLight = (pointLightElem.val())?1:0;
+
+    gl.uniform2fv(mouseLoc, flatten(mouseXY));//use flatten() to extract data from JS Array, send it to WebGL functions
+    gl.uniform1i(showSpecLoc, showSpec);
+    gl.uniform1i(pointLightLoc, pointLight);
+    gl.uniform3fv(lightColorLoc, flatten(lightColor));
     gl.uniform1f(styleBrightLoc, styleBright);
     gl.uniform1f(styleDarkLoc, styleDark);
+    gl.uniform1f(alphaRLoc, alphaR);
+    gl.uniform1f(alphaGLoc, alphaG);
+    gl.uniform1f(alphaBLoc, alphaB);
+    
     gl.uniform1f(logIORLoc, logIOR);
     gl.uniform1f(BGdisLoc, BGdis);
     gl.uniform1f(FGdisLoc, FGdis);

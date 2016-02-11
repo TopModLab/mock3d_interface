@@ -1,4 +1,4 @@
-var image1, image2, image3, image4, image5;
+var image1, image2, image3, image4, image5, image6;
 
 
 // init vars
@@ -6,7 +6,8 @@ var $container1 = $('#container1'),
 	$container2 = $('#container2'),
 	$container3 = $('#container3'),
 	$container4 = $('#container4'),
-	$container5 = $('#container5');
+	$container5 = $('#container5'),
+	$container6 = $('#container6');
 
 UPLOADinit = function()
 {
@@ -17,6 +18,7 @@ UPLOADinit = function()
 	image3 = new Image();
 	image4 = new Image();
 	image5 = new Image();	
+	image6 = new Image();	
 	
 	/*
 	image1.src = "images/Eye/eye_dark.jpg"; //dark
@@ -24,23 +26,26 @@ UPLOADinit = function()
 	image3.src = "images/Eye/eye_shape.jpg"; //shape map
 	*/
 	
-	image1.src = "images/dark_(alpha50).png"; //dark
-	image2.src = "images/light_(alpha50).png"; //bright
+	//image1.src = "images/dark_(alpha50).png"; //dark
+	//image2.src = "images/light_(alpha50).png"; //bright
 	//image3.src = "images/normal.png"; //shape map
 	image3.src = "images/Holmer/Holmer_shape_clean.png"; //shape map
 	
 	
-	//image1.src = "images/Holmer/Holmer_dark.png"; //dark
-	//image2.src = "images/Holmer/Holmer_bright.png"; //bright
+	image1.src = "images/Holmer/Holmer_dark.png"; //dark
+	image2.src = "images/Holmer/Holmer_bright.png"; //bright
 	//image3.src = "images/Holmer/Holmer_shape.png"; //shape map
+	
+
+	//image4.src = "images/reflect_red.png";//reflection
+	image4.src = "images/reflect_window.png";//reflection
 	
 	image5.src = "images/checker.jpg";  //refraction
 	//image5.src = "images/trees.png";  //refraction
 	
-	//image4.src = "images/reflect_red.png";//reflection
-	image4.src = "images/reflect_window.png";//reflection
 		
-
+	image6.src = "images/Holmer/Holmer_alphaControl.jpg";  //refraction
+	
 
 	//load default images in thumb
 	
@@ -49,15 +54,17 @@ UPLOADinit = function()
 	initDefaultThumbImgSize(image3);
 	initDefaultThumbImgSize(image4);
 	initDefaultThumbImgSize(image5);
+	initDefaultThumbImgSize(image6);
 
-	initDefaultCanvasSize(image3);
+	initDefaultCanvasSize(image3);//canvas size based on Normal map
 	
 	$("#container1image").append(image1);
 	$("#container2image").append(image2);
 	$("#container3image").append(image3);
 	$("#container4image").append(image4);
 	$("#container5image").append(image5);
-	
+	$("#container6image").append(image6);
+		
 
 	//key function
 	addEventListeners();
@@ -111,6 +118,12 @@ function addEventListeners()
 	container5.addEventListener('dragenter', cancel, false);
 	container5.addEventListener('dragexit', cancel, false);
 	container5.addEventListener('drop', dropFile, false);
+
+	var container6 = $container6[0];
+	container6.addEventListener('dragover', cancel, false);
+	container6.addEventListener('dragenter', cancel, false);
+	container6.addEventListener('dragexit', cancel, false);
+	container6.addEventListener('drop', dropFile, false);
 }
 
 
@@ -254,6 +267,19 @@ function fileUploaded(event, elemName)
 
 		// Update WebGL texture.
 		refractImage.src = image5.src;
+	}
+
+	else if(elemName === "container6")
+	{
+		image6 = new Image();
+		image6.src 	= event.target.result;
+		image = image6;
+
+		//set thumb image size
+		setThumbImgSize(image6);
+
+		// Update WebGL texture.
+		refractImage.src = image6.src;
 	}
 	
 	// create the image object

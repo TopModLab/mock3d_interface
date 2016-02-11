@@ -16,8 +16,10 @@
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet"> <!--have bootstrap.min.css-->
-	<link href="css/offcanvas.css" rel="stylesheet"> <!--have bootstrap.min.css-->
-    <link href="css/bootstrap-slider.css" rel="stylesheet"> <!--have bootstrap.min.css-->
+	<link href="css/offcanvas.css" rel="stylesheet"> 
+    <link href="css/bootstrap-slider.css" rel="stylesheet"> 
+    <link href="css/jquery.minicolors.css" rel="stylesheet"> 
+    
 
     <!-- Custom styles for this template -->
     <link href="css/mock3d.css" rel="stylesheet">
@@ -29,22 +31,25 @@
 
         varying vec2 f_texcoord;
         varying vec3 fNormal;
+        varying vec3 pLight;
         varying vec3 vLight;
 
         uniform vec2 uMouse;
-
+        
         void main()
         {
+
             gl_Position = vPosition;
 
             vec4 transformedNormal = vec4(vNormal, 1.0) /* + vec4(0.0, 0.0, 0.5, 0.0) */;
             fNormal = normalize(transformedNormal.xyz);
 
-            float x = uMouse.x * 2.0;
+            float x = uMouse.x * 2.0 ;
             float y = uMouse.y * 2.0;
             float z = 1.0 - x*x - y*y;
-            vec3 directionalLight = vec3(x, -y, z);
-            vLight = normalize(directionalLight);
+            
+            pLight = vec3(x, -y, z);
+            vLight = normalize(pLight);//directional light
 
             f_texcoord = texcoord;
         }
@@ -55,17 +60,24 @@
 
         varying vec2 f_texcoord;
         varying vec3 fNormal;//(0,0,1)
+        varying vec3 pLight;
         varying vec3 vLight;
         
-        uniform sampler2D uSamplerColor0, uSamplerColor1, uSamplerNormal, uSamplerForeground,uSamplerBackground;
+        uniform sampler2D uSamplerColor0, uSamplerColor1, uSamplerNormal, uSamplerForeground, uSamplerBackground, uSamplerAlpha;
 
-        vec3 lightColor = vec3(1,1,1);
+        //vec3 lightColor = vec3(1,1,1);
 
+        uniform vec3 lightColor;
+        uniform int showSpec;
+        uniform int pointLight;
         uniform float styleBright, styleDark;
+        uniform float alphaR, alphaG, alphaB;
         uniform float logIOR, BGdis;
         uniform float FGdis;
         uniform int mirror;
         uniform float FGshiftLR;
+
+        //uniform vec2 uMouse;
 
         vec4 normal()
         {
@@ -79,6 +91,11 @@
         vec4 diffuse(vec3 n)
         {
             float cosTheta = max( dot(n, vLight), 0.0);
+            if (pointLight == 1)
+            {
+                vec3 pPointLight = vec3( pLight.xy, 0.2); //point light is on the plane 0.2 away upon the object
+                cosTheta = max( dot(n, normalize( pPointLight - vec3(f_texcoord.s - 0.5, f_texcoord.t-0.5, 0.0) )), 0.0);
+            }
             vec4 c0 = texture2D(uSamplerColor0, vec2(f_texcoord.s, f_texcoord.t) );
             vec4 c1 = texture2D(uSamplerColor1, vec2(f_texcoord.s, f_texcoord.t) );
             float t = (cosTheta - styleDark) / (styleBright - styleDark);
@@ -86,6 +103,12 @@
             vec4 color =( t * c0 + (1.0 - t) * c1) * vec4(lightColor,1.0);
             return color;
             
+        }
+
+        vec3 alphaControl()
+        {
+            vec4 alphaMap = texture2D(uSamplerAlpha, vec2(f_texcoord.s, f_texcoord.t) );
+            return alphaMap.rgb;
         }
 
         vec3 spec(vec3 n)
@@ -101,8 +124,7 @@
         //Ergun's reflect
         vec3 reflect(vec3 n)
         {
-            // Reflected texture is treated as ultimate plane, 
-            // images flips left and right, up and down to make wallpaper seamless
+            // Reflected texture is treated as ultimate plane.
             float reflectIntensity = 1.0;
             vec3 reflect = - 1.0 * vec3(0.0, 0.0, 1.0) + 2.0 * dot(n, vec3(0.0, 0.0, 1.0)) * n;
             vec2 reflCoord = f_texcoord + (reflect.xy / reflect.z) * (FGdis * 3.0) + vec2( FGshiftLR * -2.0, 0.0)+vLight.xy;
@@ -117,7 +139,7 @@
             // away from the surface.
 
             float reflectIntensity = 1.0;
-            vec2 reflCoord = f_texcoord + n.xy * vLight.xy * (FGdis * 2.0);
+            vec2 reflCoord = f_texcoord + n.xy * (FGdis * 2.0);
             vec4 reflColor = texture2D(uSamplerForeground, reflCoord) ;
             return reflColor.rgb * reflectIntensity;
         }
@@ -134,56 +156,73 @@
             vec4 refrColor = texture2D(uSamplerBackground, refrCoord);
             return refrColor.rgb * refractIntensity;
         }
-        /*Conrad's refr
-        vec3 refract(vec3 n)
-        {
-            float refractIntensity = 1.0;
-            float ior = 1.5;
-            float cos1 = dot(-n, vec3(0,0,1)); //vLight
-            float cos2 = sqrt(1.0 - ior * ior * (1.0 - (cos1 * cos1)) );
-            vec3 refract = ior * vec3(0,0,1) + (ior * cos1 - cos2) * n; // vec3(0,0,1) -> vLight
-            vec2 refrCoord = f_texcoord + refract.xy/refract.z;
-            vec4 refrColor = texture2D(uSamplerBackground, refrCoord);
-            return refrColor.rgb * refractIntensity;
-        }*/
+        
 
         vec3 fresnelBlend(vec3 n, vec3 refl, vec3 refr)
         {
             float cos = dot(n, vec3(0,0,1) );
-            if (mirror == 1) {
-                return refl;
-            }else{
-                return refl * (1.0 - cos) + refr * cos;
-            }
-           
+            return refl * (1.0 - cos) + refr * cos;
+            
                
         }
 
         void main()
-        {
+        {   
           
             vec4 nn = normal();
             vec3 n = nn.xyz;
             
             //vec3 specular = spec(n);
             vec4 diffuse = diffuse(n);//+ vec4(specular, 1.0);
+            vec3 alphaControl = alphaControl();
             vec4 background = texture2D(uSamplerBackground, vec2(f_texcoord.s, f_texcoord.t) );
             vec3 backgroundColor = background.rgb;
             vec3 refl = reflect(n);
             vec3 refr = refract(n);
             vec3 fresnel = fresnelBlend(n, refl, refr);
-            float a = diffuse.a;
-            vec3 finalColor = fresnel * (1.0 - a) + diffuse.rgb * a;
+            
+            float a;
+            a = alphaControl.r;
+            vec4 diffuse2 = diffuse * (1.0 - a) + diffuse * alphaR * a; 
+            a = alphaControl.g;
+            vec4 diffuse3 = diffuse2 * (1.0 - a) + diffuse2 * alphaG * a; 
+            a = alphaControl.b;
+            vec4 diffuse4 = diffuse3 * (1.0 - a) + diffuse3 * alphaB * a; 
 
-            float b = nn.a;
-            vec3 compBackground = backgroundColor * (1.0 - b) + finalColor * b;
+            vec3 specular = spec(n);
+            vec4 diffuse5;
+            diffuse5 = diffuse4;
+            if (showSpec ==1)
+            {
+                diffuse5 = diffuse4 + vec4(specular, 1.0); 
+            }
+
+            
+            a = diffuse4.a;
+            
+            vec3 finalColor = fresnel * (1.0 - a) + diffuse5.rgb * a;
+            if (mirror == 1)
+                finalColor = refl;
+            
+            a = nn.a;
+            vec3 compBackground = backgroundColor * (1.0 - a) + finalColor * a;
             
             vec4 normalMap = texture2D(uSamplerNormal, vec2(f_texcoord.s, f_texcoord.t) );
-            vec4 heightField = vec4(normalMap.z, normalMap.z, normalMap.z, 1.0); 
-            gl_FragColor = heightField;
             
             gl_FragColor = vec4(compBackground, 1.0);
             
+
+            //gl_FragColor = vec4(f_texcoord.xy, 0.0, 1.0);
+
+/*
+            vec2 v0 = f_texcoord - uMouse;
+            vec3 NewNormal;
+             NewNormal = vec3(v0.xy, sqrt(1.0 - length(v0)/(0.1*0.1)));
+            
+            vec3 Newrefr = refract(NewNormal);
+            gl_FragColor = vec4(refr,1.0);
+*/           
+
             /*
             vec3 diffuse = diffuse(n).rgb;
             vec3 specular = spec(n);
@@ -194,10 +233,8 @@
             */
         }
     </script>
-  -->
+
     <script type="text/javascript" src="js/jquery-2.1.4.js"></script>
-    <!-- <script type="text/javascript" src="resources/jquery-1.10.2.js"></script> -->
-   
     <script type="text/javascript" src="resources/webgl-utils.js"></script>
     <script type="text/javascript" src="resources/initShaders.js"></script>
     <script type="text/javascript" src="resources/MV.js"></script>
@@ -312,27 +349,30 @@
                     	<a class="myControlTitle collapsed" data-toggle="collapse" data-parent = "#accordion_L" href="     #alphaControl">Additional Alpha Control</a>
                         <div id = "alphaControl" class= "inCollapse collapse"> 
                        	    <div class="imgbox_container">
-                          		<h6>Alpha Image</h6>
+                                <h6>Alpha Image</h6>
                                 <div>
-                                    <div class="imgThumb_container">
-                                        <div class="imgThumb"> </div>
+                                    <div id = "container6" class="imgThumb_container" >
+                                        <div class="btn-file">
+                                            <input type="file" id = "inputFileToLoad6" >
+                                        </div>
+                                        <div id = "container6image" class="imgThumb"> </div>
                                     </div>
                                 </div>
                             </div>
-                            
                             <div class="slider_container">
                                 <span class="h6 inlineBlock"> Alpha in Red </span>
                                 <div class="pull-right">
-                                   	<input type="text" class="form-control mytextbox text-center" id="alphaInRed_val"   value="   1">
+                                   	<input type="text" class="form-control mytextbox text-center" id="alphaInRed_val">
                                 </div>
                                 <div class="slider_box">
                                    	<input id="alphaInRed_slider" data-slider-id='customSlider' type="text"/>
                                 </div>
                             </div>
+
                             <div class="slider_container">
                                 <span class="h6 inlineBlock"> Alpha in Green </span>
                                 <div class="pull-right">
-                                   	<input type="text" class="form-control mytextbox text-center" id="alphaInGreen_val"     value   ="1"   >
+                                   	<input type="text" class="form-control mytextbox text-center" id="alphaInGreen_val">
                                 </div>
                                 <div class="slider_box">
                                    	<input id="alphaInGreen_slider" data-slider-id='customSlider' type="text"/>
@@ -341,7 +381,7 @@
                             <div class="slider_container">
                                 <span class="h6 inlineBlock"> Alpha in Blue </span>
                                 <div class="pull-right">
-                                   	 <input type="text" class="form-control mytextbox text-center" id="alphaInBlue_val"     value   ="1"   >
+                                   	 <input type="text" class="form-control mytextbox text-center" id="alphaInBlue_val">
                                 </div>
                                 <div class="slider_box">
                                    	<input id="alphaInBlue_slider" data-slider-id='customSlider' type="text"/>
@@ -399,11 +439,17 @@
                                             DEFAULT LIGHT 
                                         </a>
                                         <div id = "light0" class= "lightBox inCollapse collapse in" > 
+                                            <div>
+                                                <span class="h6 inlineBlock"> Color </span>
+                                                <div class="pull-right">
+                                                     <input class="colorPicker" type="hidden" id="hidden-input">
+                                                </div>
+                                            </div>
                                             <div class = "checkbox">
                                                 <label>
-                                                    <span class="h6 inlineBlock" >Show Cos</span>
+                                                    <span class="h6 inlineBlock" >Show Specular</span>
                                                     <div class = "checkbox_container pull-right">
-                                                        <input type="checkbox" >
+                                                        <input type="checkbox" id = "specSelect" >
                                                         <div class = "pseudoCheckbox"></div>
                                                     </div>
                                                 </label>
@@ -411,6 +457,16 @@
                                             <div class = "checkbox">
                                                 <label>
                                                     <span class="h6 inlineBlock" >Point Light</span>
+                                                    <div class = "checkbox_container pull-right">
+                                                        <input type="checkbox" id = "pointLightSelect" >
+                                                        <div class = "pseudoCheckbox"></div>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                            
+                                            <div class = "checkbox">
+                                                <label>
+                                                    <span class="h6 inlineBlock" >Show Cos</span>
                                                     <div class = "checkbox_container pull-right">
                                                         <input type="checkbox" >
                                                         <div class = "pseudoCheckbox"></div>
@@ -563,7 +619,7 @@
                                 <label>
                                     <span class = "h6 inlineBlock"> Toggle Mirror </span>
                                     <div class = "checkbox_container pull-right">
-                                        <input type="checkbox" id ="mirrowSelect">
+                                        <input type="checkbox" id ="mirrorSelect">
                                         <div class = "pseudoCheckbox"></div>
                                     </div>
                                 </label>
@@ -633,9 +689,12 @@
 
 
     <!-- Bootstrap core JavaScript  ================================================== -->
-
     <script src="js/bootstrap.min.js"></script> 
     <script src="js/bootstrap-slider.js"></script>
+    
+    <!--colorpicker-->
+    <script src="js/jquery.minicolors.min.js"></script>
+    
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="js/ie10-viewport-bug-workaround.js"></script>
 

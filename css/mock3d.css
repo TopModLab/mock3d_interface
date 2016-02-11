@@ -68,7 +68,7 @@ label{margin-bottom:0;}
     z-index: 1000;
     display: block;
     padding: 20px;
-    overflow-x: hidden;
+    overflow-x: visible;
     overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
     background-color: #f5f5f5;
     
@@ -345,7 +345,12 @@ label{margin-bottom:0;}
     background-image: linear-gradient(to bottom,#fff 0,#e0e0e0 100%);}
 */
 
-.checkbox {margin-top:0; margin-bottom:0;}
+.checkbox {
+  margin-top:0; margin-bottom:0;
+}
+.checkbox + .checkbox {
+  margin-top: 0px;
+}
 .checkbox_container{
   display:block;
   width:12px;
@@ -385,7 +390,7 @@ input[type="checkbox"] + .pseudoCheckbox{
     width: 15px;
     height:15px;
 
-    color: #ccc;
+    color: #ddd;
     line-height: 7px;
     margin-left: -1px;
 
@@ -470,3 +475,43 @@ input[type="checkbox"] + .pseudoCheckbox{
   
   border-radius: 3px;
   } 
+
+
+
+.minicolors{margin:5px 0;
+right:0px;}
+.minicolors input[type=hidden] + .minicolors-swatch{
+  width: 80px;
+  height: 21px;
+
+}
+
+.minicolors-theme-bootstrap .minicolors-swatch-color{
+  border: solid 1px #eee;
+}
+
+.minicolors .minicolors-grid {
+    width: 120px;
+    height: 120px;
+    background-position: -96px 0px;
+  }
+.minicolors .minicolors-picker{
+      border: solid 1px #aaa ;
+}
+.minicolors .minicolors-panel {
+    width: 143px;
+    height: 122px;
+  }
+.minicolors .minicolors-slider {
+    left:122px;
+    height:120px;
+  }
+
+.minicolors .minicolors-grid-inner{
+  width:120px;
+  height:120px;
+}
+
+.minicolors-sprite {
+    background-image: url("../img/colorPickerBG.png");
+}

@@ -18,13 +18,21 @@ $("#styleControl_slider").on("slide", function(slideEvt) {
 
 
 /**Alpha**/
-$("#alphaInRed_slider").slider({min: 0, max: 1, value: 1, step: 0.01, focus: true});
-$("#alphaInRed_slider").on('slide', function(slideEvt) {
-				$("#alphaInRed_val").val(slideEvt.value);
-});
+var alphaInRed_slider = $("#alphaInRed_slider");
+var alphaInRed_val = $("#alphaInRed_val");
+alphaInRed_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", alphaR).attr("data-slider-tooltip","hide").slider({});
+bindSliderValParam (alphaInRed_slider, alphaInRed_val, "alphaR");
 
-$("#alphaInGreen_slider").slider({min: 0, max: 1, value: 1, step: 0.01, focus: true});
-$("#alphaInBlue_slider").slider({min: 0, max: 1, value: 1, step: 0.01, focus: true});
+var alphaInGreen_slider = $("#alphaInGreen_slider");
+var alphaInGreen_val = $("#alphaInGreen_val");
+alphaInGreen_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", alphaG).attr("data-slider-tooltip","hide").slider({});
+bindSliderValParam (alphaInGreen_slider, alphaInGreen_val, "alphaG");
+
+var alphaInBlue_slider = $("#alphaInBlue_slider");
+var alphaInBlue_val = $("#alphaInBlue_val");
+alphaInBlue_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", alphaB).attr("data-slider-tooltip","hide").slider({});
+bindSliderValParam (alphaInBlue_slider, alphaInBlue_val, "alphaB");
+
 
 
 /**Shadow**/
@@ -77,7 +85,40 @@ $("#bluriness_slider").slider({min: 0, max: 1, value: 1, step: 0.01, focus: true
 $("#smQuality_slider").slider({min: 0, max: 1, value: 1, step: 0.01, focus: true});
 
 
- 
+
+
+
+$('.colorPicker').each( function() {
+                
+                $(this).minicolors({
+                    position: 'bottom right',
+                    theme: 'bootstrap',
+                    defaultValue: '#ffffff',
+                    change: function(value) {
+                        if( !value ) return;
+                        if( typeof console === 'object' ) {
+                            var rgbObject = $(this).minicolors('rgbObject');
+                            lightColor[0] =rgbObject.r / 255;
+                            lightColor[1] =rgbObject.g / 255;
+                            lightColor[2] =rgbObject.b / 255;
+                            console.log(value);
+                            var addBorderElem = $(this).parent().find(".minicolors-swatch-color");
+                            if (value =="#ffffff")
+                            {
+                                addBorderElem.css("border","solid 1px #eee");
+                                console.log("in");
+                            }else{
+                                addBorderElem.css("border","none");
+                            }
+                            
+
+                        }
+                    },
+                });
+
+            });
+
+
 
  //collapse list +/- toggle	
 /*
