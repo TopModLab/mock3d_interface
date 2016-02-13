@@ -1,15 +1,29 @@
 /****************** For SliderBar Parameter ******************/
+var mouseFlag = 0;
+var currentLight = 0;
 
-var lightColor =[1.0, 1.0 ,1.0];
-var pointLight = 0;
-var showSpec = 0;
+var light0on = 1;
+var light1on = 1;
+
+var lightColor0 =[1.0, 0.0 ,0.0],
+    lightColor1 =[0.0, 0.0 ,1.0];
+var lightIntensity0 = 0.7;
+var lightIntensity1 = 0.7;
+
+var pointLight0 = 0,
+    pointLight1 = 0;
+var pointLight0dis = 0.1;
+var pointLight1dis = 0.1;
+
+var showSpec0 = 0,
+    showSpec1 = 0;
 
 var styleBright = 0,
     styleDark = 1;
 
-var alphaR = .7,
-    alphaG = .1,
-    alphaB = .8;
+var alphaR = 1,
+    alphaG = 1,
+    alphaB = 1;
 
 var logIOR = 0.1;
 var BGdis = 0.5;
@@ -18,9 +32,13 @@ var mirror = 1;
 var FGdis = 0.5;
 var FGshiftLR = 0;
 
-var lightColorLoc;
-var pointLightLoc;
-var showSpecLoc;
+var currentLightLoc;
+var light0onLoc, light1onLoc;
+var lightColor0Loc, lightColor1Loc;
+var lightIntensity0Loc, lightIntensity1Loc;
+var pointLight0Loc, pointLight1Loc;
+var pointLight0disLoc, pointLight1disLoc;
+var showSpec0Loc, showSpec1Loc;
 var styleBrightLoc, styleDarkLoc;
 var alphaRLoc, alphaGLoc, alphaBLoc;
 var logIORLoc, BGdisLoc;
@@ -45,7 +63,9 @@ var color0Loc;
 var color1Loc;
 var colorSpecLoc;
 
-var mouseXY = [0.3, -0.3];
+var mouseXY0 = [0.3, -0.3];     //default light
+var mouseXY1 = [-0.3, -0.1];     //default light
+
 var mouseLoc;
 
 var darkTexture, darkImage;
@@ -67,24 +87,34 @@ window.onload = function init()
     /* MOUSE STUFF */
 
     var context = canvas.getContext('2d');
-    var mouseFlag = 0;
+    
     canvas.addEventListener("mousedown", function(evt){
-        mouseFlag = 1;
-        setMousePos(canvas, evt);
+        
     }, false);
     canvas.addEventListener("mousemove", function(evt){
-        if(mouseFlag === 1){
+        if(mouseFlag === 0){
             setMousePos(canvas, evt);
         }
+
     }, false);
     canvas.addEventListener("mouseup", function(){
-        mouseFlag = 0;    
+        mouseFlag = (mouseFlag ==0)?1:0;
     }, false);
     
     function setMousePos(canvas, evt){
-        mouseXY[0] = getMousePos(canvas, evt).x;
-        mouseXY[1] = getMousePos(canvas, evt).y;
-        //console.log(mouseXY[0]+" "+mouseXY[1]);
+        if (currentLight == 0)
+        {
+            mouseXY0[0] = getMousePos(canvas, evt).x;
+            mouseXY0[1] = getMousePos(canvas, evt).y;
+            console.log("0:"+mouseXY0[0]+" "+mouseXY0[1]);
+        }
+        else if(currentLight == 1)
+        {
+            mouseXY1[0] = getMousePos(canvas, evt).x;
+            mouseXY1[1] = getMousePos(canvas, evt).y;
+            console.log("1:"+mouseXY1[0]+" "+mouseXY1[1]);
+        }
+
     }
 
     function getMousePos(canvas, evt) {
@@ -187,10 +217,25 @@ window.onload = function init()
     gl.bindTexture(gl.TEXTURE_2D, alphaTexture);
     gl.uniform1i(gl.getUniformLocation(program, "uSamplerAlpha"), 5);
 
-    mouseLoc = gl.getUniformLocation( program, "uMouse");
-    showSpecLoc = gl.getUniformLocation( program, "showSpec");
-    pointLightLoc = gl.getUniformLocation( program, "pointLight");
-    lightColorLoc = gl.getUniformLocation (program, "lightColor");
+    currentLightLoc = gl.getUniformLocation (program, "currentLight");
+    mouse0Loc = gl.getUniformLocation( program, "mouseXY0");
+    mouse1Loc = gl.getUniformLocation( program, "mouseXY1");
+    
+    light0onLoc = gl.getUniformLocation(program, "light0on");
+    light1onLoc = gl.getUniformLocation(program, "light1on");
+    lightColor0Loc = gl.getUniformLocation (program, "lightColor0");
+    lightColor1Loc = gl.getUniformLocation (program, "lightColor1");
+    lightIntensity0Loc = gl.getUniformLocation (program, "lightIntensity0");
+    lightIntensity1Loc = gl.getUniformLocation (program, "lightIntensity1");
+    
+    showSpec0Loc = gl.getUniformLocation( program, "showSpec0");
+    showSpec1Loc = gl.getUniformLocation( program, "showSpec1");
+    pointLight0Loc = gl.getUniformLocation( program, "pointLight0");
+    pointLight1Loc = gl.getUniformLocation( program, "pointLight1");
+
+    pointLight0disLoc = gl.getUniformLocation( program, "pointLight0dis");
+    pointLight1disLoc = gl.getUniformLocation( program, "pointLight1dis");
+
     styleBrightLoc = gl.getUniformLocation( program, "styleBright");
     styleDarkLoc = gl.getUniformLocation( program, "styleDark");
     alphaRLoc = gl.getUniformLocation( program, "alphaR");
@@ -261,16 +306,40 @@ function render() {
     var mirrorElem = $('#mirrorSelect:checked');
     mirror = (mirrorElem.val())?1:0;
 
-    var showSpecElem = $('#specSelect:checked');
-    showSpec = (showSpecElem.val())?1:0;
+    var light0onElem = $ ('#lightPanel0 #lightSelect:checked');
+    light0on = (light0onElem.val())?1:0;
+    var light1onElem = $ ('#lightPane11 #lightSelect:checked');
+    light1on = (light1onElem.val())?1:0;
 
-    var pointLightElem = $('#pointLightSelect:checked');
-    pointLight = (pointLightElem.val())?1:0;
+    var showSpec0Elem = $('#lightPanel0 #specSelect:checked');
+    showSpec0 = (showSpec0Elem.val())?1:0;
+    var showSpec1Elem = $('#lightPanel1 #specSelect:checked');
+    showSpec1 = (showSpec1Elem.val())?1:0;
 
-    gl.uniform2fv(mouseLoc, flatten(mouseXY));//use flatten() to extract data from JS Array, send it to WebGL functions
-    gl.uniform1i(showSpecLoc, showSpec);
-    gl.uniform1i(pointLightLoc, pointLight);
-    gl.uniform3fv(lightColorLoc, flatten(lightColor));
+    var pointLight0Elem = $('#lightPanel0 #pointLightSelect:checked');
+    pointLight0 = (pointLight0Elem.val())?1:0;
+    var pointLight1Elem = $('#lightPanel1 #pointLightSelect:checked');
+    pointLight1 = (pointLight1Elem.val())?1:0;
+
+
+    gl.uniform1i(currentLightLoc, currentLight);
+    gl.uniform2fv(mouse0Loc, flatten(mouseXY0));//use flatten() to extract data from JS Array, send it to WebGL functions
+    gl.uniform2fv(mouse1Loc, flatten(mouseXY1));//use flatten() to extract data from JS Array, send it to WebGL functions
+    
+    gl.uniform1i(light0onLoc, light0on);
+    gl.uniform1i(light1onLoc, light1on);
+    gl.uniform3fv(lightColor0Loc, flatten(lightColor0));
+    gl.uniform3fv(lightColor1Loc, flatten(lightColor1));
+    gl.uniform1f(lightIntensity0Loc, lightIntensity0);
+    gl.uniform1f(lightIntensity1Loc, lightIntensity1);
+    
+    gl.uniform1i(showSpec0Loc, showSpec0);
+    gl.uniform1i(showSpec1Loc, showSpec1);
+    gl.uniform1i(pointLight0Loc, pointLight0);
+    gl.uniform1i(pointLight1Loc, pointLight1);
+    gl.uniform1f(pointLight0disLoc, pointLight0dis);
+    gl.uniform1f(pointLight1disLoc, pointLight1dis);
+    
     gl.uniform1f(styleBrightLoc, styleBright);
     gl.uniform1f(styleDarkLoc, styleDark);
     gl.uniform1f(alphaRLoc, alphaR);

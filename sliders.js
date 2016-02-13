@@ -34,6 +34,30 @@ alphaInBlue_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("d
 bindSliderValParam (alphaInBlue_slider, alphaInBlue_val, "alphaB");
 
 
+/**Lights**/
+//light0
+var lightIntensity0_slider = $("#lightPanel0 #intensity_slider");
+var lightIntensity0_val = $("#lightPanel0 #intensity_val");
+lightIntensity0_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", lightIntensity0).attr("data-slider-tooltip","hide").slider({});
+bindSliderValParam (lightIntensity0_slider, lightIntensity0_val, "lightIntensity0");
+
+var pointLGT0dis_slider = $("#lightPanel0 #pointLGTdis_slider");
+var pointLGT0dis_val = $("#lightPanel0 #pointLGTdis_val");
+pointLGT0dis_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", pointLight0dis).attr("data-slider-tooltip","hide").slider({});
+bindSliderValParam (pointLGT0dis_slider, pointLGT0dis_val, "pointLight0dis");
+
+//light1
+var lightIntensity1_slider = $("#lightPanel1 #intensity_slider");
+var lightIntensity1_val = $("#lightPanel1 #intensity_val");
+lightIntensity1_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", lightIntensity1).attr("data-slider-tooltip","hide").slider({});
+bindSliderValParam (lightIntensity1_slider, lightIntensity1_val, "lightIntensity1");
+
+var pointLGT1dis_slider = $("#lightPanel1 #pointLGTdis_slider");
+var pointLGT1dis_val = $("#lightPanel1 #pointLGTdis_val");
+pointLGT1dis_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", pointLight1dis).attr("data-slider-tooltip","hide").slider({});
+bindSliderValParam (pointLGT1dis_slider, pointLGT1dis_val, "pointLight1dis");
+
+
 
 /**Shadow**/
 $("#sha_sampleSize_slider").slider({min: 0, max: 1, value: 1, step: 0.01, focus: true});
@@ -88,6 +112,26 @@ $("#smQuality_slider").slider({min: 0, max: 1, value: 1, step: 0.01, focus: true
 
 
 
+//handle multiple lights
+
+$('#lightPanel0').on('shown.bs.collapse', function(){
+    currentLight = 0;
+    console.log("current: " + currentLight);
+})
+
+$('#lightPanel0').on('hidden.bs.collapse', function(){
+    
+})
+
+$('#lightPanel1').on('shown.bs.collapse', function(){
+    currentLight = 1;
+     console.log("current: " + currentLight);
+})
+
+$('#lightPanel1').on('hidden.bs.collapse', function(){
+   
+})
+
 $('.colorPicker').each( function() {
                 
                 $(this).minicolors({
@@ -98,15 +142,24 @@ $('.colorPicker').each( function() {
                         if( !value ) return;
                         if( typeof console === 'object' ) {
                             var rgbObject = $(this).minicolors('rgbObject');
-                            lightColor[0] =rgbObject.r / 255;
-                            lightColor[1] =rgbObject.g / 255;
-                            lightColor[2] =rgbObject.b / 255;
-                            console.log(value);
+
+                            //var aaa = $('#accordinLights')
+                            if (currentLight ==0)
+                            {
+                                lightColor0[0] =rgbObject.r / 255;
+                                lightColor0[1] =rgbObject.g / 255;
+                                lightColor0[2] =rgbObject.b / 255;
+                            }
+                            else if (currentLight ==1)
+                            {
+                                lightColor1[0] =rgbObject.r / 255;
+                                lightColor1[1] =rgbObject.g / 255;
+                                lightColor1[2] =rgbObject.b / 255;
+                            }
                             var addBorderElem = $(this).parent().find(".minicolors-swatch-color");
                             if (value =="#ffffff")
                             {
                                 addBorderElem.css("border","solid 1px #eee");
-                                console.log("in");
                             }else{
                                 addBorderElem.css("border","none");
                             }
@@ -117,8 +170,19 @@ $('.colorPicker').each( function() {
                 });
 
             });
-
-
+/*
+$('#colorPicker0').minicolors('change', function(value){
+    if( !value ) return;
+                        if( typeof console === 'object' ) {
+                            var rgbObject = $(this).minicolors('rgbObject');
+                            //lightColor[0] =rgbObject.r / 255;
+                            //lightColor[1] =rgbObject.g / 255;
+                            //lightColor[2] =rgbObject.b / 255;
+                            console.log(value);
+                            
+                        }
+})
+*/
 
  //collapse list +/- toggle	
 /*

@@ -26,21 +26,27 @@ UPLOADinit = function()
 	image3.src = "images/Eye/eye_shape.jpg"; //shape map
 	*/
 	
+	image1.src = "images/dark.png"; //dark
+	//image2.src = "images/white.png"; //bright
+	image2.src = "images/light.png"; //bright
+	
 	//image1.src = "images/dark_(alpha50).png"; //dark
 	//image2.src = "images/light_(alpha50).png"; //bright
 	//image3.src = "images/normal.png"; //shape map
 	image3.src = "images/Holmer/Holmer_shape_clean.png"; //shape map
 	
 	
-	image1.src = "images/Holmer/Holmer_dark.png"; //dark
-	image2.src = "images/Holmer/Holmer_bright.png"; //bright
+	//image1.src = "images/Holmer/Holmer_dark.png"; //dark
+	//image2.src = "images/Holmer/Holmer_bright.png"; //bright
 	//image3.src = "images/Holmer/Holmer_shape.png"; //shape map
 	
 
 	//image4.src = "images/reflect_red.png";//reflection
 	image4.src = "images/reflect_window.png";//reflection
 	
-	image5.src = "images/checker.jpg";  //refraction
+	//image5.src = "images/checker.jpg";  //refraction
+	image5.src = "images/dark.png";  //refraction
+	
 	//image5.src = "images/trees.png";  //refraction
 	
 		
