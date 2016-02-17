@@ -1,6 +1,52 @@
 $(document).ready(function () {
-	
 
+/**************** init checkbox ******************/
+
+var mirrorElem = $('#mirrorSelect');
+initCheckbox(mirror, mirrorElem);
+
+
+var light0onElem = $ ('#lightPanel0 #lightSelect');
+initCheckbox(light0on, light0onElem);
+
+var light1onElem = $ ('#lightPanel1 #lightSelect');
+initCheckbox(light1on, light1onElem);
+
+var light2onElem = $ ('#lightPanel2 #lightSelect');
+initCheckbox(light2on, light2onElem);
+
+
+var showSpec0Elem = $('#lightPanel0 #specSelect');
+initCheckbox(showSpec0, showSpec0Elem);
+
+var showSpec1Elem = $('#lightPanel1 #specSelect');
+initCheckbox(showSpec1, showSpec1Elem);
+
+var showSpec2Elem = $('#lightPanel2 #specSelect');
+initCheckbox(showSpec2, showSpec2Elem);
+
+
+var pointLight0Elem = $('#lightPanel0 #pointLightSelect');
+initCheckbox(pointLight0, pointLight0Elem);
+
+var pointLight1Elem = $('#lightPanel1 #pointLightSelect');
+initCheckbox(pointLight1, pointLight1Elem);
+
+var pointLight2Elem = $('#lightPanel2 #pointLightSelect');
+initCheckbox(pointLight2, pointLight2Elem);
+
+    
+/*
+if ($(this).is(':checked')) {
+$(this).parent().fadeTo('slow', 0.5);
+$(this).attr('checked'); //This line
+}else{
+
+$(this).parent().fadeTo('slow', 1);
+$(this).removeAttr('checked');
+}
+	
+*/
 /**********************offcanvas.js********************/
 $('[data-toggle="offcanvas"]').click(function () {
     $('.row-offcanvas').toggleClass('active')
@@ -35,6 +81,30 @@ bindSliderValParam (alphaInBlue_slider, alphaInBlue_val, "alphaB");
 
 
 /**Lights**/
+
+//handle multiple lights
+
+$('#lightPanel0').on('shown.bs.collapse', function(){
+    currentLight = 0;
+    console.log("current: " + currentLight);
+})
+
+$('#lightPanel1').on('shown.bs.collapse', function(){
+    currentLight = 1;
+     console.log("current: " + currentLight);
+})
+
+$('#lightPanel2').on('shown.bs.collapse', function(){
+    currentLight = 2;
+     console.log("current: " + currentLight);
+})
+
+
+$("#lightPanel0 .colorPicker").attr("value", "#ff0000");
+$("#lightPanel1 .colorPicker").attr("value", "#0000ff");
+$("#lightPanel2 .colorPicker").attr("value", "#00ff00");
+
+
 //light0
 var lightIntensity0_slider = $("#lightPanel0 #intensity_slider");
 var lightIntensity0_val = $("#lightPanel0 #intensity_val");
@@ -56,6 +126,17 @@ var pointLGT1dis_slider = $("#lightPanel1 #pointLGTdis_slider");
 var pointLGT1dis_val = $("#lightPanel1 #pointLGTdis_val");
 pointLGT1dis_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", pointLight1dis).attr("data-slider-tooltip","hide").slider({});
 bindSliderValParam (pointLGT1dis_slider, pointLGT1dis_val, "pointLight1dis");
+
+//light2
+var lightIntensity2_slider = $("#lightPanel2 #intensity_slider");
+var lightIntensity2_val = $("#lightPanel2 #intensity_val");
+lightIntensity2_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", lightIntensity2).attr("data-slider-tooltip","hide").slider({});
+bindSliderValParam (lightIntensity2_slider, lightIntensity2_val, "lightIntensity2");
+
+var pointLGT2dis_slider = $("#lightPanel2 #pointLGTdis_slider");
+var pointLGT2dis_val = $("#lightPanel2 #pointLGTdis_val");
+pointLGT2dis_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", pointLight2dis).attr("data-slider-tooltip","hide").slider({});
+bindSliderValParam (pointLGT2dis_slider, pointLGT2dis_val, "pointLight2dis");
 
 
 
@@ -88,16 +169,22 @@ bindSliderValParam (refr_BGdis_slider, refr_BGdis_val, "BGdis");
 $("#translucency_slider").slider({min: 0, max: 1, value: 1, step: 0.01, focus: true});
 
 /**Reflection**/
-var refr_FGdis_slider = $("#refr_FGdis_slider");
-var refr_FGdis_val = $("#refr_FGdis_val");
-refr_FGdis_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", FGdis).attr("data-slider-tooltip","hide").slider({});
-bindSliderValParam (refr_FGdis_slider, refr_FGdis_val, "FGdis");
+var refl_intensity_slider = $("#refl_intensity_slider");
+var refl_intensity_val = $("#refl_intensity_val");
+refl_intensity_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", reflectIntensity).attr("data-slider-tooltip","hide").slider({});
+bindSliderValParam (refl_intensity_slider, refl_intensity_val, "reflectIntensity");
 
 
-var refr_FGshiftLR_slider = $("#refr_FGshiftLR_slider");
-var refr_FGshiftLR_val = $("#refr_FGshiftLR_val");
-refr_FGshiftLR_slider.attr("data-slider-min", -1).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", FGshiftLR).attr("data-slider-tooltip","hide").slider({});
-bindSliderValParam (refr_FGshiftLR_slider, refr_FGshiftLR_val, "FGshiftLR");
+var refl_FGdis_slider = $("#refl_FGdis_slider");
+var refl_FGdis_val = $("#refl_FGdis_val");
+refl_FGdis_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", FGdis).attr("data-slider-tooltip","hide").slider({});
+bindSliderValParam (refl_FGdis_slider, refl_FGdis_val, "FGdis");
+
+
+var refl_FGshiftLR_slider = $("#refl_FGshiftLR_slider");
+var refl_FGshiftLR_val = $("#refl_FGshiftLR_val");
+refl_FGshiftLR_slider.attr("data-slider-min", -1).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", FGshiftLR).attr("data-slider-tooltip","hide").slider({});
+bindSliderValParam (refl_FGshiftLR_slider, refl_FGshiftLR_val, "FGshiftLR");
 
 
 $("#bluriness_slider").slider({min: 0, max: 1, value: 1, step: 0.01, focus: true});
@@ -112,25 +199,8 @@ $("#smQuality_slider").slider({min: 0, max: 1, value: 1, step: 0.01, focus: true
 
 
 
-//handle multiple lights
+//Light colorPicker
 
-$('#lightPanel0').on('shown.bs.collapse', function(){
-    currentLight = 0;
-    console.log("current: " + currentLight);
-})
-
-$('#lightPanel0').on('hidden.bs.collapse', function(){
-    
-})
-
-$('#lightPanel1').on('shown.bs.collapse', function(){
-    currentLight = 1;
-     console.log("current: " + currentLight);
-})
-
-$('#lightPanel1').on('hidden.bs.collapse', function(){
-   
-})
 
 $('.colorPicker').each( function() {
                 
@@ -155,6 +225,12 @@ $('.colorPicker').each( function() {
                                 lightColor1[0] =rgbObject.r / 255;
                                 lightColor1[1] =rgbObject.g / 255;
                                 lightColor1[2] =rgbObject.b / 255;
+                            }
+                            else if (currentLight ==2)
+                            {
+                                lightColor2[0] =rgbObject.r / 255;
+                                lightColor2[1] =rgbObject.g / 255;
+                                lightColor2[2] =rgbObject.b / 255;
                             }
                             var addBorderElem = $(this).parent().find(".minicolors-swatch-color");
                             if (value =="#ffffff")
@@ -195,6 +271,14 @@ $('#colorPicker0').minicolors('change', function(value){
   
 });//end of $(document).ready
 
+
+function initCheckbox(param, elem){
+    if (param == 1) {
+    elem.prop('checked', true);
+    }else if (param ==0){
+    elem.prop('checked', false);
+    }
+}
 
 
 function bindSliderValParam(slider, val, param){

@@ -34,12 +34,15 @@
         
         varying vec3 pLight0;
         varying vec3 pLight1;
+        varying vec3 pLight2;
         
         varying vec3 vLight0;
         varying vec3 vLight1;
+        varying vec3 vLight2;
         
         uniform vec2 mouseXY0;
         uniform vec2 mouseXY1;
+        uniform vec2 mouseXY2;
         
         //varying vec2 userMouse0;
         //varying vec2 userMouse1;
@@ -61,12 +64,19 @@
             float y1 = mouseXY1.y * 2.0;
             float z1 = 1.0 - x1*x1 - y1*y1;
             
+            float x2 = mouseXY2.x * 2.0 ;
+            float y2 = mouseXY2.y * 2.0;
+            float z2 = 1.0 - x2*x2 - y2*y2;
+                        
 
             pLight0 = vec3(x0, -y0, z0);
             vLight0 = normalize(pLight0);//directional light
 
             pLight1 = vec3(x1, -y1, z1);
             vLight1 = normalize(pLight1);//directional light
+            
+            pLight2 = vec3(x2, -y2, z2);
+            vLight2 = normalize(pLight2);//directional light
             
             //userMouse0 = mouseXY0;
             //userMouse1 = mouseXY1;
@@ -83,12 +93,15 @@
         
         varying vec3 pLight0;
         varying vec3 pLight1;
+        varying vec3 pLight2;
         
         varying vec3 vLight0;
         varying vec3 vLight1;
+        varying vec3 vLight2;
         
         varying vec2 userMouse0;
         varying vec2 userMouse1;
+        varying vec2 userMouse2;
 
 
         uniform sampler2D uSamplerColor0, uSamplerColor1, uSamplerNormal, uSamplerForeground, uSamplerBackground, uSamplerAlpha;
@@ -96,23 +109,32 @@
         uniform int currentLight;
         uniform int light0on;
         uniform int light1on;
+        uniform int light2on;
 
         uniform vec3 lightColor0;
         uniform vec3 lightColor1;
+        uniform vec3 lightColor2;
         uniform float lightIntensity0;
         uniform float lightIntensity1;
+        uniform float lightIntensity2;
 
         uniform int showSpec0;
         uniform int showSpec1;
+        uniform int showSpec2;
+        
         uniform int pointLight0;
         uniform int pointLight1;
+        uniform int pointLight2;
         uniform float pointLight0dis;
         uniform float pointLight1dis;
-                
+        uniform float pointLight2dis;
+                        
 
         uniform float styleBright, styleDark;
         uniform float alphaR, alphaG, alphaB;
         uniform float logIOR, BGdis;
+
+        uniform float reflectIntensity;
         uniform float FGdis;
         uniform int mirror;
         uniform float FGshiftLR;
@@ -147,50 +169,62 @@
             //float cosTheta0 = (dot(n, vnewLight0)+1.0)/2.0;
             //float cosTheta1 = dot(n, vnewLight1);
 
-
             float cosTheta0 = (dot(n, vLight0)+1.0)/2.0;
             float cosTheta1 = (dot(n, vLight1)+1.0)/2.0;
+            float cosTheta2 = (dot(n, vLight2)+1.0)/2.0;
              
             if (pointLight0 == 1)
             {
-                
                 vec3 pPointLight0 = vec3( pLight0.xy, pointLight0dis); //point light is on the plane 0.2 away upon the object
                 cosTheta0 = max( dot(n, normalize( pPointLight0 - vec3(f_texcoord.s - 0.5, f_texcoord.t-0.5, 0.0) )), 0.0);
-                
             }
             if (pointLight1 == 1)
             {
-                
                 vec3 pPointLight1 = vec3( pLight1.xy, pointLight1dis); //point light is on the plane 0.2 away upon the object
                 cosTheta1 = max( dot(n, normalize( pPointLight1 - vec3(f_texcoord.s - 0.5, f_texcoord.t-0.5, 0.0) )), 0.0);
-                
+            }
+            if (pointLight2 == 1)
+            {
+                vec3 pPointLight2 = vec3( pLight2.xy, pointLight2dis); //point light is on the plane 0.2 away upon the object
+                cosTheta2 = max( dot(n, normalize( pPointLight2 - vec3(f_texcoord.s - 0.5, f_texcoord.t-0.5, 0.0) )), 0.0);
             }
             
             vec4 c0 = texture2D(uSamplerColor0, vec2(f_texcoord.s, f_texcoord.t) );//dark
             vec4 c1 = texture2D(uSamplerColor1, vec2(f_texcoord.s, f_texcoord.t) );//bright
-            
 
             float t0 = (cosTheta0 - styleDark) / (styleBright - styleDark);
             if (t0>1.0) t0=1.0; if (t0<0.0) t0=0.0; 
 
             float t1 = (cosTheta1 - styleDark) / (styleBright - styleDark);
             if (t1>1.0) t1=1.0; if (t1<0.0) t1=0.0; 
+
+            float t2 = (cosTheta2 - styleDark) / (styleBright - styleDark);
+            if (t2>1.0) t2=1.0; if (t2<0.0) t2=0.0; 
             
             vec4 color = vec4(0,0,0,0);
 
-            vec4 color0 = c0 * t0 + c1 * (1.0 - t0) * vec4(lightColor0, 1.0) * lightIntensity0 ;
-            vec4 color1 = c0 * t1 + c1 * (1.0 - t1) * vec4(lightColor1, 1.0) * lightIntensity1 ; 
+            vec4 color0 = (1.0 - t0) * vec4(lightColor0, 1.0) * lightIntensity0 ;
+            vec4 color1 = (1.0 - t1) * vec4(lightColor1, 1.0) * lightIntensity1 ; 
+            vec4 color2 = (1.0 - t2) * vec4(lightColor2, 1.0) * lightIntensity2 ; 
             
             if ( light0on == 1 )
             {
                 color += color0;
             };
+            if ( light1on == 1 )
+            {
                 color += color1;
-            
-            //vec3 t = t0 * lightColor0 * lightIntensity0 + t1 *lightColor1 + lightIntensity1;
+            };
+            if ( light2on == 1 )
+            {
+                color += color2;
+            };
 
-            //color = vec4(t, 1.0) * c0 + vec4(( vec3 (1.0, 1.0, 1.0) - t), 1.0) * c1 ; //light0
-            return color;
+            vec4 T = color;
+            
+            vec4 colorFinal = c0 * (vec4 ( 1.0, 1.0, 1.0, 1.0) - T) + c1 * T;
+            
+            return colorFinal;
             
         }
 
@@ -236,7 +270,7 @@
             // Reflected texture is treated as ultimate plane.
             float reflectIntensity = 1.0;
             vec3 reflect = - 1.0 * vec3(0.0, 0.0, 1.0) + 2.0 * dot(n, vec3(0.0, 0.0, 1.0)) * n;
-            vec2 reflCoord = f_texcoord + (reflect.xy / reflect.z) * (FGdis * 3.0) + vec2( FGshiftLR * -2.0, 0.0)+vLight0.xy;
+            vec2 reflCoord = f_texcoord + (reflect.xy / reflect.z) * (FGdis * 3.0) + vec2( FGshiftLR * -2.0, 0.0)+ vLight0.xy ;
             vec4 reflColor = texture2D(uSamplerForeground, reflCoord) ;
             return reflColor.rgb * reflectIntensity;
         }
@@ -248,7 +282,7 @@
             // away from the surface.
 
             float reflectIntensity = 1.0;
-            vec2 reflCoord = f_texcoord + n.xy * (FGdis * 2.0);
+            vec2 reflCoord = f_texcoord + n.xy * (FGdis * 2.0) + vec2( FGshiftLR * -2.0, 0.0) ;
             vec4 reflColor = texture2D(uSamplerForeground, reflCoord) ;
             return reflColor.rgb * reflectIntensity;
         }
@@ -270,8 +304,8 @@
         vec3 fresnelBlend(vec3 n, vec3 refl, vec3 refr)
         {
             float cos = dot(n, vec3(0,0,1) );
-            return refl * (1.0 - cos) + refr * cos;
-            
+            //return refl * (1.0 - cos) + refr * cos;
+            return refl;
                
         }
 
@@ -286,8 +320,10 @@
             vec3 alphaControl = alphaControl();
             vec4 background = texture2D(uSamplerBackground, vec2(f_texcoord.s, f_texcoord.t) );
             vec3 backgroundColor = background.rgb;
-            vec3 refl = reflect(n);
+            vec3 refl = reflect2(n);
             vec3 refr = refract(n);
+            refl = refl * reflectIntensity * 2.0;
+            refr = refr * (1.0 - reflectIntensity) * 2.0;
             vec3 fresnel = fresnelBlend(n, refl, refr);
             
             float a;
@@ -308,18 +344,17 @@
             }
 */
             
-            a = diffuse4.a;
+            a = diffuse.a;
             
             vec3 finalColor = fresnel * (1.0 - a) + diffuse5.rgb * a;
             if (mirror == 1)
                 finalColor = refl;
             
             a = nn.a;
-            vec3 compBackground = backgroundColor * (1.0 - a) + finalColor * a;
+            vec3 compBackground = backgroundColor * (1.0 - a) + diffuse.rgb * a;
             
-            vec4 normalMap = texture2D(uSamplerNormal, vec2(f_texcoord.s, f_texcoord.t) );
             
-            gl_FragColor = vec4(compBackground, 1.0);
+            gl_FragColor = vec4(compBackground.rgb, 1.0);
             //gl_FragColor = vec4(userMouse.x+0.5, -userMouse.y+0.5, 0.0, 1.0);
 
             //gl_FragColor = vec4(f_texcoord.x, 1.0-f_texcoord.y, 0.0, 1.0);
@@ -553,7 +588,7 @@
                                                 <label>
                                                     <span class="h6 inlineBlock" >On</span>
                                                     <div class = "checkbox_container pull-right">
-                                                        <input type="checkbox" id = "lightSelect" checked>
+                                                        <input type="checkbox" id = "lightSelect">
                                                         <div class = "pseudoCheckbox"></div>
                                                     </div>
                                                 </label>
@@ -586,7 +621,7 @@
                                                 <label>
                                                     <span class="h6 inlineBlock" >Diffuse</span>
                                                     <div class = "checkbox_container pull-right">
-                                                        <input type="checkbox" checked>
+                                                        <input type="checkbox" >
                                                         <div class = "pseudoCheckbox"></div>
                                                     </div>
                                                 </label>
@@ -622,7 +657,7 @@
                                                 <label>
                                                     <span class="h6 inlineBlock" >On</span>
                                                     <div class = "checkbox_container pull-right">
-                                                        <input type="checkbox" id = "lightSelect" checked>
+                                                        <input type="checkbox" id = "lightSelect" >
                                                         <div class = "pseudoCheckbox"></div>
                                                     </div>
                                                 </label>
@@ -655,7 +690,7 @@
                                                 <label>
                                                     <span class="h6 inlineBlock" >Diffuse</span>
                                                     <div class = "checkbox_container pull-right">
-                                                        <input type="checkbox" checked>
+                                                        <input type="checkbox">
                                                         <div class = "pseudoCheckbox"></div>
                                                     </div>
                                                 </label>
@@ -681,12 +716,72 @@
                                             
                                         </div>
                                     </li>
-                                    <li class = "panel">
+                                    <li class = "panel" id = "lightPanel2">
                                         <a class = "myControlTitle myLightsTitle collapsed" data-toggle= "collapse" data-parent= " #accordion_Lights" href="#light2"> 
                                             LIGHT2
                                         </a>
                                         <div id = "light2" class= "lightBox inCollapse collapse" > 
-                                            asdf
+                                            <div class = "checkbox">
+                                                <label>
+                                                    <span class="h6 inlineBlock" >On</span>
+                                                    <div class = "checkbox_container pull-right">
+                                                        <input type="checkbox" id = "lightSelect" >
+                                                        <div class = "pseudoCheckbox"></div>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                            <div>
+                                                <span class="h6 inlineBlock"> Color </span>
+                                                <div class="pull-right">
+                                                     <input class="colorPicker" type="hidden" >
+                                                </div>
+                                            </div>
+                                            <div class="slider_container">
+                                                <span class="h6 inlineBlock"> Intensity </span>
+                                                <div class="pull-right">
+                                                    <input type="text" class="form-control mytextbox text-center" id="intensity_val">
+                                                </div>
+                                                <div class="slider_box">
+                                                    <input id="intensity_slider" data-slider-id='customSlider' type="text" />
+                                                </div>
+                                            </div>
+                                            <div class = "checkbox">
+                                                <label>
+                                                    <span class="h6 inlineBlock" >Specular</span>
+                                                    <div class = "checkbox_container pull-right">
+                                                        <input type="checkbox" id = "specSelect" >
+                                                        <div class = "pseudoCheckbox"></div>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                            <div class = "checkbox">
+                                                <label>
+                                                    <span class="h6 inlineBlock" >Diffuse</span>
+                                                    <div class = "checkbox_container pull-right">
+                                                        <input type="checkbox">
+                                                        <div class = "pseudoCheckbox"></div>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                            <div class = "checkbox">
+                                                <label>
+                                                    <span class="h6 inlineBlock" >Point Light</span>
+                                                    <div class = "checkbox_container pull-right">
+                                                        <input type="checkbox" id = "pointLightSelect" >
+                                                        <div class = "pseudoCheckbox"></div>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                            <div class="slider_container">
+                                                <span class="h6 inlineBlock"> Point Light Distance </span>
+                                                <div class="pull-right">
+                                                    <input type="text" class="form-control mytextbox text-center" id="pointLGTdis_val">
+                                                </div>
+                                                <div class="slider_box">
+                                                    <input id="pointLGTdis_slider" data-slider-id='customSlider' type="text" />
+                                                </div>
+                                            </div>
+                                            
                                         </div>
                                     </li>
                                 </ul>
@@ -822,9 +917,18 @@
                                     </div>
                                 </label>
                             </div>
+                            <div class="slider_container">
+                                <span class="h6 inlineBlock"> Intensity </span>
+                                <div class="pull-right">
+                                    <input type="text" class="form-control mytextbox text-center" id="refl_intensity_val">
+                                </div>
+                                <div class="slider_box">
+                                    <input id="refl_intensity_slider" data-slider-id='customSlider' type="text" />
+                                </div>
+                            </div>
                 	        <div class="imgbox_container">
-                	   	    <h6>Foreground image</h6>
-                	   	    <div>
+                	   	       <h6>Foreground image</h6>
+                	   	       <div>
                                     <div id = "container4" class="imgThumb_container">
                                         <div class="btn-file">
                                             <input type="file" id = "inputFileToLoad4" >
@@ -836,19 +940,19 @@
                             <div class="slider_container">
                                 <span class="h6 inlineBlock"> FG shift </span>
                                 <div class="pull-right">
-                                    <input type="text" class="form-control mytextbox text-center" id="refr_FGshiftLR_val">
+                                    <input type="text" class="form-control mytextbox text-center" id="refl_FGshiftLR_val">
                                 </div>
                                 <div class="slider_box">
-                                    <input id="refr_FGshiftLR_slider" data-slider-id='customSlider' type="text" />
+                                    <input id="refl_FGshiftLR_slider" data-slider-id='customSlider' type="text" />
                                 </div>
                             </div>
                             <div class="slider_container">
                                 <span class="h6 inlineBlock"> FG Distance </span>
                                 <div class="pull-right">
-                                    <input type="text" class="form-control mytextbox text-center" id="refr_FGdis_val">
+                                    <input type="text" class="form-control mytextbox text-center" id="refl_FGdis_val">
                                 </div>
                                 <div class="slider_box">
-                                    <input id="refr_FGdis_slider" data-slider-id='customSlider' type="text" />
+                                    <input id="refl_FGdis_slider" data-slider-id='customSlider' type="text" />
                                 </div>
                             </div>
                             <div class="slider_container">

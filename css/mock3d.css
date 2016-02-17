@@ -88,13 +88,18 @@ label{margin-bottom:0;}
   
   .main {
    width:100%;
-   padding: 20px calc(25% + 20px);
+   padding: 20px calc(25% + 10px);
   }
 }
 
 /*just for main_button*/
 @media (min-width: 950px) {
   .main_button{width:50%; }
+
+  .main {
+   padding: 20px calc(25% + 0px);
+  }
+
 }
 
 @media (min-width: 992px) {
