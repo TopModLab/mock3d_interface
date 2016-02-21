@@ -7,28 +7,28 @@ var mouseXY0 = [0.3, -0.3];     //default light
 var mouseXY1 = [-0.3, -0.1];     
 var mouseXY2 = [0.1, 0.3];  
 
+var lightsOnly = 0;
 
 var light0on = 1;
-var light1on = 1;
-var light2on = 1;
+var light1on = 0;
+var light2on = 0;
 
-var lightColor0 =[1.0, 0.0 ,0.0],
+var lightColor0 =[1.0, 1.0 ,1.0],
     lightColor1 =[0.0, 0.0 ,1.0],
     lightColor2 =[0.0, 1.0 ,0.0];
 
 var lightIntensity0 = 1.0,
-    lightIntensity1 = 0.7,
-    lightIntensity2 = 0.7;
+    lightIntensity1 = 1.0,
+    lightIntensity2 = 1.0;
 
-var pointLight0 = 0,
-    pointLight1 = 1,
-    pointLight2 = 1;
+var pointLight0dis = 0.5,
+    pointLight1dis = 0.5,
+    pointLight2dis = 0.5;
 
-var pointLight0dis = 0.1,
-    pointLight1dis = 0.1,
-    pointLight2dis = 0.1;
-    
-var showSpec0 = 0,
+var showDiffuse0 = 1,
+    showDiffuse1 = 0,
+    showDiffuse2 = 0;    
+var showSpec0 = 1,
     showSpec1 = 0,
     showSpec2 = 0;
 
@@ -55,11 +55,14 @@ var FGshiftLR = 0;
 
 var currentLightLoc;
 var mouse0Loc, mouse1Loc, mouse2Loc;
+
+var lightsOnlyLoc;
 var light0onLoc, light1onLoc, light2onLoc;
 var lightColor0Loc, lightColor1Loc, lightColor2Loc;
 var lightIntensity0Loc, lightIntensity1Loc, lightIntensity2Loc;
-var pointLight0Loc, pointLight1Loc, pointLight2Loc;
 var pointLight0disLoc, pointLight1disLoc, pointLight2disLoc;
+
+var showDiffuse0Loc, showDiffuse1Loc, showDiffuse2Loc;
 var showSpec0Loc, showSpec1Loc, showSpec2Loc;
 
 var styleBrightLoc, styleDarkLoc;
@@ -245,6 +248,8 @@ window.onload = function init()
     mouse1Loc = gl.getUniformLocation( program, "mouseXY1");
     mouse2Loc = gl.getUniformLocation( program, "mouseXY2");
     
+    lightsOnlyLoc = gl.getUniformLocation (program, "lightsOnly");
+
     lightColor0Loc = gl.getUniformLocation (program, "lightColor0");
     lightColor1Loc = gl.getUniformLocation (program, "lightColor1");
     lightColor2Loc = gl.getUniformLocation (program, "lightColor2");
@@ -257,14 +262,14 @@ window.onload = function init()
     light1onLoc = gl.getUniformLocation(program, "light1on");
     light2onLoc = gl.getUniformLocation(program, "light2on");
     
+    showDiffuse0Loc = gl.getUniformLocation( program, "showDiffuse0");
+    showDiffuse1Loc = gl.getUniformLocation( program, "showDiffuse1");
+    showDiffuse2Loc = gl.getUniformLocation( program, "showDiffuse2");
+    
     showSpec0Loc = gl.getUniformLocation( program, "showSpec0");
     showSpec1Loc = gl.getUniformLocation( program, "showSpec1");
     showSpec2Loc = gl.getUniformLocation( program, "showSpec2");
     
-    pointLight0Loc = gl.getUniformLocation( program, "pointLight0");
-    pointLight1Loc = gl.getUniformLocation( program, "pointLight1");
-    pointLight2Loc = gl.getUniformLocation( program, "pointLight2");
-
     pointLight0disLoc = gl.getUniformLocation( program, "pointLight0dis");
     pointLight1disLoc = gl.getUniformLocation( program, "pointLight1dis");
     pointLight2disLoc = gl.getUniformLocation( program, "pointLight2dis");
@@ -341,12 +346,22 @@ function render() {
     var mirrorElem = $('#mirrorSelect:checked');
     mirror = (mirrorElem.val())?1:0;
 
+    var lightsOnlyElem = $ ('#lightsOnlySelect:checked');
+    lightsOnly = (lightsOnlyElem.val())?1:0;
+
     var light0onElem = $ ('#lightPanel0 #lightSelect:checked');
     light0on = (light0onElem.val())?1:0;
     var light1onElem = $ ('#lightPanel1 #lightSelect:checked');
     light1on = (light1onElem.val())?1:0;
     var light2onElem = $ ('#lightPanel2 #lightSelect:checked');
     light2on = (light2onElem.val())?1:0;
+
+    var showDiffuse0Elem = $('#lightPanel0 #diffuseSelect:checked');
+    showDiffuse0 = (showDiffuse0Elem.val())?1:0;
+    var showDiffuse1Elem = $('#lightPanel1 #diffuseSelect:checked');
+    showDiffuse1 = (showDiffuse1Elem.val())?1:0;
+    var showDiffuse2Elem = $('#lightPanel2 #diffuseSelect:checked');
+    showDiffuse2 = (showDiffuse2Elem.val())?1:0;
 
     var showSpec0Elem = $('#lightPanel0 #specSelect:checked');
     showSpec0 = (showSpec0Elem.val())?1:0;
@@ -355,18 +370,12 @@ function render() {
     var showSpec2Elem = $('#lightPanel2 #specSelect:checked');
     showSpec2 = (showSpec2Elem.val())?1:0;
 
-    var pointLight0Elem = $('#lightPanel0 #pointLightSelect:checked');
-    pointLight0 = (pointLight0Elem.val())?1:0;
-    var pointLight1Elem = $('#lightPanel1 #pointLightSelect:checked');
-    pointLight1 = (pointLight1Elem.val())?1:0;
-    var pointLight2Elem = $('#lightPanel2 #pointLightSelect:checked');
-    pointLight2 = (pointLight2Elem.val())?1:0;
-
     gl.uniform1i(currentLightLoc, currentLight);
     gl.uniform2fv(mouse0Loc, flatten(mouseXY0));//use flatten() to extract data from JS Array, send it to WebGL functions
     gl.uniform2fv(mouse1Loc, flatten(mouseXY1));
     gl.uniform2fv(mouse2Loc, flatten(mouseXY2));
     
+    gl.uniform1i(lightsOnlyLoc, lightsOnly);
     gl.uniform1i(light0onLoc, light0on);
     gl.uniform1i(light1onLoc, light1on);
     gl.uniform1i(light2onLoc, light2on);
@@ -377,12 +386,12 @@ function render() {
     gl.uniform1f(lightIntensity1Loc, lightIntensity1);
     gl.uniform1f(lightIntensity2Loc, lightIntensity2);
     
+    gl.uniform1i(showDiffuse0Loc, showDiffuse0);
+    gl.uniform1i(showDiffuse1Loc, showDiffuse1);
+    gl.uniform1i(showDiffuse2Loc, showDiffuse2);
     gl.uniform1i(showSpec0Loc, showSpec0);
     gl.uniform1i(showSpec1Loc, showSpec1);
     gl.uniform1i(showSpec2Loc, showSpec2);
-    gl.uniform1i(pointLight0Loc, pointLight0);
-    gl.uniform1i(pointLight1Loc, pointLight1);
-    gl.uniform1i(pointLight2Loc, pointLight2);
     gl.uniform1f(pointLight0disLoc, pointLight0dis);
     gl.uniform1f(pointLight1disLoc, pointLight1dis);
     gl.uniform1f(pointLight2disLoc, pointLight2dis);

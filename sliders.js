@@ -6,6 +6,11 @@ var mirrorElem = $('#mirrorSelect');
 initCheckbox(mirror, mirrorElem);
 
 
+
+
+var lightsOnlyElem = $ ('#lightsOnlySelect');
+initCheckbox(lightsOnly, lightsOnlyElem);
+
 var light0onElem = $ ('#lightPanel0 #lightSelect');
 initCheckbox(light0on, light0onElem);
 
@@ -15,6 +20,14 @@ initCheckbox(light1on, light1onElem);
 var light2onElem = $ ('#lightPanel2 #lightSelect');
 initCheckbox(light2on, light2onElem);
 
+var showDiffuse0Elem = $('#lightPanel0 #diffuseSelect');
+initCheckbox(showDiffuse0, showDiffuse0Elem);
+
+var showDiffuse1Elem = $('#lightPanel1 #diffuseSelect');
+initCheckbox(showDiffuse1, showDiffuse1Elem);
+
+var showDiffuse2Elem = $('#lightPanel2 #diffuseSelect');
+initCheckbox(showDiffuse2, showDiffuse2Elem);
 
 var showSpec0Elem = $('#lightPanel0 #specSelect');
 initCheckbox(showSpec0, showSpec0Elem);
@@ -26,16 +39,7 @@ var showSpec2Elem = $('#lightPanel2 #specSelect');
 initCheckbox(showSpec2, showSpec2Elem);
 
 
-var pointLight0Elem = $('#lightPanel0 #pointLightSelect');
-initCheckbox(pointLight0, pointLight0Elem);
 
-var pointLight1Elem = $('#lightPanel1 #pointLightSelect');
-initCheckbox(pointLight1, pointLight1Elem);
-
-var pointLight2Elem = $('#lightPanel2 #pointLightSelect');
-initCheckbox(pointLight2, pointLight2Elem);
-
-    
 /*
 if ($(this).is(':checked')) {
 $(this).parent().fadeTo('slow', 0.5);
@@ -87,20 +91,26 @@ bindSliderValParam (alphaInBlue_slider, alphaInBlue_val, "alphaB");
 $('#lightPanel0').on('shown.bs.collapse', function(){
     currentLight = 0;
     console.log("current: " + currentLight);
+}).on('hidden.bs.collapse', function(){
+    currentLight = null;
 })
 
 $('#lightPanel1').on('shown.bs.collapse', function(){
     currentLight = 1;
      console.log("current: " + currentLight);
+}).on('hidden.bs.collapse', function(){
+    currentLight = null;
 })
 
 $('#lightPanel2').on('shown.bs.collapse', function(){
     currentLight = 2;
      console.log("current: " + currentLight);
+}).on('hidden.bs.collapse', function(){
+    currentLight = null;
 })
 
 
-$("#lightPanel0 .colorPicker").attr("value", "#ff0000");
+$("#lightPanel0 .colorPicker").attr("value", "#ffffff");
 $("#lightPanel1 .colorPicker").attr("value", "#0000ff");
 $("#lightPanel2 .colorPicker").attr("value", "#00ff00");
 
@@ -232,6 +242,8 @@ $('.colorPicker').each( function() {
                                 lightColor2[1] =rgbObject.g / 255;
                                 lightColor2[2] =rgbObject.b / 255;
                             }
+
+                            //add border if it is white#ffffff;
                             var addBorderElem = $(this).parent().find(".minicolors-swatch-color");
                             if (value =="#ffffff")
                             {
