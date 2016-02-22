@@ -161,15 +161,6 @@ label{margin-bottom:0;}
 }
 
 
-.btn-addLight input{padding:3px 12px; 
-	color:#710000; border: solid 1px #B58686;
-  -webkit-transition: all 0.4s;
-  transition: all 0.4s;
-	
-	}
-.btn-addLight input:hover{color:#500000; border: solid 1px #710000;
-	}
-
 
 .myAccordion{
 	list-style:none;
@@ -228,6 +219,18 @@ label{margin-bottom:0;}
 }
 
 
+#btn_addLight {
+  padding:3px 12px; 
+  color:#710000; border: solid 1px #B58686;
+  -webkit-transition: all 0.4s;
+  transition: all 0.4s;
+  margin-top:10px;
+  
+  }
+#btn_addLight:hover{color:#500000; border: solid 1px #710000;
+  }
+
+
 #lights_container{
 	margin: 20px 0px;
 	margin-bottom: -5px;
@@ -240,6 +243,11 @@ label{margin-bottom:0;}
 #accordion_Lights .panel .myLightsTitle{
 	background:#710000;
 	color:#fff;
+}
+
+#accordion_Lights .panel .myLightsTitle:hover{
+  background:#999;
+  color:#fff;
 }
 
 #accordion_Lights .panel .myLightsTitle .destroy{
@@ -258,12 +266,14 @@ label{margin-bottom:0;}
 }
 #accordion_Lights .panel .myLightsTitle:hover .destroy{
   display: block;
+  color:#666;
 }
 #accordion_Lights .panel .myLightsTitle .destroy:hover{
   text-shadow: 0 0 1px #000,
          0 0 10px rgba(199, 107, 107, 0.8);
   -webkit-transform: scale(1.3);
   transform: scale(1.3);
+  color:#500000;
 }
 
 #accordion_Lights .panel .myLightsTitle .destroy:before{

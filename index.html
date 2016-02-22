@@ -25,7 +25,7 @@
     <link href="css/mock3d.css" rel="stylesheet">
 
     <script id="vertex-shader" type="x-shader/x-vertex">
-        #define max_lights 10
+        #define max_lights 20
 
         attribute vec4 vPosition;
         attribute vec3 vNormal;
@@ -69,7 +69,7 @@
     </script>
 
     <script id="fragment-shader" type="x-shader/x-fragment">
-        #define max_lights 10
+        #define max_lights 20
 
         precision mediump float;
 
@@ -518,191 +518,16 @@
                                     </div>
                                 </label>
                             </div>
-                            <div class="btn_container btn-addLight">
+
+                            <!-- <div class="btn_container btn-addLight">
                                 <input type = "submit" class ="btn btn-default btn-block " value="Add Light">
+                            </div> -->
+                            <div class="btn_container">
+                                <button id = "btn_addLight" class ="btn btn-default btn-block" >Add Light</button>
                             </div>
                             <div id = "lights_container">
                                 <ul class="myAccordion" id = "accordion_Lights">
-                                    <li class = "panel" id = "lightPanel0">
-                                        <a class = "myControlTitle myLightsTitle" data-toggle= "collapse" data-parent= " #accordion_Lights" href="#light0"> 
-                                            DEFAULT LIGHT 
-                                        </a>
-                                        <div id = "light0" class= "lightBox inCollapse collapse in" > 
-                                            <div class = "checkbox">
-                                                <label>
-                                                    <span class="h6 inlineBlock" >On</span>
-                                                    <div class = "checkbox_container pull-right">
-                                                        <input type="checkbox" id = "lightSelect">
-                                                        <div class = "pseudoCheckbox"></div>
-                                                    </div>
-                                                </label>
-                                            </div>
-                                            <div>
-                                                <span class="h6 inlineBlock"> Color </span>
-                                                <div class="pull-right">
-                                                     <input class="colorPicker" type="hidden" >
-                                                </div>
-                                            </div>
-                                            <div class="slider_container">
-                                                <span class="h6 inlineBlock"> Intensity </span>
-                                                <div class="pull-right">
-                                                    <input type="text" class="form-control mytextbox text-center" id="intensity_val">
-                                                </div>
-                                                <div class="slider_box">
-                                                    <input id="intensity_slider" data-slider-id='customSlider' type="text" />
-                                                </div>
-                                            </div>
-                                            <div class = "checkbox">
-                                                <label>
-                                                    <span class="h6 inlineBlock" >Diffuse</span>
-                                                    <div class = "checkbox_container pull-right">
-                                                        <input type="checkbox" id = "diffuseSelect">
-                                                        <div class = "pseudoCheckbox"></div>
-                                                    </div>
-                                                </label>
-                                            </div>
-                                            <div class = "checkbox">
-                                                <label>
-                                                    <span class="h6 inlineBlock" >Specular</span>
-                                                    <div class = "checkbox_container pull-right">
-                                                        <input type="checkbox" id = "specSelect" >
-                                                        <div class = "pseudoCheckbox"></div>
-                                                    </div>
-                                                </label>
-                                            </div>
-                                            <div class="slider_container">
-                                                <span class="h6 inlineBlock"> Light Distance </span>
-                                                <div class="pull-right">
-                                                    <input type="text" class="form-control mytextbox text-center" id="pointLGTdis_val">
-                                                </div>
-                                                <div class="slider_box">
-                                                    <input id="pointLGTdis_slider" data-slider-id='customSlider' type="text" />
-                                                </div>
-                                            </div>
-                                            
-                                            
-                                        </div>
-                                    </li>
-                                    <li class = "panel" id = "lightPanel1">
-                                        <a class = "myControlTitle myLightsTitle collapsed" data-toggle= "collapse" data-parent= " #accordion_Lights" href="#light1"> 
-                                            <div class = "destroy" ></div>
-                                            LIGHT1
-                                        </a>
-                                        <div id = "light1" class= "lightBox inCollapse collapse" > 
-                                            <div class = "checkbox">
-                                                <label>
-                                                    <span class="h6 inlineBlock" >On</span>
-                                                    <div class = "checkbox_container pull-right">
-                                                        <input type="checkbox" id = "lightSelect" >
-                                                        <div class = "pseudoCheckbox"></div>
-                                                    </div>
-                                                </label>
-                                            </div>
-                                            <div>
-                                                <span class="h6 inlineBlock"> Color </span>
-                                                <div class="pull-right">
-                                                     <input class="colorPicker" type="hidden" >
-                                                </div>
-                                            </div>
-                                            <div class="slider_container">
-                                                <span class="h6 inlineBlock"> Intensity </span>
-                                                <div class="pull-right">
-                                                    <input type="text" class="form-control mytextbox text-center" id="intensity_val">
-                                                </div>
-                                                <div class="slider_box">
-                                                    <input id="intensity_slider" data-slider-id='customSlider' type="text" />
-                                                </div>
-                                            </div>
-                                            <div class = "checkbox">
-                                                <label>
-                                                    <span class="h6 inlineBlock" >Diffuse</span>
-                                                    <div class = "checkbox_container pull-right">
-                                                        <input type="checkbox" id = "diffuseSelect">
-                                                        <div class = "pseudoCheckbox"></div>
-                                                    </div>
-                                                </label>
-                                            </div>
-                                            <div class = "checkbox">
-                                                <label>
-                                                    <span class="h6 inlineBlock" >Specular</span>
-                                                    <div class = "checkbox_container pull-right">
-                                                        <input type="checkbox" id = "specSelect" >
-                                                        <div class = "pseudoCheckbox"></div>
-                                                    </div>
-                                                </label>
-                                            </div>
-                                            <div class="slider_container">
-                                                <span class="h6 inlineBlock"> Light Distance </span>
-                                                <div class="pull-right">
-                                                    <input type="text" class="form-control mytextbox text-center" id="pointLGTdis_val">
-                                                </div>
-                                                <div class="slider_box">
-                                                    <input id="pointLGTdis_slider" data-slider-id='customSlider' type="text" />
-                                                </div>
-                                            </div>
-                                            
-                                        </div>
-                                    </li>
-                                    <li class = "panel" id = "lightPanel2">
-                                        <a class = "myControlTitle myLightsTitle collapsed" data-toggle= "collapse" data-parent= " #accordion_Lights" href="#light2"> 
-                                            <div class = "destroy" ></div>
-                                            LIGHT2
-                                        </a>
-                                        <div id = "light2" class= "lightBox inCollapse collapse" > 
-                                            <div class = "checkbox">
-                                                <label>
-                                                    <span class="h6 inlineBlock" >On</span>
-                                                    <div class = "checkbox_container pull-right">
-                                                        <input type="checkbox" id = "lightSelect" >
-                                                        <div class = "pseudoCheckbox"></div>
-                                                    </div>
-                                                </label>
-                                            </div>
-                                            <div>
-                                                <span class="h6 inlineBlock"> Color </span>
-                                                <div class="pull-right">
-                                                     <input class="colorPicker" type="hidden" >
-                                                </div>
-                                            </div>
-                                            <div class="slider_container">
-                                                <span class="h6 inlineBlock"> Intensity </span>
-                                                <div class="pull-right">
-                                                    <input type="text" class="form-control mytextbox text-center" id="intensity_val">
-                                                </div>
-                                                <div class="slider_box">
-                                                    <input id="intensity_slider" data-slider-id='customSlider' type="text" />
-                                                </div>
-                                            </div>
-                                            <div class = "checkbox">
-                                                <label>
-                                                    <span class="h6 inlineBlock" >Diffuse</span>
-                                                    <div class = "checkbox_container pull-right">
-                                                        <input type="checkbox" id = "diffuseSelect">
-                                                        <div class = "pseudoCheckbox"></div>
-                                                    </div>
-                                                </label>
-                                            </div>
-                                            <div class = "checkbox">
-                                                <label>
-                                                    <span class="h6 inlineBlock" >Specular</span>
-                                                    <div class = "checkbox_container pull-right">
-                                                        <input type="checkbox" id = "specSelect" >
-                                                        <div class = "pseudoCheckbox"></div>
-                                                    </div>
-                                                </label>
-                                            </div>
-                                            <div class="slider_container">
-                                                <span class="h6 inlineBlock"> Light Distance </span>
-                                                <div class="pull-right">
-                                                    <input type="text" class="form-control mytextbox text-center" id="pointLGTdis_val">
-                                                </div>
-                                                <div class="slider_box">
-                                                    <input id="pointLGTdis_slider" data-slider-id='customSlider' type="text" />
-                                                </div>
-                                            </div>
-                                            
-                                        </div>
-                                    </li>
+                                    
                                 </ul>
                             </div>
             	        </div>	
@@ -909,6 +734,136 @@
     </div>
 
 
+
+    <!-- default light templete -->
+    <script type="text/template" data-template="defaultLight">
+        <li class = "panel" id = "lightPanel0">
+            <a class = "myControlTitle myLightsTitle collapsed" data-toggle= "collapse" data-parent= " #accordion_Lights" href="#light0"> 
+                DEFAULT LIGHT 
+            </a>
+            <div id = "light0" class= "lightBox inCollapse collapse" > 
+                <div class = "checkbox">
+                    <label>
+                        <span class="h6 inlineBlock" >On</span>
+                        <div class = "checkbox_container pull-right">
+                            <input type="checkbox" id = "lightSelect">
+                            <div class = "pseudoCheckbox"></div>
+                        </div>
+                    </label>
+                </div>
+                <div>
+                    <span class="h6 inlineBlock"> Color </span>
+                    <div class="pull-right">
+                         <input class="colorPicker" type="hidden" >
+                    </div>
+                </div>
+                <div class="slider_container">
+                    <span class="h6 inlineBlock"> Intensity </span>
+                    <div class="pull-right">
+                        <input type="text" class="form-control mytextbox text-center" id="intensity_val">
+                    </div>
+                    <div class="slider_box">
+                        <input id="intensity_slider" data-slider-id='customSlider' type="text" />
+                    </div>
+                </div>
+                <div class = "checkbox">
+                    <label>
+                        <span class="h6 inlineBlock" >Diffuse</span>
+                        <div class = "checkbox_container pull-right">
+                            <input type="checkbox" id = "diffuseSelect">
+                            <div class = "pseudoCheckbox"></div>
+                        </div>
+                    </label>
+                </div>
+                <div class = "checkbox">
+                    <label>
+                        <span class="h6 inlineBlock" >Specular</span>
+                        <div class = "checkbox_container pull-right">
+                            <input type="checkbox" id = "specSelect" >
+                            <div class = "pseudoCheckbox"></div>
+                        </div>
+                    </label>
+                </div>
+                <div class="slider_container">
+                    <span class="h6 inlineBlock"> Light Distance </span>
+                    <div class="pull-right">
+                        <input type="text" class="form-control mytextbox text-center" id="pointLGTdis_val">
+                    </div>
+                    <div class="slider_box">
+                        <input id="pointLGTdis_slider" data-slider-id='customSlider' type="text" />
+                    </div>
+                </div>
+                
+                
+            </div>
+        </li>
+    </script>
+
+    <!-- light templete -->
+    <script type="text/template" data-template="light">
+        <li class = "panel" data-id ="{{id}}" id = "lightPanel{{id}}">
+            <a class = "myControlTitle myLightsTitle collapsed" data-toggle= "collapse" data-parent= " #accordion_Lights" href="#light{{id}}"> 
+                <div class = "destroy" ></div>
+                LIGHT{{id}}
+            </a>
+            <div id = "light{{id}}" class= "lightBox inCollapse collapse" > 
+                <div class = "checkbox">
+                    <label>
+                        <span class="h6 inlineBlock" >On</span>
+                        <div class = "checkbox_container pull-right">
+                            <input type="checkbox" id = "lightSelect" >
+                            <div class = "pseudoCheckbox"></div>
+                        </div>
+                    </label>
+                </div>
+                <div>
+                    <span class="h6 inlineBlock"> Color </span>
+                    <div class="pull-right">
+                         <input class="colorPicker" type="hidden" >
+                    </div>
+                </div>
+                <div class="slider_container">
+                    <span class="h6 inlineBlock"> Intensity </span>
+                    <div class="pull-right">
+                        <input type="text" class="form-control mytextbox text-center" id="intensity_val">
+                    </div>
+                    <div class="slider_box">
+                        <input id="intensity_slider" data-slider-id='customSlider' type="text" />
+                    </div>
+                </div>
+                <div class = "checkbox">
+                    <label>
+                        <span class="h6 inlineBlock" >Diffuse</span>
+                        <div class = "checkbox_container pull-right">
+                            <input type="checkbox" id = "diffuseSelect">
+                            <div class = "pseudoCheckbox"></div>
+                        </div>
+                    </label>
+                </div>
+                <div class = "checkbox">
+                    <label>
+                        <span class="h6 inlineBlock" >Specular</span>
+                        <div class = "checkbox_container pull-right">
+                            <input type="checkbox" id = "specSelect" >
+                            <div class = "pseudoCheckbox"></div>
+                        </div>
+                    </label>
+                </div>
+                <div class="slider_container">
+                    <span class="h6 inlineBlock"> Light Distance </span>
+                    <div class="pull-right">
+                        <input type="text" class="form-control mytextbox text-center" id="pointLGTdis_val">
+                    </div>
+                    <div class="slider_box">
+                        <input id="pointLGTdis_slider" data-slider-id='customSlider' type="text" />
+                    </div>
+                </div>
+                
+            </div>
+        </li>
+
+    </script>
+
     <!-- Bootstrap core JavaScript  ================================================== -->
     <script src="js/bootstrap.min.js"></script> 
     <script src="js/bootstrap-slider.js"></script>
@@ -923,7 +878,7 @@
     <script type="text/javascript" src="dragndrop.js"></script>
     <script type="text/javascript" src="cube.js"></script>
     <script type="text/javascript" src="sliders.js"></script> 
-   
+    <script src="addLight.js"></script>
     
   </body>
 </html>

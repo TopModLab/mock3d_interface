@@ -1,45 +1,33 @@
 /****************** For SliderBar Parameter ******************/
 var mouseFlag = 0;
 var currentLight = 0;
-var lightNum = 3;
+var lightNum = 1;
 
 var mouseXY = [];
 mouseXY[0] = [0.3, -0.3];     //default light
-mouseXY[1] = [-0.3, -0.1];     
-mouseXY[2] = [0.1, 0.3];  
+  
 
 var lightsOnly = 0;
 
 var lightOn = [];
 lightOn[0] = 1;
-lightOn[1] = 1;
-lightOn[2] = 0;
+
 
 var lightColor = [];
 lightColor[0] =[1.0, 1.0 ,1.0];
-lightColor[1] =[0.0, 1.0 ,0.0];
-lightColor[2] =[0.0, 0.0 ,1.0];
+
 
 var lightIntensity = [];
 lightIntensity[0] = 1.0;
-lightIntensity[1] = 1.0;
-lightIntensity[2] = 1.0;
 
 var pointLightDis = [];
 pointLightDis[0] = 0.5;
-pointLightDis[1] = 0.5;
-pointLightDis[2] = 0.5;
-
 
 var showDiffuse = [];
-showDiffuse[0] = 1,
-showDiffuse[1] = 0,
-showDiffuse[2] = 0; 
+showDiffuse[0] = 1;
 
 var showSpec = [];   
-showSpec[0] = 1,
-showSpec[1] = 0,
-showSpec[2] = 0;
+showSpec[0] = 1;
 
 
 
@@ -110,18 +98,16 @@ window.onload = function init()
     gl = WebGLUtils.setupWebGL( canvas );
     if ( !gl ) { alert( "WebGL isn't available" ); }
 
-
-
     /* MOUSE STUFF */
 
     var context = canvas.getContext('2d');
     
     canvas.addEventListener("mousedown", function(evt){
-        
+    
     }, false);
     canvas.addEventListener("mousemove", function(evt){
         if(mouseFlag === 0){
-            setMousePos(canvas, evt);
+            setMousePos(canvas, evt, 0);//add default light event;
         }
 
     }, false);
@@ -129,35 +115,6 @@ window.onload = function init()
         mouseFlag = (mouseFlag ==0)?1:0;
     }, false);
     
-    function setMousePos(canvas, evt){
-        if (currentLight == 0)
-        {
-            mouseXY[0][0] = getMousePos(canvas, evt).x;
-            mouseXY[0][1] = getMousePos(canvas, evt).y;
-            console.log("0:"+mouseXY[0][0]+" "+mouseXY[0][1]);
-        }
-        else if(currentLight == 1)
-        {
-            mouseXY[1][0] = getMousePos(canvas, evt).x;
-            mouseXY[1][1] = getMousePos(canvas, evt).y;
-            console.log("1:"+mouseXY[1][0]+" "+mouseXY[1][1]);
-        }
-        else if(currentLight == 2)
-        {
-            mouseXY[2][0] = getMousePos(canvas, evt).x;
-            mouseXY[2][1] = getMousePos(canvas, evt).y;
-            console.log("2:"+mouseXY[2][0]+" "+mouseXY[2][1]);
-        }
-
-    }
-
-    function getMousePos(canvas, evt) {
-        var rect = canvas.getBoundingClientRect();
-        return {
-            x: (evt.clientX - rect.left)/(rect.right - rect.left) - 0.5,
-            y: (evt.clientY - rect.top)/(rect.bottom - rect.top) - 0.5
-        };
-    }
     /***************/
 
 
@@ -333,6 +290,26 @@ function handleTextureLoaded(image, texture) {
     
 }
 
+
+function setMousePos(canvas, evt, i){
+    
+    if (currentLight == i)
+    {
+        mouseXY[i][0] = getMousePos(canvas, evt).x;
+        mouseXY[i][1] = getMousePos(canvas, evt).y;
+        console.log(i+": "+mouseXY[i][0]+" "+mouseXY[i][1]);
+    }
+    
+}
+
+function getMousePos(canvas, evt) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+        x: (evt.clientX - rect.left)/(rect.right - rect.left) - 0.5,
+        y: (evt.clientY - rect.top)/(rect.bottom - rect.top) - 0.5
+    };
+}
+
 function render() {
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT );
 
@@ -343,32 +320,26 @@ function render() {
     var lightsOnlyElem = $ ('#lightsOnlySelect:checked');
     lightsOnly = (lightsOnlyElem.val())?1:0;
 
-    var light0onElem = $ ('#lightPanel0 #lightSelect:checked');
-    lightOn[0] = (light0onElem.val())?1:0;
-    var light1onElem = $ ('#lightPanel1 #lightSelect:checked');
-    lightOn[1] = (light1onElem.val())?1:0;
-    var light2onElem = $ ('#lightPanel2 #lightSelect:checked');
-    lightOn[2] = (light2onElem.val())?1:0;
-
-    var showDiffuse0Elem = $('#lightPanel0 #diffuseSelect:checked');
-    showDiffuse[0] = (showDiffuse0Elem.val())?1:0;
-    var showDiffuse1Elem = $('#lightPanel1 #diffuseSelect:checked');
-    showDiffuse[1] = (showDiffuse1Elem.val())?1:0;
-    var showDiffuse2Elem = $('#lightPanel2 #diffuseSelect:checked');
-    showDiffuse[2] = (showDiffuse2Elem.val())?1:0;
-
-    var showSpec0Elem = $('#lightPanel0 #specSelect:checked');
-    showSpec[0] = (showSpec0Elem.val())?1:0;
-    var showSpec1Elem = $('#lightPanel1 #specSelect:checked');
-    showSpec[1] = (showSpec1Elem.val())?1:0;
-    var showSpec2Elem = $('#lightPanel2 #specSelect:checked');
-    showSpec[2] = (showSpec2Elem.val())?1:0;
-
+    for (var i = 0; i < lightNum ; i++)
+    {
+        var checkboxName_lightOn = '#lightPanel' + i + ' #lightSelect:checked';
+        var lightOnElem = $ (checkboxName_lightOn);
+        lightOn[i] = (lightOnElem.val())?1:0;
+        
+        var checkboxName_showDiffuse = '#lightPanel' + i + ' #diffuseSelect:checked';
+        var showDiffuseElem = $(checkboxName_showDiffuse);
+        showDiffuse[i] = (showDiffuseElem.val())?1:0;
+        
+        var checkboxName_showSpec = '#lightPanel' + i + ' #specSelect:checked';
+        var showSpecElem = $(checkboxName_showSpec);
+        showSpec[i] = (showSpecElem.val())?1:0;
+        
+    }
+    
     gl.uniform1i(currentLightLoc, currentLight);
     gl.uniform1f(lightNumLoc, lightNum);
 
     gl.uniform2fv(mouseLoc, flatten(mouseXY));//use flatten() to extract data from JS Array, send it to WebGL functions
-    
     
     gl.uniform1i(lightsOnlyLoc, lightsOnly);
     gl.uniform1iv(lightOnLoc, lightOn);
