@@ -1,36 +1,45 @@
 /****************** For SliderBar Parameter ******************/
 var mouseFlag = 0;
 var currentLight = 0;
+var lightNum = 3;
 
-
-var mouseXY0 = [0.3, -0.3];     //default light
-var mouseXY1 = [-0.3, -0.1];     
-var mouseXY2 = [0.1, 0.3];  
+var mouseXY = [];
+mouseXY[0] = [0.3, -0.3];     //default light
+mouseXY[1] = [-0.3, -0.1];     
+mouseXY[2] = [0.1, 0.3];  
 
 var lightsOnly = 0;
 
-var light0on = 1;
-var light1on = 0;
-var light2on = 0;
+var lightOn = [];
+lightOn[0] = 1;
+lightOn[1] = 1;
+lightOn[2] = 0;
 
-var lightColor0 =[1.0, 1.0 ,1.0],
-    lightColor1 =[0.0, 0.0 ,1.0],
-    lightColor2 =[0.0, 1.0 ,0.0];
+var lightColor = [];
+lightColor[0] =[1.0, 1.0 ,1.0];
+lightColor[1] =[0.0, 1.0 ,0.0];
+lightColor[2] =[0.0, 0.0 ,1.0];
 
-var lightIntensity0 = 1.0,
-    lightIntensity1 = 1.0,
-    lightIntensity2 = 1.0;
+var lightIntensity = [];
+lightIntensity[0] = 1.0;
+lightIntensity[1] = 1.0;
+lightIntensity[2] = 1.0;
 
-var pointLight0dis = 0.5,
-    pointLight1dis = 0.5,
-    pointLight2dis = 0.5;
+var pointLightDis = [];
+pointLightDis[0] = 0.5;
+pointLightDis[1] = 0.5;
+pointLightDis[2] = 0.5;
 
-var showDiffuse0 = 1,
-    showDiffuse1 = 0,
-    showDiffuse2 = 0;    
-var showSpec0 = 1,
-    showSpec1 = 0,
-    showSpec2 = 0;
+
+var showDiffuse = [];
+showDiffuse[0] = 1,
+showDiffuse[1] = 0,
+showDiffuse[2] = 0; 
+
+var showSpec = [];   
+showSpec[0] = 1,
+showSpec[1] = 0,
+showSpec[2] = 0;
 
 
 
@@ -54,16 +63,17 @@ var FGshiftLR = 0;
 
 
 var currentLightLoc;
-var mouse0Loc, mouse1Loc, mouse2Loc;
+var lightNumLoc;
+var mouseLoc;;//, mouse1Loc, mouse2Loc;
 
 var lightsOnlyLoc;
-var light0onLoc, light1onLoc, light2onLoc;
-var lightColor0Loc, lightColor1Loc, lightColor2Loc;
-var lightIntensity0Loc, lightIntensity1Loc, lightIntensity2Loc;
-var pointLight0disLoc, pointLight1disLoc, pointLight2disLoc;
+var lightOn;
+var lightColorLoc;
+var lightIntensityLoc;
+var pointLightDisLoc;
 
-var showDiffuse0Loc, showDiffuse1Loc, showDiffuse2Loc;
-var showSpec0Loc, showSpec1Loc, showSpec2Loc;
+var showDiffuseLoc;
+var showSpecLoc;
 
 var styleBrightLoc, styleDarkLoc;
 var alphaRLoc, alphaGLoc, alphaBLoc;
@@ -122,21 +132,21 @@ window.onload = function init()
     function setMousePos(canvas, evt){
         if (currentLight == 0)
         {
-            mouseXY0[0] = getMousePos(canvas, evt).x;
-            mouseXY0[1] = getMousePos(canvas, evt).y;
-            console.log("0:"+mouseXY0[0]+" "+mouseXY0[1]);
+            mouseXY[0][0] = getMousePos(canvas, evt).x;
+            mouseXY[0][1] = getMousePos(canvas, evt).y;
+            console.log("0:"+mouseXY[0][0]+" "+mouseXY[0][1]);
         }
         else if(currentLight == 1)
         {
-            mouseXY1[0] = getMousePos(canvas, evt).x;
-            mouseXY1[1] = getMousePos(canvas, evt).y;
-            console.log("1:"+mouseXY1[0]+" "+mouseXY1[1]);
+            mouseXY[1][0] = getMousePos(canvas, evt).x;
+            mouseXY[1][1] = getMousePos(canvas, evt).y;
+            console.log("1:"+mouseXY[1][0]+" "+mouseXY[1][1]);
         }
         else if(currentLight == 2)
         {
-            mouseXY2[0] = getMousePos(canvas, evt).x;
-            mouseXY2[1] = getMousePos(canvas, evt).y;
-            console.log("2:"+mouseXY2[0]+" "+mouseXY2[1]);
+            mouseXY[2][0] = getMousePos(canvas, evt).x;
+            mouseXY[2][1] = getMousePos(canvas, evt).y;
+            console.log("2:"+mouseXY[2][0]+" "+mouseXY[2][1]);
         }
 
     }
@@ -244,36 +254,19 @@ window.onload = function init()
 
 
     currentLightLoc = gl.getUniformLocation (program, "currentLight");
-    mouse0Loc = gl.getUniformLocation( program, "mouseXY0");
-    mouse1Loc = gl.getUniformLocation( program, "mouseXY1");
-    mouse2Loc = gl.getUniformLocation( program, "mouseXY2");
+    lightNumLoc = gl.getUniformLocation (program, "lightNum");
+    mouseLoc = gl.getUniformLocation( program, "mouseXY");
     
     lightsOnlyLoc = gl.getUniformLocation (program, "lightsOnly");
 
-    lightColor0Loc = gl.getUniformLocation (program, "lightColor0");
-    lightColor1Loc = gl.getUniformLocation (program, "lightColor1");
-    lightColor2Loc = gl.getUniformLocation (program, "lightColor2");
     
-    lightIntensity0Loc = gl.getUniformLocation (program, "lightIntensity0");
-    lightIntensity1Loc = gl.getUniformLocation (program, "lightIntensity1");
-    lightIntensity2Loc = gl.getUniformLocation (program, "lightIntensity2");
+    lightOnLoc = gl.getUniformLocation(program, "lightOn");
+    lightColorLoc = gl.getUniformLocation (program, "lightColor");
+    lightIntensityLoc = gl.getUniformLocation (program, "lightIntensity");
+    showDiffuseLoc = gl.getUniformLocation( program, "showDiffuse");
+    showSpecLoc = gl.getUniformLocation( program, "showSpec");
+    pointLightDisLoc = gl.getUniformLocation( program, "pointLightDis");
     
-    light0onLoc = gl.getUniformLocation(program, "light0on");
-    light1onLoc = gl.getUniformLocation(program, "light1on");
-    light2onLoc = gl.getUniformLocation(program, "light2on");
-    
-    showDiffuse0Loc = gl.getUniformLocation( program, "showDiffuse0");
-    showDiffuse1Loc = gl.getUniformLocation( program, "showDiffuse1");
-    showDiffuse2Loc = gl.getUniformLocation( program, "showDiffuse2");
-    
-    showSpec0Loc = gl.getUniformLocation( program, "showSpec0");
-    showSpec1Loc = gl.getUniformLocation( program, "showSpec1");
-    showSpec2Loc = gl.getUniformLocation( program, "showSpec2");
-    
-    pointLight0disLoc = gl.getUniformLocation( program, "pointLight0dis");
-    pointLight1disLoc = gl.getUniformLocation( program, "pointLight1dis");
-    pointLight2disLoc = gl.getUniformLocation( program, "pointLight2dis");
-
 
     styleBrightLoc = gl.getUniformLocation( program, "styleBright");
     styleDarkLoc = gl.getUniformLocation( program, "styleDark");
@@ -343,6 +336,7 @@ function handleTextureLoaded(image, texture) {
 function render() {
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT );
 
+    //console.log(lightOn[0]);
     var mirrorElem = $('#mirrorSelect:checked');
     mirror = (mirrorElem.val())?1:0;
 
@@ -350,51 +344,40 @@ function render() {
     lightsOnly = (lightsOnlyElem.val())?1:0;
 
     var light0onElem = $ ('#lightPanel0 #lightSelect:checked');
-    light0on = (light0onElem.val())?1:0;
+    lightOn[0] = (light0onElem.val())?1:0;
     var light1onElem = $ ('#lightPanel1 #lightSelect:checked');
-    light1on = (light1onElem.val())?1:0;
+    lightOn[1] = (light1onElem.val())?1:0;
     var light2onElem = $ ('#lightPanel2 #lightSelect:checked');
-    light2on = (light2onElem.val())?1:0;
+    lightOn[2] = (light2onElem.val())?1:0;
 
     var showDiffuse0Elem = $('#lightPanel0 #diffuseSelect:checked');
-    showDiffuse0 = (showDiffuse0Elem.val())?1:0;
+    showDiffuse[0] = (showDiffuse0Elem.val())?1:0;
     var showDiffuse1Elem = $('#lightPanel1 #diffuseSelect:checked');
-    showDiffuse1 = (showDiffuse1Elem.val())?1:0;
+    showDiffuse[1] = (showDiffuse1Elem.val())?1:0;
     var showDiffuse2Elem = $('#lightPanel2 #diffuseSelect:checked');
-    showDiffuse2 = (showDiffuse2Elem.val())?1:0;
+    showDiffuse[2] = (showDiffuse2Elem.val())?1:0;
 
     var showSpec0Elem = $('#lightPanel0 #specSelect:checked');
-    showSpec0 = (showSpec0Elem.val())?1:0;
+    showSpec[0] = (showSpec0Elem.val())?1:0;
     var showSpec1Elem = $('#lightPanel1 #specSelect:checked');
-    showSpec1 = (showSpec1Elem.val())?1:0;
+    showSpec[1] = (showSpec1Elem.val())?1:0;
     var showSpec2Elem = $('#lightPanel2 #specSelect:checked');
-    showSpec2 = (showSpec2Elem.val())?1:0;
+    showSpec[2] = (showSpec2Elem.val())?1:0;
 
     gl.uniform1i(currentLightLoc, currentLight);
-    gl.uniform2fv(mouse0Loc, flatten(mouseXY0));//use flatten() to extract data from JS Array, send it to WebGL functions
-    gl.uniform2fv(mouse1Loc, flatten(mouseXY1));
-    gl.uniform2fv(mouse2Loc, flatten(mouseXY2));
+    gl.uniform1f(lightNumLoc, lightNum);
+
+    gl.uniform2fv(mouseLoc, flatten(mouseXY));//use flatten() to extract data from JS Array, send it to WebGL functions
+    
     
     gl.uniform1i(lightsOnlyLoc, lightsOnly);
-    gl.uniform1i(light0onLoc, light0on);
-    gl.uniform1i(light1onLoc, light1on);
-    gl.uniform1i(light2onLoc, light2on);
-    gl.uniform3fv(lightColor0Loc, flatten(lightColor0));
-    gl.uniform3fv(lightColor1Loc, flatten(lightColor1));
-    gl.uniform3fv(lightColor2Loc, flatten(lightColor2));
-    gl.uniform1f(lightIntensity0Loc, lightIntensity0);
-    gl.uniform1f(lightIntensity1Loc, lightIntensity1);
-    gl.uniform1f(lightIntensity2Loc, lightIntensity2);
+    gl.uniform1iv(lightOnLoc, lightOn);
+    gl.uniform3fv(lightColorLoc, flatten(lightColor));
+    gl.uniform1fv(lightIntensityLoc, lightIntensity);
     
-    gl.uniform1i(showDiffuse0Loc, showDiffuse0);
-    gl.uniform1i(showDiffuse1Loc, showDiffuse1);
-    gl.uniform1i(showDiffuse2Loc, showDiffuse2);
-    gl.uniform1i(showSpec0Loc, showSpec0);
-    gl.uniform1i(showSpec1Loc, showSpec1);
-    gl.uniform1i(showSpec2Loc, showSpec2);
-    gl.uniform1f(pointLight0disLoc, pointLight0dis);
-    gl.uniform1f(pointLight1disLoc, pointLight1dis);
-    gl.uniform1f(pointLight2disLoc, pointLight2dis);
+    gl.uniform1iv(showDiffuseLoc, showDiffuse);
+    gl.uniform1iv(showSpecLoc, showSpec);
+    gl.uniform1fv(pointLightDisLoc, pointLightDis);
     
     gl.uniform1f(styleBrightLoc, styleBright);
     gl.uniform1f(styleDarkLoc, styleDark);

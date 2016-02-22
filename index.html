@@ -25,6 +25,8 @@
     <link href="css/mock3d.css" rel="stylesheet">
 
     <script id="vertex-shader" type="x-shader/x-vertex">
+        #define max_lights 10
+
         attribute vec4 vPosition;
         attribute vec3 vNormal;
         attribute vec2 texcoord;
@@ -32,17 +34,12 @@
         varying vec2 f_texcoord;
         varying vec3 fNormal;
         
-        varying vec3 pLight0;
-        varying vec3 pLight1;
-        varying vec3 pLight2;
+        varying vec3 pLight[max_lights];
+        varying float lightN;// = lightNum
         
-        uniform vec2 mouseXY0;
-        uniform vec2 mouseXY1;
-        uniform vec2 mouseXY2;
-        
-        uniform float pointLight0dis;
-        uniform float pointLight1dis;
-        uniform float pointLight2dis;
+        uniform float lightNum;
+        uniform vec2 mouseXY[max_lights];
+        uniform float pointLightDis[max_lights];
         
         
         void main()
@@ -53,74 +50,50 @@
             vec4 transformedNormal = vec4(vNormal, 1.0) /* + vec4(0.0, 0.0, 0.5, 0.0) */;
             fNormal = normalize(transformedNormal.xyz);
 
-            float x0 = mouseXY0.x * 4.0 ;
-            float y0 = mouseXY0.y * 4.0;
-            float z0 = pointLight0dis;
+            for (int i = 0; i < max_lights; i++)
+            {
+                if (float(i)< float(lightNum))
+                {
+                    float x = mouseXY[i].x * 4.0 ;
+                    float y = mouseXY[i].y * 4.0;
+                    float z = pointLightDis[i];
+                    pLight[i] = vec3(x, -y, z + 0.05);
+                }else{
+                    break;
+                }
+            }
             
-            float x1 = mouseXY1.x * 4.0 ;
-            float y1 = mouseXY1.y * 4.0;
-            float z1 = pointLight1dis;
-            
-            float x2 = mouseXY2.x * 4.0 ;
-            float y2 = mouseXY2.y * 4.0;
-            float z2 = pointLight2dis;
-                        
-
-            pLight0 = vec3(x0, -y0, z0 + 0.05);
-            
-            pLight1 = vec3(x1, -y1, z1 + 0.05);
-            
-            pLight2 = vec3(x2, -y2, z2 + 0.05);
-            
+            lightN = lightNum;
             f_texcoord = texcoord;
         }
     </script>
 
     <script id="fragment-shader" type="x-shader/x-fragment">
+        #define max_lights 10
+
         precision mediump float;
 
         varying vec2 f_texcoord;
         varying vec3 fNormal;//(0,0,1)
-        
-        varying vec3 pLight0;
-        varying vec3 pLight1;
-        varying vec3 pLight2;
-        
-        varying vec2 userMouse0;
-        varying vec2 userMouse1;
-        varying vec2 userMouse2;
 
-
+        varying float lightN;
+        
+        varying vec3 pLight[max_lights];
+        
         uniform sampler2D uSamplerColor0, uSamplerColor1, uSamplerNormal, uSamplerForeground, uSamplerBackground, uSamplerAlpha;
 
         uniform int currentLight;
 
         uniform int lightsOnly;
 
-        uniform int light0on;
-        uniform int light1on;
-        uniform int light2on;
-
-        uniform vec3 lightColor0;
-        uniform vec3 lightColor1;
-        uniform vec3 lightColor2;
-        uniform float lightIntensity0;
-        uniform float lightIntensity1;
-        uniform float lightIntensity2;
-
-        uniform int showDiffuse0;
-        uniform int showDiffuse1;
-        uniform int showDiffuse2;
-
-        uniform int showSpec0;
-        uniform int showSpec1;
-        uniform int showSpec2;
+        uniform bool lightOn[max_lights];
         
-        uniform int pointLight0;
-        uniform int pointLight1;
-        uniform int pointLight2;
-                        
-
+        uniform vec3 lightColor[max_lights];
+        uniform float lightIntensity[max_lights];
+        
+        uniform bool showDiffuse[max_lights];
+        uniform bool showSpec[max_lights];
+        
         uniform float styleBright, styleDark;
         uniform float alphaR, alphaG, alphaB;
         uniform float logIOR, BGdis;
@@ -145,50 +118,36 @@
         {
 
             vec3 currentP = vec3(f_texcoord.s - 0.5, f_texcoord.t-0.5, 0.0);
-            vec3 vLight0 = normalize( pLight0 - currentP);
-            vec3 vLight1 = normalize( pLight1 - currentP);
-            vec3 vLight2 = normalize( pLight2 - currentP);
-
-            float cosTheta0 = max( dot(n, vLight0), 0.0);
-            float cosTheta1 = max( dot(n, vLight1), 0.0);
-            float cosTheta2 = max( dot(n, vLight2), 0.0);
             
-
-            vec4 c0 = texture2D(uSamplerColor0, vec2(f_texcoord.s, f_texcoord.t) );//dark
-            vec4 c1 = texture2D(uSamplerColor1, vec2(f_texcoord.s, f_texcoord.t) );//bright
-
-            float t0 = (cosTheta0 - styleDark) / (styleBright - styleDark);
-            if (t0>1.0) t0=1.0; if (t0<0.0) t0=0.0; 
-
-            float t1 = (cosTheta1 - styleDark) / (styleBright - styleDark);
-            if (t1>1.0) t1=1.0; if (t1<0.0) t1=0.0; 
-
-            float t2 = (cosTheta2 - styleDark) / (styleBright - styleDark);
-            if (t2>1.0) t2=1.0; if (t2<0.0) t2=0.0; 
             
             vec4 color = vec4(0,0,0,0);
             float lightWeight=0.0;
 
-            vec4 color0, color1 ,color2 ; 
-            
-            if ( light0on == 1 )
+            for (int i = 0; i < max_lights; i++)
             {
-                color += (1.0 - t0) * vec4(lightColor0, 1.0) * lightIntensity0 ;
-                lightWeight+=lightIntensity0 ;
-            };
-            if ( light1on == 1 )
-            {
-                color += (1.0 - t1) * vec4(lightColor1, 1.0) * lightIntensity1 ;
-                lightWeight+=lightIntensity1 ;
-            };
-            if ( light2on == 1 )
-            {
-                color += (1.0 - t2) * vec4(lightColor2, 1.0) * lightIntensity2;
-                lightWeight+=lightIntensity2 ;
-            };
+                if (float(i)< float(lightN))
+                {
 
+                    vec3 vLight = normalize( pLight[i] - currentP);
+                    float cosTheta = max( dot(n, vLight), 0.0);
+                    float t = (cosTheta - styleDark) / (styleBright - styleDark);
+                    if (t>1.0) t=1.0; if (t<0.0) t=0.0;
+                    if ( lightOn[i] == true )
+                    {
+                        color += (1.0 - t) * vec4(lightColor[i], 1.0) * lightIntensity[i] ;
+                        lightWeight+=lightIntensity[i] ;
+                    };
+
+                }else{
+                    break;
+                }
+            }
+            
             vec4 T = color /lightWeight;
             
+            vec4 c0 = texture2D(uSamplerColor0, vec2(f_texcoord.s, f_texcoord.t) );//dark
+            vec4 c1 = texture2D(uSamplerColor1, vec2(f_texcoord.s, f_texcoord.t) );//bright
+
             vec4 colorFinal = c0 * (vec4 ( 1.0, 1.0, 1.0, 1.0) - T) + c1 * T;
             
             if (lightsOnly ==1)
@@ -211,15 +170,29 @@
         vec3 spec(vec3 n)
         {
             vec3 currentP = vec3(f_texcoord.s - 0.5, f_texcoord.t-0.5, 0.0);
-            vec3 vLight0 = normalize( pLight0 - currentP);
-            vec3 vLight1 = normalize( pLight1 - currentP);
-            vec3 vLight2 = normalize( pLight2 - currentP);
+            vec3 finalSpec;
 
-            vec3 specColor = lightColor0;
-            vec3 viewVector = vec3(0.0, 0.0, 1.0);
-            vec3 RVector = - vLight0 + 2.0 * dot(n, vLight0) * n ;
-            float spec = pow(dot(RVector, viewVector), 200.0);
-            return specColor * spec ;
+            for (int i = 0; i < max_lights; i++)
+            {
+                if (float(i)< float(lightN))
+                {
+
+                    vec3 vLight = normalize( pLight[i] - currentP);
+                    if (showSpec[i] == true)
+                    {
+                    vec3 specColor = lightColor[i];
+                    vec3 viewVector = vec3(0.0, 0.0, 1.0);
+                    vec3 RVector = - vLight + 2.0 * dot(n, vLight) * n ;
+                    float spec = pow(dot(RVector, viewVector), 200.0);
+                    finalSpec += specColor * spec;
+
+                    }
+                }else{
+                    break;
+                }
+            }
+            
+            return finalSpec ;
         }
 
         //Ergun's reflect
@@ -298,16 +271,9 @@
             vec4 diffuse4 = diffuse3 * (1.0 - a) + diffuse3 * alphaB * a; 
 
             
-            if (showDiffuse0 == 1)
-            {
-                finalColor = finalColor + diffuse4;
-            }
-
-
-            if (showSpec0 ==1)
-            {
-                finalColor = finalColor + vec4(specular, 1.0); 
-            }
+           
+            finalColor = diffuse4 + vec4(specular, 1.0); 
+            
 
             
             a = diffuse.a;

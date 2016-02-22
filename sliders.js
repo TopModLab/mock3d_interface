@@ -6,37 +6,12 @@ var mirrorElem = $('#mirrorSelect');
 initCheckbox(mirror, mirrorElem);
 
 
-
-
 var lightsOnlyElem = $ ('#lightsOnlySelect');
 initCheckbox(lightsOnly, lightsOnlyElem);
 
-var light0onElem = $ ('#lightPanel0 #lightSelect');
-initCheckbox(light0on, light0onElem);
 
-var light1onElem = $ ('#lightPanel1 #lightSelect');
-initCheckbox(light1on, light1onElem);
 
-var light2onElem = $ ('#lightPanel2 #lightSelect');
-initCheckbox(light2on, light2onElem);
 
-var showDiffuse0Elem = $('#lightPanel0 #diffuseSelect');
-initCheckbox(showDiffuse0, showDiffuse0Elem);
-
-var showDiffuse1Elem = $('#lightPanel1 #diffuseSelect');
-initCheckbox(showDiffuse1, showDiffuse1Elem);
-
-var showDiffuse2Elem = $('#lightPanel2 #diffuseSelect');
-initCheckbox(showDiffuse2, showDiffuse2Elem);
-
-var showSpec0Elem = $('#lightPanel0 #specSelect');
-initCheckbox(showSpec0, showSpec0Elem);
-
-var showSpec1Elem = $('#lightPanel1 #specSelect');
-initCheckbox(showSpec1, showSpec1Elem);
-
-var showSpec2Elem = $('#lightPanel2 #specSelect');
-initCheckbox(showSpec2, showSpec2Elem);
 
 
 
@@ -68,6 +43,7 @@ $("#styleControl_slider").on("slide", function(slideEvt) {
 
 
 /**Alpha**/
+
 var alphaInRed_slider = $("#alphaInRed_slider");
 var alphaInRed_val = $("#alphaInRed_val");
 alphaInRed_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", alphaR).attr("data-slider-tooltip","hide").slider({});
@@ -86,7 +62,7 @@ bindSliderValParam (alphaInBlue_slider, alphaInBlue_val, "alphaB");
 
 /**Lights**/
 
-//handle multiple lights
+//switch multiple lights
 
 $('#lightPanel0').on('shown.bs.collapse', function(){
     currentLight = 0;
@@ -111,43 +87,49 @@ $('#lightPanel2').on('shown.bs.collapse', function(){
 
 
 $("#lightPanel0 .colorPicker").attr("value", "#ffffff");
-$("#lightPanel1 .colorPicker").attr("value", "#0000ff");
-$("#lightPanel2 .colorPicker").attr("value", "#00ff00");
+$("#lightPanel1 .colorPicker").attr("value", "#00ff00");
+$("#lightPanel2 .colorPicker").attr("value", "#0000ff");
+
+/**lightIntensity**/
+
+for (var i = 0; i < lightNum; i++)
+{
+    /////init checkbox
+
+    //lightOn
+    var checkboxName_lightOn = '#lightPanel' + i + ' #lightSelect';
+    var lightOnElem = $ (checkboxName_lightOn);
+    initCheckbox(lightOn[i], lightOnElem);
+
+    var checkboxName_showDiffuse = '#lightPanel' + i + ' #diffuseSelect';
+    var showDiffuseElem = $(checkboxName_showDiffuse);
+    initCheckbox(showDiffuse[i], showDiffuseElem);
+
+    var checkboxName_showSpec = '#lightPanel' + i + ' #specSelect';
+    var showSpecElem = $(checkboxName_showSpec);
+    initCheckbox(showSpec[i], showSpecElem);
 
 
-//light0
-var lightIntensity0_slider = $("#lightPanel0 #intensity_slider");
-var lightIntensity0_val = $("#lightPanel0 #intensity_val");
-lightIntensity0_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", lightIntensity0).attr("data-slider-tooltip","hide").slider({});
-bindSliderValParam (lightIntensity0_slider, lightIntensity0_val, "lightIntensity0");
 
-var pointLGT0dis_slider = $("#lightPanel0 #pointLGTdis_slider");
-var pointLGT0dis_val = $("#lightPanel0 #pointLGTdis_val");
-pointLGT0dis_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", pointLight0dis).attr("data-slider-tooltip","hide").slider({});
-bindSliderValParam (pointLGT0dis_slider, pointLGT0dis_val, "pointLight0dis");
 
-//light1
-var lightIntensity1_slider = $("#lightPanel1 #intensity_slider");
-var lightIntensity1_val = $("#lightPanel1 #intensity_val");
-lightIntensity1_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", lightIntensity1).attr("data-slider-tooltip","hide").slider({});
-bindSliderValParam (lightIntensity1_slider, lightIntensity1_val, "lightIntensity1");
+    //////slider events
 
-var pointLGT1dis_slider = $("#lightPanel1 #pointLGTdis_slider");
-var pointLGT1dis_val = $("#lightPanel1 #pointLGTdis_val");
-pointLGT1dis_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", pointLight1dis).attr("data-slider-tooltip","hide").slider({});
-bindSliderValParam (pointLGT1dis_slider, pointLGT1dis_val, "pointLight1dis");
+    //lightIntensity
+    var sliderName_intensity = "#lightPanel" + i + " #intensity_slider";
+    var textareaName_intensity = "#lightPanel" + i + " #intensity_val";
+    var lightIntensity_slider = $(sliderName_intensity);
+    var lightIntensity_val = $(textareaName_intensity);
+    lightIntensity_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", lightIntensity[i]).attr("data-slider-tooltip","hide").slider({});
+    bindSliderValParamIndex (lightIntensity_slider, lightIntensity_val, "lightIntensity", i);
 
-//light2
-var lightIntensity2_slider = $("#lightPanel2 #intensity_slider");
-var lightIntensity2_val = $("#lightPanel2 #intensity_val");
-lightIntensity2_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", lightIntensity2).attr("data-slider-tooltip","hide").slider({});
-bindSliderValParam (lightIntensity2_slider, lightIntensity2_val, "lightIntensity2");
-
-var pointLGT2dis_slider = $("#lightPanel2 #pointLGTdis_slider");
-var pointLGT2dis_val = $("#lightPanel2 #pointLGTdis_val");
-pointLGT2dis_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", pointLight2dis).attr("data-slider-tooltip","hide").slider({});
-bindSliderValParam (pointLGT2dis_slider, pointLGT2dis_val, "pointLight2dis");
-
+    //pointLightDis
+    var sliderName_pLightDis = "#lightPanel" + i + " #pointLGTdis_slider";
+    var textarea_pLightDis = "#lightPanel" + i + " #pointLGTdis_val";
+    var pointLGTdis_slider = $(sliderName_pLightDis);
+    var pointLGTdis_val = $(textarea_pLightDis);
+    pointLGTdis_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", pointLightDis[i]).attr("data-slider-tooltip","hide").slider({});
+    bindSliderValParamIndex (pointLGTdis_slider, pointLGTdis_val, "pointLightDis", i);
+}
 
 
 /**Shadow**/
@@ -161,6 +143,7 @@ $("#amb_numberOfSample_slider").slider({min: 0, max: 1, value: 1, step: 0.01, fo
 
 
 /**Refraction**/
+
 var refr_slider = $("#refraction_slider");
 var refr_val = $("#refraction_val");
 refr_slider.attr("data-slider-min",-1).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", logIOR).attr("data-slider-tooltip","hide").slider({});
@@ -179,6 +162,7 @@ bindSliderValParam (refr_BGdis_slider, refr_BGdis_val, "BGdis");
 $("#translucency_slider").slider({min: 0, max: 1, value: 1, step: 0.01, focus: true});
 
 /**Reflection**/
+
 var refl_intensity_slider = $("#refl_intensity_slider");
 var refl_intensity_val = $("#refl_intensity_val");
 refl_intensity_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", reflectIntensity).attr("data-slider-tooltip","hide").slider({});
@@ -226,21 +210,21 @@ $('.colorPicker').each( function() {
                             //var aaa = $('#accordinLights')
                             if (currentLight ==0)
                             {
-                                lightColor0[0] =rgbObject.r / 255;
-                                lightColor0[1] =rgbObject.g / 255;
-                                lightColor0[2] =rgbObject.b / 255;
+                                lightColor[0][0] =rgbObject.r / 255;
+                                lightColor[0][1] =rgbObject.g / 255;
+                                lightColor[0][2] =rgbObject.b / 255;
                             }
                             else if (currentLight ==1)
                             {
-                                lightColor1[0] =rgbObject.r / 255;
-                                lightColor1[1] =rgbObject.g / 255;
-                                lightColor1[2] =rgbObject.b / 255;
+                                lightColor[1][0] =rgbObject.r / 255;
+                                lightColor[1][1] =rgbObject.g / 255;
+                                lightColor[1][2] =rgbObject.b / 255;
                             }
                             else if (currentLight ==2)
                             {
-                                lightColor2[0] =rgbObject.r / 255;
-                                lightColor2[1] =rgbObject.g / 255;
-                                lightColor2[2] =rgbObject.b / 255;
+                                lightColor[2][0] =rgbObject.r / 255;
+                                lightColor[2][1] =rgbObject.g / 255;
+                                lightColor[2][2] =rgbObject.b / 255;
                             }
 
                             //add border if it is white#ffffff;
@@ -258,19 +242,7 @@ $('.colorPicker').each( function() {
                 });
 
             });
-/*
-$('#colorPicker0').minicolors('change', function(value){
-    if( !value ) return;
-                        if( typeof console === 'object' ) {
-                            var rgbObject = $(this).minicolors('rgbObject');
-                            //lightColor[0] =rgbObject.r / 255;
-                            //lightColor[1] =rgbObject.g / 255;
-                            //lightColor[2] =rgbObject.b / 255;
-                            console.log(value);
-                            
-                        }
-})
-*/
+
 
  //collapse list +/- toggle	
 /*
@@ -287,30 +259,30 @@ $('#colorPicker0').minicolors('change', function(value){
 function initCheckbox(param, elem){
     if (param == 1) {
     elem.prop('checked', true);
-    }else if (param ==0){
+    }else {
     elem.prop('checked', false);
     }
 }
 
 
-function bindSliderValParam(slider, val, param){
+function bindSliderValParamIndex(slider, val, param, index){
 	//init textarea
-	val.val(window[param]);
+	val.val(window[param][index]);
 
 	//update textarea when in slide
 	slider.on("slide", function(slideEvt) {
-		window[param] = slideEvt.value;	
-		val.val(window[param]);
+		window[param][index] = slideEvt.value;	
+		val.val(window[param][index]);
 	});
 	
 	//update slider when textarea change
 	val.on("change", function(){
-		window[param] = Number($(this).val());
-		slider.slider("destroy").attr("data-slider-value", window[param]).attr("data-value", window[param]).attr("value", window[param]);
+		window[param][index] = Number($(this).val());
+		slider.slider("destroy").attr("data-slider-value", window[param][index]).attr("data-value", window[param][index]).attr("value", window[param][index]);
 		slider.slider({});
 		slider.on("slide", function(slideEvt) {
-			window[param] = slideEvt.value;	
-			val.val(window[param]);
+			window[param][index] = slideEvt.value;	
+			val.val(window[param][index]);
 		});
 	});
 
@@ -329,6 +301,44 @@ function bindSliderValParam(slider, val, param){
 
 	//textarea restrict only input number
 	val.keydown(function(e){onlyNumber(e)});
+}
+
+function bindSliderValParam(slider, val, param){
+    //init textarea
+    val.val(window[param]);
+
+    //update textarea when in slide
+    slider.on("slide", function(slideEvt) {
+        window[param] = slideEvt.value;  
+        val.val(window[param]);
+    });
+    
+    //update slider when textarea change
+    val.on("change", function(){
+        window[param] = Number($(this).val());
+        slider.slider("destroy").attr("data-slider-value", window[param]).attr("data-value", window[param]).attr("value", window[param]);
+        slider.slider({});
+        slider.on("slide", function(slideEvt) {
+            window[param] = slideEvt.value;  
+            val.val(window[param]);
+        });
+    });
+
+    //textarea allSelected when on focus;
+    val.focus(function() {
+        var $this = $(this);
+        $this.select();
+
+        // Work around Chrome's little problem
+        $this.mouseup(function() {
+        // Prevent further mouseup intervention
+            $this.unbind("mouseup");
+            return false;
+        });
+    });
+
+    //textarea restrict only input number
+    val.keydown(function(e){onlyNumber(e)});
 }
 
 function onlyNumber(e)
