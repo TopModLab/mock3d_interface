@@ -127,17 +127,23 @@ label{margin-bottom:0;}
 
 .btn-mycustom{
   display:block; width:100%; font-size:12px;
-	background: #b5b5b5;
-  color:#fff;
-  -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.25);
-  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.25);
-
-  
+	background: #E8E8E8;
+  color:#666; 
+  -webkit-box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.08);
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.08);
   border: none;
   font-size: 12px;
 }
 .btn-mycustom:hover{
-	background: #FBFBFB;
+  background: #b5b5b5;
+  color:#fff;
+	
+  -webkit-box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.2);
+
+}
+.btn-mycustom:active{
+  background: #FBFBFB;
   color:#888; 
   -webkit-box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.08);
   box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.08);
@@ -205,19 +211,30 @@ label{margin-bottom:0;}
 
 #btn_addLight {
   padding:8px 12px; 
-  background: #666;
-  color:#fff;
-  -webkit-box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.45);
-  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.45);
+  background: #E8E8E8;
+  color:#500000; 
+  font-weight: 400;
+  -webkit-box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.1);
   border: none;
   line-height: 14px;
   font-size: 12px;
+  
   }
 #btn_addLight:hover{
-  background: #E8E8E8;
-  color:#500000; 
-  -webkit-box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.11);
-  box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.11);
+  font-weight: 300;
+  background: #666;
+  color:#fff;
+  -webkit-box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.45);
+  box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.45);
+}
+
+#btn_addLight:active{
+  background: #710000;
+  color:#fff; 
+  font-weight: 300;
+  -webkit-box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.6);
+  box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.6);
 }
 
 
