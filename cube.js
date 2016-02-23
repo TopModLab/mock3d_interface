@@ -35,8 +35,8 @@ var alphaR = 1,
     alphaG = 1,
     alphaB = 1;
 
-var logIOR = 0.1;
-var BGdis = 0.5;
+var logIOR = 0.25;
+var BGdis = 0.6;
 
 var mirror = 0;
 var reflectIntensity = 0.5;

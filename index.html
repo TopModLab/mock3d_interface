@@ -234,8 +234,8 @@
         vec3 fresnelBlend(vec3 n, vec3 refl, vec3 refr)
         {
             float cos = dot(n, vec3(0,0,1) );
-            //return refl * (1.0 - cos) + refr * cos;
-            return refl;
+            return refl * (1.0 - cos) + refr * cos;
+            //return refl;
                
         }
 
@@ -259,6 +259,7 @@
             
             vec4 finalColor = diffuse;
 
+
             float a;
             a = alphaControl.r;
             finalColor = finalColor * (1.0 - a) + finalColor * alphaR * a; 
@@ -266,24 +267,34 @@
             finalColor = finalColor * (1.0 - a) + finalColor * alphaG * a; 
             a = alphaControl.b;
             finalColor = finalColor * (1.0 - a) + finalColor * alphaB * a; 
-           
+            
+
             finalColor += vec4(specular, 1.0); 
+
+
+            float alpha = diffuse.a;
             
-            a = diffuse.a;
+            a = alphaControl.r;
+            alpha = alpha * (1.0 - a) + alpha * alphaR * a; 
+            a = alphaControl.g;
+            alpha = alpha * (1.0 - a) + alpha * alphaG * a; 
+            a = alphaControl.b;
+            alpha = alpha * (1.0 - a) + alpha * alphaB * a; 
             
-            finalColor = vec4 (fresnel * (1.0 - a) + finalColor.rgb * a, 1.0) ;
+            
+            finalColor = vec4 (fresnel * (1.0 - alpha) + finalColor.rgb * alpha, 1.0) ;
             
             if (mirror == 1)
             {
                 finalColor = vec4 (refl, 1.0);
             }
 
-            a = nn.a;
+            a = nn.a  ;
             vec3 compBackground = backgroundColor * (1.0 - a) + finalColor.rgb * a;
             
             
             gl_FragColor = vec4(compBackground.rgb, 1.0);
-            //gl_FragColor = vec4(specular, 1.0);
+            //gl_FragColor = vec4(diffuse.a,diffuse.a,diffuse.a, 1.0);
             
             //gl_FragColor = vec4(userMouse.x+0.5, -userMouse.y+0.5, 0.0, 1.0);
 
@@ -495,7 +506,7 @@
                 		    Light 
                         </a>
                         <div id = "lightControl" class= "inCollapse collapse" > 
-                            <div class = "checkbox">
+                            <!-- <div class = "checkbox">
                                 <label>
                          		    <span class="h6 inlineBlock" >Show lights Position</span>
                                     <div class = "checkbox_container pull-right">
@@ -503,7 +514,7 @@
                                         <div class = "pseudoCheckbox"></div>
                                     </div>
                                 </label>
-                            </div>
+                            </div> -->
                             <div class = "checkbox">
                                 <label>
                                     <span class="h6 inlineBlock" >Show Lights Only</span>
@@ -528,7 +539,7 @@
             	        </div>	
                     </li>
                     <!--Shadow-->
-                    <li class="panel">
+                    <!-- <li class="panel">
             	        <a class = "myControlTitle collapsed" data-toggle="collapse" data-parent = "#accordion_R" href="#shadow">Shadow<span class="sr-only">(current)</span></a>
                         <div id = "shadow" class= "inCollapse collapse"> 
                	            <div class="checkbox">
@@ -559,7 +570,7 @@
                                 </div>
                             </div>
             	        </div>	
-                    </li>
+                    </li> -->
                     <!--Refraction-->
                     <li class="panel">
             	        <a class="myControlTitle collapsed" data-toggle="collapse" data-parent = "#accordion_R" href="#refractionControl">
@@ -595,7 +606,7 @@
                                     <input id="refr_BGdis_slider" data-slider-id='customSlider' type="text" />
                                 </div>
                             </div>
-                            <div class="slider_container">
+                            <!-- <div class="slider_container">
                                 <span class="h6 inlineBlock"> Translucency </span>
                                 <div class="pull-right">
                        	            <input type="text" class="form-control mytextbox text-center" id="translucency_val" value="1">
@@ -603,7 +614,7 @@
                                 <div class="slider_box">
                        	            <input id="translucency_slider" data-slider-id='customSlider' type="text"/>
                                 </div>
-                            </div>
+                            </div> -->
             	        </div>	
                     </li>
                     <!--Reflection-->
@@ -659,7 +670,7 @@
                                     <input id="refl_FGdis_slider" data-slider-id='customSlider' type="text" />
                                 </div>
                             </div>
-                            <div class="slider_container">
+                            <!-- <div class="slider_container">
                                 <span class="h6 inlineBlock"> Bluriness </span>
                                 <div class="pull-right">
                            	        <input type="text" class="form-control mytextbox text-center" id="bluriness_val"    value="1">
@@ -667,11 +678,11 @@
                                 <div class="slider_box">
                            	        <input id="bluriness_slider" data-slider-id='customSlider' type="text"/>
                                 </div>
-                            </div>
+                            </div> -->
             	       </div>	
                     </li>
                     <!--Ambient Occlusion-->
-                    <li class="panel">
+                    <!-- <li class="panel">
                         <a class = "myControlTitle collapsed" data-toggle="collapse" data-parent = "#accordion_R" href="#aoControl">
                             Ambient Occlusion                           
                         </a>
@@ -704,9 +715,9 @@
                                 </div>
                             </div>
                         </div>  
-                    </li>
+                    </li> -->
                     <!--Quality-->
-                    <li class="panel">
+                    <!-- <li class="panel">
             	        <a class="myControlTitle collapsed" data-toggle="collapse" data-parent = "#accordion_R" href=" #qualityControl">
                     	    Quality 
                         </a>
@@ -721,7 +732,7 @@
                                 </div>
                             </div>
             	       </div>	
-                    </li>
+                    </li> -->
                 </ul>
             </div>
             <!--Right column end-->
