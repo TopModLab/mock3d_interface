@@ -17,14 +17,38 @@ $(function() {
             
             lightNum++;
             addLightParameters(thisID);
-            view.render();
+
+
+            currentLight = thisID;
+
+            
+            var animation = 1;
+            view.render(animation);
+            //mouseFlag = 0;
             
         },
 
         removeLight: function(light) {
             var clickedLight = data.lights[ light.id - 1 ];
             clickedLight.Exist = false;
-            //data.lights[ light.id - 1 ].Exist = false;
+            
+            //check exist max id, set to lastID
+            if (light.id == data.lastID)
+            {
+                var currentID = data.lastID;
+                for(var i = currentID; i > 0; i--)
+                {
+                    if(data.lights[i-1].Exist == false)
+                    {
+                        data.lights.pop();
+                        --data.lastID;
+                    }else{
+                        break;
+                    }
+                }
+            }
+            
+
             view.render();
         },
 
@@ -77,11 +101,15 @@ $(function() {
             // Cache vars for use in forEach() callback (performance)
             var $lightList = this.$lightList,
                 lightTemplate = this.lightTemplate;
-                defaultLightTemplate = this.defaultLightTemplate;
+                
+            var defaultLightTemplate = lightTemplate.replace(/{{id}}/g, 0).replace("LIGHT0","DEFAULT LIGHT");
 
             // Clear and render
             $lightList.html('');
             $lightList.append(defaultLightTemplate);
+
+            $("#lightPanel0 .destroy").remove();
+
             setupLightFunctions(0);//for default light
 
             octopus.getExistLights().forEach(function(light) {
@@ -91,13 +119,16 @@ $(function() {
                 $lightList.append(thisTemplate);
                 setupLightFunctions(light.id);
             });
-
+            
+            
             if (currentLight != null)
             {
+                
                 var lightTitleName = '#lightPanel' + currentLight + ' .myLightsTitle';
                 $(lightTitleName).removeClass('collapsed');
                 var lightContentName = '#light' + currentLight;
                 $(lightContentName).addClass('in');
+                
             }
         }
     };
@@ -110,20 +141,18 @@ $(function() {
 function addLightParameters(index){
     //init parameter
     mouseXY[index] = [Math.random()-0.5, Math.random()-0.5];     
-    lightOn[index] = 1;
-    lightColor[index] =[1.0, 1.0 ,1.0];
-    lightIntensity[index] = 1.0;
+    lightColor[index] =[Math.random()/2+0.5, Math.random()/2+0.5, Math.random()/2+0.5];
+    lightIntensity[index] = 0.5;
     pointLightDis[index] = 0.5;
-    showDiffuse[index] = 0;
-    showSpec[index] = 0;
+    showDiffuse[index] = 1;
+    showSpec[index] = 1;
     
     //mouse stuff
     var canvas = document.getElementById( "gl-canvas" );
     canvas.addEventListener("mousemove", function(evt){
-        if(mouseFlag === 0){
+        if(mouseFlag === 1){
             setMousePos(canvas, evt, index);//this function in "cube.js"
         }
-
     }, false);
     
 }

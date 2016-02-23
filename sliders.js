@@ -154,10 +154,6 @@ function setupLightFunctions(i)
     /////init checkbox
 
     //lightOn
-    var checkboxName_lightOn = '#lightPanel' + i + ' #lightSelect';
-    var lightOnElem = $ (checkboxName_lightOn);
-    initCheckbox(lightOn[i], lightOnElem);
-
     var checkboxName_showDiffuse = '#lightPanel' + i + ' #diffuseSelect';
     var showDiffuseElem = $(checkboxName_showDiffuse);
     initCheckbox(showDiffuse[i], showDiffuseElem);
@@ -188,11 +184,13 @@ function setupLightFunctions(i)
     var colorPickerName = "#lightPanel" + i + " .colorPicker";
     var colorString = color2hex(lightColor[i]);
     $(colorPickerName).attr("value", colorString);
+    
+    
 
     $(colorPickerName).minicolors({
         position: 'bottom right',
         theme: 'bootstrap',
-        //defaultValue: '#ffffff',
+        //defaultValue: colorString,
         change: function(value) {
             if( !value ) return;
             if( typeof console === 'object' ) {
@@ -206,17 +204,23 @@ function setupLightFunctions(i)
                         lightColor[i][2] =rgbObject.b / 255;
                     }
                 }
-                //add border if it is white#ffffff;
+                //add event: add border if it is white#ffffff;
                 var addBorderElem = $(this).parent().find(".minicolors-swatch-color");
                 if (value =="#ffffff")
                 {
-                    addBorderElem.css("border","solid 1px #eee");
+                    addBorderElem.addClass('colorPickerBorder');
                 }else{
-                    addBorderElem.css("border","none");
+                    addBorderElem.removeClass('colorPickerBorder');
                 }
             }
         },
     });
+    
+    //init: add border if it is white#ffffff;
+    if (colorString == "#ffffff")
+    {
+        $(colorPickerName).parent().find(".minicolors-swatch-color").addClass('colorPickerBorder');
+    }
 }
 
 
@@ -333,9 +337,9 @@ function onlyNumber(e)
 // Converts an color array to a hex string
 function color2hex(color) {
     var hex = [
-        (color[0]*255).toString(16),
-        (color[1]*255).toString(16),
-        (color[2]*255).toString(16)
+        (Math.round(color[0]*255)).toString(16),
+        (Math.round(color[1]*255)).toString(16),
+        (Math.round(color[2]*255)).toString(16)
     ];
     $.each(hex, function(nr, val) {
         if (val.length === 1) hex[nr] = '0' + val;

@@ -25,7 +25,7 @@
     <link href="css/mock3d.css" rel="stylesheet">
 
     <script id="vertex-shader" type="x-shader/x-vertex">
-        #define max_lights 20
+        #define max_lights 15
 
         attribute vec4 vPosition;
         attribute vec3 vNormal;
@@ -69,7 +69,7 @@
     </script>
 
     <script id="fragment-shader" type="x-shader/x-fragment">
-        #define max_lights 20
+        #define max_lights 15
 
         precision mediump float;
 
@@ -86,8 +86,6 @@
 
         uniform int lightsOnly;
 
-        uniform bool lightOn[max_lights];
-        
         uniform vec3 lightColor[max_lights];
         uniform float lightIntensity[max_lights];
         
@@ -120,8 +118,8 @@
             vec3 currentP = vec3(f_texcoord.s - 0.5, f_texcoord.t-0.5, 0.0);
             
             
-            vec4 color = vec4(0,0,0,0);
-            float lightWeight=0.0;
+            vec4 color = vec4(0,0,0,1);
+            float lightWeight = 0.0;
 
             for (int i = 0; i < max_lights; i++)
             {
@@ -132,7 +130,7 @@
                     float cosTheta = max( dot(n, vLight), 0.0);
                     float t = (cosTheta - styleDark) / (styleBright - styleDark);
                     if (t>1.0) t=1.0; if (t<0.0) t=0.0;
-                    if ( lightOn[i] == true )
+                    if ( showDiffuse[i] == true )
                     {
                         color += (1.0 - t) * vec4(lightColor[i], 1.0) * lightIntensity[i] ;
                         lightWeight+=lightIntensity[i] ;
@@ -143,7 +141,7 @@
                 }
             }
             
-            vec4 T = color /lightWeight;
+            vec4 T = color;//lightWeight;
             
             vec4 c0 = texture2D(uSamplerColor0, vec2(f_texcoord.s, f_texcoord.t) );//dark
             vec4 c1 = texture2D(uSamplerColor1, vec2(f_texcoord.s, f_texcoord.t) );//bright
@@ -170,7 +168,7 @@
         vec3 spec(vec3 n)
         {
             vec3 currentP = vec3(f_texcoord.s - 0.5, f_texcoord.t-0.5, 0.0);
-            vec3 finalSpec;
+            vec3 finalSpec = vec3(0.0, 0.0, 0.0);
 
             for (int i = 0; i < max_lights; i++)
             {
@@ -259,22 +257,17 @@
             refr = refr * (1.0 - reflectIntensity) * 2.0;
             vec3 fresnel = fresnelBlend(n, refl, refr);
             
-            vec4 finalColor = vec4(0.0, 0.0, 0.0, 0.0);
-
+            vec4 finalColor = diffuse;
 
             float a;
             a = alphaControl.r;
-            vec4 diffuse2 = diffuse * (1.0 - a) + diffuse * alphaR * a; 
+            finalColor = finalColor * (1.0 - a) + finalColor * alphaR * a; 
             a = alphaControl.g;
-            vec4 diffuse3 = diffuse2 * (1.0 - a) + diffuse2 * alphaG * a; 
+            finalColor = finalColor * (1.0 - a) + finalColor * alphaG * a; 
             a = alphaControl.b;
-            vec4 diffuse4 = diffuse3 * (1.0 - a) + diffuse3 * alphaB * a; 
-
-            
+            finalColor = finalColor * (1.0 - a) + finalColor * alphaB * a; 
            
-            finalColor = diffuse4 + vec4(specular, 1.0); 
-            
-
+            finalColor += vec4(specular, 1.0); 
             
             a = diffuse.a;
             
@@ -290,6 +283,8 @@
             
             
             gl_FragColor = vec4(compBackground.rgb, 1.0);
+            //gl_FragColor = vec4(specular, 1.0);
+            
             //gl_FragColor = vec4(userMouse.x+0.5, -userMouse.y+0.5, 0.0, 1.0);
 
             //gl_FragColor = vec4(f_texcoord.x, 1.0-f_texcoord.y, 0.0, 1.0);
@@ -354,16 +349,16 @@
         
                 <div class="main_button_container">
                     <div class="main_button"> 
-                        <input type = "submit" class ="btn btn-default btn-mycustom" value="Save Proj">
+                        <button class ="btn btn-block btn-mycustom">Save Proj</button>
                     </div>
                     <div class="main_button"> 
-                        <input type = "submit" class ="btn btn-default btn-mycustom" value="Load Proj">
+                        <button class ="btn btn-block btn-mycustom">Load Proj</button>
                     </div>
                     <div class="main_button"> 
-                        <input type = "submit" class ="btn btn-default btn-mycustom" value="Export JS">
+                        <button class ="btn btn-block btn-mycustom">Export JS</button>
                     </div>
                     <div class="main_button"> 
-                        <input type = "submit" class ="btn btn-default btn-mycustom" value="Export Img">
+                        <button class ="btn btn-block btn-mycustom">Export Img</button>
                     </div>
                     <div class="clearfix"></div>
                 </div>
@@ -511,7 +506,7 @@
                             </div>
                             <div class = "checkbox">
                                 <label>
-                                    <span class="h6 inlineBlock" >Toggle lights only</span>
+                                    <span class="h6 inlineBlock" >Show Lights Only</span>
                                     <div class = "checkbox_container pull-right">
                                         <input type="checkbox" id = "lightsOnlySelect">
                                         <div class = "pseudoCheckbox"></div>
@@ -523,7 +518,7 @@
                                 <input type = "submit" class ="btn btn-default btn-block " value="Add Light">
                             </div> -->
                             <div class="btn_container">
-                                <button id = "btn_addLight" class ="btn btn-default btn-block" >Add Light</button>
+                                <button class ="btn btn-block" id = "btn_addLight"  >Add Light</button>
                             </div>
                             <div id = "lights_container">
                                 <ul class="myAccordion" id = "accordion_Lights">
@@ -561,41 +556,6 @@
                                 </div>
                                 <div class="slider_box">
                        	            <input id="sha_numberOfSample_slider" data-slider-id='customSlider' type="text"/>
-                                </div>
-                            </div>
-            	        </div>	
-                    </li>
-                    <!--Ambient Occlusion-->
-                    <li class="panel">
-            	        <a class = "myControlTitle collapsed" data-toggle="collapse" data-parent = "#accordion_R" href="#aoControl">
-                		    Ambient Occlusion			 				
-                        </a>
-                        <div id = "aoControl" class= "inCollapse collapse"> 
-               	            <div class="checkbox">
-                                <label>
-                                    <span class = "h6 inlineBlock"> Show Ambient </span>
-                                    <div class = "checkbox_container pull-right">
-                           	            <input type="checkbox">
-                                        <div class = "pseudoCheckbox"></div>
-                                    </div>
-                                </label>
-                            </div>
-                            <div class="slider_container">
-                                <span class="h6 inlineBlock"> Sample size </span>
-                                <div class="pull-right">
-                       	            <input type="text" class="form-control mytextbox text-center" id="amb_sampleSize_val"    value="1">
-                                </div>
-                                <div class="slider_box">
-                       	            <input id="amb_sampleSize_slider" data-slider-id='customSlider' type="text"/>
-                                </div>
-                            </div>
-                            <div class="slider_container">
-                                <span class="h6 inlineBlock"> Number of Sample </span>
-                                <div class="pull-right">
-                       	            <input type="text" class="form-control mytextbox text-center" id="amb_numberOfSample_val" value="1">
-                                </div>
-                                <div class="slider_box">
-                       	            <input id="amb_numberOfSample_slider" data-slider-id='customSlider' type="text"/>
                                 </div>
                             </div>
             	        </div>	
@@ -710,6 +670,41 @@
                             </div>
             	       </div>	
                     </li>
+                    <!--Ambient Occlusion-->
+                    <li class="panel">
+                        <a class = "myControlTitle collapsed" data-toggle="collapse" data-parent = "#accordion_R" href="#aoControl">
+                            Ambient Occlusion                           
+                        </a>
+                        <div id = "aoControl" class= "inCollapse collapse"> 
+                            <div class="checkbox">
+                                <label>
+                                    <span class = "h6 inlineBlock"> Show Ambient </span>
+                                    <div class = "checkbox_container pull-right">
+                                        <input type="checkbox">
+                                        <div class = "pseudoCheckbox"></div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="slider_container">
+                                <span class="h6 inlineBlock"> Sample size </span>
+                                <div class="pull-right">
+                                    <input type="text" class="form-control mytextbox text-center" id="amb_sampleSize_val"    value="1">
+                                </div>
+                                <div class="slider_box">
+                                    <input id="amb_sampleSize_slider" data-slider-id='customSlider' type="text"/>
+                                </div>
+                            </div>
+                            <div class="slider_container">
+                                <span class="h6 inlineBlock"> Number of Sample </span>
+                                <div class="pull-right">
+                                    <input type="text" class="form-control mytextbox text-center" id="amb_numberOfSample_val" value="1">
+                                </div>
+                                <div class="slider_box">
+                                    <input id="amb_numberOfSample_slider" data-slider-id='customSlider' type="text"/>
+                                </div>
+                            </div>
+                        </div>  
+                    </li>
                     <!--Quality-->
                     <li class="panel">
             	        <a class="myControlTitle collapsed" data-toggle="collapse" data-parent = "#accordion_R" href=" #qualityControl">
@@ -735,83 +730,28 @@
 
 
 
-    <!-- default light templete -->
-    <script type="text/template" data-template="defaultLight">
-        <li class = "panel" id = "lightPanel0">
-            <a class = "myControlTitle myLightsTitle collapsed" data-toggle= "collapse" data-parent= " #accordion_Lights" href="#light0"> 
-                DEFAULT LIGHT 
-            </a>
-            <div id = "light0" class= "lightBox inCollapse collapse" > 
-                <div class = "checkbox">
-                    <label>
-                        <span class="h6 inlineBlock" >On</span>
-                        <div class = "checkbox_container pull-right">
-                            <input type="checkbox" id = "lightSelect">
-                            <div class = "pseudoCheckbox"></div>
-                        </div>
-                    </label>
-                </div>
-                <div>
-                    <span class="h6 inlineBlock"> Color </span>
-                    <div class="pull-right">
-                         <input class="colorPicker" type="hidden" >
-                    </div>
-                </div>
-                <div class="slider_container">
-                    <span class="h6 inlineBlock"> Intensity </span>
-                    <div class="pull-right">
-                        <input type="text" class="form-control mytextbox text-center" id="intensity_val">
-                    </div>
-                    <div class="slider_box">
-                        <input id="intensity_slider" data-slider-id='customSlider' type="text" />
-                    </div>
-                </div>
-                <div class = "checkbox">
-                    <label>
-                        <span class="h6 inlineBlock" >Diffuse</span>
-                        <div class = "checkbox_container pull-right">
-                            <input type="checkbox" id = "diffuseSelect">
-                            <div class = "pseudoCheckbox"></div>
-                        </div>
-                    </label>
-                </div>
-                <div class = "checkbox">
-                    <label>
-                        <span class="h6 inlineBlock" >Specular</span>
-                        <div class = "checkbox_container pull-right">
-                            <input type="checkbox" id = "specSelect" >
-                            <div class = "pseudoCheckbox"></div>
-                        </div>
-                    </label>
-                </div>
-                <div class="slider_container">
-                    <span class="h6 inlineBlock"> Light Distance </span>
-                    <div class="pull-right">
-                        <input type="text" class="form-control mytextbox text-center" id="pointLGTdis_val">
-                    </div>
-                    <div class="slider_box">
-                        <input id="pointLGTdis_slider" data-slider-id='customSlider' type="text" />
-                    </div>
-                </div>
-                
-                
-            </div>
-        </li>
-    </script>
-
     <!-- light templete -->
     <script type="text/template" data-template="light">
         <li class = "panel" data-id ="{{id}}" id = "lightPanel{{id}}">
-            <a class = "myControlTitle myLightsTitle collapsed" data-toggle= "collapse" data-parent= " #accordion_Lights" href="#light{{id}}"> 
+            <a class = "myControlTitle myLightsTitle collapsed" data-toggle= "collapse" data-parent= "#accordion_Lights" href="#light{{id}}"> 
                 <div class = "destroy" ></div>
                 LIGHT{{id}}
             </a>
             <div id = "light{{id}}" class= "lightBox inCollapse collapse" > 
                 <div class = "checkbox">
                     <label>
-                        <span class="h6 inlineBlock" >On</span>
+                        <span class="h6 inlineBlock" >Diffuse</span>
                         <div class = "checkbox_container pull-right">
-                            <input type="checkbox" id = "lightSelect" >
+                            <input type="checkbox" id = "diffuseSelect">
+                            <div class = "pseudoCheckbox"></div>
+                        </div>
+                    </label>
+                </div>
+                <div class = "checkbox">
+                    <label>
+                        <span class="h6 inlineBlock" >Specular</span>
+                        <div class = "checkbox_container pull-right">
+                            <input type="checkbox" id = "specSelect" >
                             <div class = "pseudoCheckbox"></div>
                         </div>
                     </label>
@@ -830,24 +770,6 @@
                     <div class="slider_box">
                         <input id="intensity_slider" data-slider-id='customSlider' type="text" />
                     </div>
-                </div>
-                <div class = "checkbox">
-                    <label>
-                        <span class="h6 inlineBlock" >Diffuse</span>
-                        <div class = "checkbox_container pull-right">
-                            <input type="checkbox" id = "diffuseSelect">
-                            <div class = "pseudoCheckbox"></div>
-                        </div>
-                    </label>
-                </div>
-                <div class = "checkbox">
-                    <label>
-                        <span class="h6 inlineBlock" >Specular</span>
-                        <div class = "checkbox_container pull-right">
-                            <input type="checkbox" id = "specSelect" >
-                            <div class = "pseudoCheckbox"></div>
-                        </div>
-                    </label>
                 </div>
                 <div class="slider_container">
                     <span class="h6 inlineBlock"> Light Distance </span>

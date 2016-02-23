@@ -1,5 +1,5 @@
 /****************** For SliderBar Parameter ******************/
-var mouseFlag = 0;
+var mouseFlag = 0;// 0 : moving ; 1: stop
 var currentLight = 0;
 var lightNum = 1;
 
@@ -8,10 +8,6 @@ mouseXY[0] = [0.3, -0.3];     //default light
   
 
 var lightsOnly = 0;
-
-var lightOn = [];
-lightOn[0] = 1;
-
 
 var lightColor = [];
 lightColor[0] =[1.0, 1.0 ,1.0];
@@ -55,7 +51,6 @@ var lightNumLoc;
 var mouseLoc;;//, mouse1Loc, mouse2Loc;
 
 var lightsOnlyLoc;
-var lightOn;
 var lightColorLoc;
 var lightIntensityLoc;
 var pointLightDisLoc;
@@ -103,16 +98,17 @@ window.onload = function init()
     var context = canvas.getContext('2d');
     
     canvas.addEventListener("mousedown", function(evt){
-    
+        mouseFlag = 1;
     }, false);
     canvas.addEventListener("mousemove", function(evt){
-        if(mouseFlag === 0){
+        if(mouseFlag === 1){
             setMousePos(canvas, evt, 0);//add default light event;
         }
 
     }, false);
     canvas.addEventListener("mouseup", function(){
-        mouseFlag = (mouseFlag ==0)?1:0;
+        mouseFlag = 0;
+        //mouseFlag = (mouseFlag ==0)?1:0;
     }, false);
     
     /***************/
@@ -217,7 +213,6 @@ window.onload = function init()
     lightsOnlyLoc = gl.getUniformLocation (program, "lightsOnly");
 
     
-    lightOnLoc = gl.getUniformLocation(program, "lightOn");
     lightColorLoc = gl.getUniformLocation (program, "lightColor");
     lightIntensityLoc = gl.getUniformLocation (program, "lightIntensity");
     showDiffuseLoc = gl.getUniformLocation( program, "showDiffuse");
@@ -313,7 +308,6 @@ function getMousePos(canvas, evt) {
 function render() {
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT );
 
-    //console.log(lightOn[0]);
     var mirrorElem = $('#mirrorSelect:checked');
     mirror = (mirrorElem.val())?1:0;
 
@@ -322,10 +316,6 @@ function render() {
 
     for (var i = 0; i < lightNum ; i++)
     {
-        var checkboxName_lightOn = '#lightPanel' + i + ' #lightSelect:checked';
-        var lightOnElem = $ (checkboxName_lightOn);
-        lightOn[i] = (lightOnElem.val())?1:0;
-        
         var checkboxName_showDiffuse = '#lightPanel' + i + ' #diffuseSelect:checked';
         var showDiffuseElem = $(checkboxName_showDiffuse);
         showDiffuse[i] = (showDiffuseElem.val())?1:0;
@@ -342,7 +332,6 @@ function render() {
     gl.uniform2fv(mouseLoc, flatten(mouseXY));//use flatten() to extract data from JS Array, send it to WebGL functions
     
     gl.uniform1i(lightsOnlyLoc, lightsOnly);
-    gl.uniform1iv(lightOnLoc, lightOn);
     gl.uniform3fv(lightColorLoc, flatten(lightColor));
     gl.uniform1fv(lightIntensityLoc, lightIntensity);
     
