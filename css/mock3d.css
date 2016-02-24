@@ -309,11 +309,24 @@ label{margin-bottom:0;}
 	
 }
 
-
 #gl-canvas {
 	position: relative;
   	top: 50%;
   	transform: translateY(-50%);
+}
+
+#lightPosition_container{
+  margin:0 auto;
+  left: 0;
+  right: 0;
+  position:absolute;
+  display: block;
+  z-index: 100;
+  top: 50%;
+  transform: translateY(-50%);
+
+  pointer-events:none; 
+  /*background: rgba(255, 0, 0, 0.5);*/
 }
 
 
@@ -354,6 +367,9 @@ label{margin-bottom:0;}
 					text-align: center;
 					position: relative;
 					}
+.imgThumb {
+  background-image: url("../img/transparentBG.jpg");
+}
 
 .btn-file {
   position: absolute;

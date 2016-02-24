@@ -6,7 +6,7 @@ var lightNum = 1;
 var mouseXY = [];
 mouseXY[0] = [0.3, -0.3];     //default light
   
-
+var lightsPosition = 0;
 var lightsOnly = 0;
 
 var lightColor = [];
@@ -44,11 +44,11 @@ var FGdis = 0.5;
 var FGshiftLR = 0;
 
 
-
+//Locs
 
 var currentLightLoc;
 var lightNumLoc;
-var mouseLoc;;//, mouse1Loc, mouse2Loc;
+var mouseLoc;
 
 var lightsOnlyLoc;
 var lightColorLoc;
@@ -93,24 +93,10 @@ window.onload = function init()
     gl = WebGLUtils.setupWebGL( canvas );
     if ( !gl ) { alert( "WebGL isn't available" ); }
 
-    /* MOUSE STUFF */
-
+    
     var context = canvas.getContext('2d');
     
-    canvas.addEventListener("mousedown", function(evt){
-        mouseFlag = 1;
-    }, false);
-    canvas.addEventListener("mousemove", function(evt){
-        if(mouseFlag === 1){
-            setMousePos(canvas, evt, 0);//add default light event;
-        }
 
-    }, false);
-    canvas.addEventListener("mouseup", function(){
-        mouseFlag = 0;
-        //mouseFlag = (mouseFlag ==0)?1:0;
-    }, false);
-    
     /***************/
 
 
@@ -285,25 +271,6 @@ function handleTextureLoaded(image, texture) {
     
 }
 
-
-function setMousePos(canvas, evt, i){
-    
-    if (currentLight == i)
-    {
-        mouseXY[i][0] = getMousePos(canvas, evt).x;
-        mouseXY[i][1] = getMousePos(canvas, evt).y;
-        console.log(i+": "+mouseXY[i][0]+" "+mouseXY[i][1]);
-    }
-    
-}
-
-function getMousePos(canvas, evt) {
-    var rect = canvas.getBoundingClientRect();
-    return {
-        x: (evt.clientX - rect.left)/(rect.right - rect.left) - 0.5,
-        y: (evt.clientY - rect.top)/(rect.bottom - rect.top) - 0.5
-    };
-}
 
 function render() {
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT );

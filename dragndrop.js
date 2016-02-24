@@ -62,7 +62,7 @@ UPLOADinit = function()
 	//image3.src = "images/bottle/shape.png"
 	//image5.src = "images/bottle/bg.png"
 	//image6.src = "images/eye/eye_alpha.jpg";
-	image6.src = "images/Holmer/Holmer_alphaControl.jpg";
+	image6.src = "images/Holmer/Holmer_new_alphaControl.png";
 
 
 		
@@ -339,18 +339,32 @@ function updateCanvasSizeandStyle(_image)
 	var canvasContainer = $('.canvas_container');
 	var ratioImage = _image.width / _image.height;
 	var ratioContainer = canvasContainer.width() / canvasContainer.height();
-			
+	
+	var lightPostionContainer = $('#lightPosition_container');
+	
 	if(ratioImage>=ratioContainer){
 		canvas.width = canvasContainer.width();
 		canvas.height = canvas.width * _image.height / _image.width;
 		canvas.style.width = "100%";
 		canvas.style.height = "auto";
+		$(lightPostionContainer).css("width", "100%");
+		$(lightPostionContainer).css("height", "auto");
+		
+		
 	}else{
 		canvas.height = canvasContainer.height() ;
 		canvas.width = canvas.height * _image.width / _image.height;
 		canvas.style.height = "100%";
 		canvas.style.width = "auto";
+		$(lightPostionContainer).css("height", "100%");
+		$(lightPostionContainer).css("width", "auto");
+		
 	}
+	
+	$(lightPostionContainer).attr("width", canvas.width) ;
+	$(lightPostionContainer).attr("height", canvas.height);
+	var viewbox = "0 0 " + canvas.width + " " + canvas.height;
+	$(lightPostionContainer).attr("viewBox", viewbox);
 	
 	gl = WebGLUtils.setupWebGL( canvas );
  	gl.viewport( 0, 0, canvas.width, canvas.height );

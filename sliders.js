@@ -1,31 +1,26 @@
 $(document).ready(function () {
 
-    /**************** init checkbox ******************/
+    
+    /**************** init checkbox according to default parameters ******************/
     
     var mirrorElem = $('#mirrorSelect');
     initCheckbox(mirror, mirrorElem);
     
     
-    var lightsOnlyElem = $ ('#lightsOnlySelect');
+    var lightsOnlyElem = $('#lightsOnlySelect');
     initCheckbox(lightsOnly, lightsOnlyElem);
 
+    var lightsPositionElem = $('#lightsPositionSelect');
+    initCheckbox(lightsPosition, lightsPositionElem);
 
-
-
-
-
-
-    /*
-    if ($(this).is(':checked')) {
-    $(this).parent().fadeTo('slow', 0.5);
-    $(this).attr('checked'); //This line
+    if (lightsPosition ==1)
+    {
+        $('#lightPosition_container').css("display", "block");
     }else{
-    
-    $(this).parent().fadeTo('slow', 1);
-    $(this).removeAttr('checked');
+        $('#lightPosition_container').css("display", "none");
     }
-    	
-    */
+    
+    
     /**********************offcanvas.js********************/
     $('[data-toggle="offcanvas"]').click(function () {
         $('.row-offcanvas').toggleClass('active')
@@ -59,13 +54,6 @@ $(document).ready(function () {
     alphaInBlue_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", alphaB).attr("data-slider-tooltip","hide").slider({});
     bindSliderValParam (alphaInBlue_slider, alphaInBlue_val, "alphaB");
 
-
-    /**Lights**/
-    
-    for (var i = 0; i < lightNum; i++)
-    {
-        setupLightFunctions(i);
-    }
 
     /**Shadow**/
     $("#sha_sampleSize_slider").slider({min: 0, max: 1, value: 1, step: 0.01, focus: true});
@@ -133,6 +121,7 @@ $(document).ready(function () {
       $("#demo").on("show.bs.collapse", function(){
         $(".btn").html('<span class="glyphicon glyphicon-collapse-up"></span> Close');
     */	 
+
   
 });//end of $(document).ready
 
@@ -202,6 +191,7 @@ function setupLightFunctions(i)
                         lightColor[i][0] =rgbObject.r / 255;
                         lightColor[i][1] =rgbObject.g / 255;
                         lightColor[i][2] =rgbObject.b / 255;
+                        setLightMarkFill(i);//function in addLights.js
                     }
                 }
                 //add event: add border if it is white#ffffff;
@@ -346,3 +336,7 @@ function color2hex(color) {
     });
     return '#' + hex.join('');
 }
+
+
+
+

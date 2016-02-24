@@ -76,6 +76,39 @@ $(function() {
 
     var view = {
         init: function() {
+
+            // mouse event
+
+            var canvas = document.getElementById( "gl-canvas" );
+            canvas.addEventListener("mousedown", function(evt){
+                mouseFlag = 1;
+            }, false);
+            canvas.addEventListener("mousemove", function(evt){
+                if(mouseFlag === 1){
+                    setMousePos(canvas, evt, 0);//add default light event;
+                }
+            }, false);
+            canvas.addEventListener("mouseup", function(){
+                mouseFlag = 0;
+                //mouseFlag = (mouseFlag ==0)?1:0;
+            }, false);
+
+            
+            // show light Position event
+            
+            $('#lightsPositionSelect:checkbox').click(function() {
+                var $this = $(this);
+                // $this will contain a reference to the checkbox   
+                if ($this.is(':checked')) {
+                    $('#lightPosition_container').css("display", "block");
+                } else {
+                    $('#lightPosition_container').css("display", "none");
+                }
+            });
+
+
+
+            // "Add light" button event
             var addLightBtn = $('#btn_addLight');
             addLightBtn.click(function() {
                 octopus.addLight();
@@ -85,7 +118,7 @@ $(function() {
             this.$lightList = $('ul#accordion_Lights');
             this.defaultLightTemplate = $('script[data-template="defaultLight"]').html();
             this.lightTemplate = $('script[data-template="light"]').html();
-
+            this.$lightMarkList = $('#lightPosition_container');
 
             // Delegated event to listen for removal clicks
             this.$lightList.on('click', '.myLightsTitle .destroy', function(e) {
@@ -100,17 +133,21 @@ $(function() {
         render: function() {
             // Cache vars for use in forEach() callback (performance)
             var $lightList = this.$lightList,
+                $lightMarkList = this.$lightMarkList,
                 lightTemplate = this.lightTemplate;
                 
             var defaultLightTemplate = lightTemplate.replace(/{{id}}/g, 0).replace("LIGHT0","DEFAULT LIGHT");
 
             // Clear and render
             $lightList.html('');
+            $lightMarkList.html('');
             $lightList.append(defaultLightTemplate);
 
-            $("#lightPanel0 .destroy").remove();
+            $("#lightPanel0 .destroy").remove();//can not be deleted
 
-            setupLightFunctions(0);//for default light
+            //for default light
+            setupLightFunctions(0);//sliderbar checkbox etc, function in sliders.js
+            drawLightMarkPosition(0);
 
             octopus.getExistLights().forEach(function(light) {
 
@@ -118,6 +155,7 @@ $(function() {
                 var thisTemplate = lightTemplate.replace(/{{id}}/g, light.id);
                 $lightList.append(thisTemplate);
                 setupLightFunctions(light.id);
+                drawLightMarkPosition(light.id);
             });
             
             
@@ -130,6 +168,13 @@ $(function() {
                 $(lightContentName).addClass('in');
                 
             }
+
+            //for show lights position 
+            //init default point
+            
+
+
+
         }
     };
 
@@ -141,18 +186,78 @@ $(function() {
 function addLightParameters(index){
     //init parameter
     mouseXY[index] = [Math.random()-0.5, Math.random()-0.5];     
-    lightColor[index] =[Math.random()/2+0.5, Math.random()/2+0.5, Math.random()/2+0.5];
+    lightColor[index] =[Math.random(), Math.random(), Math.random()];
     lightIntensity[index] = 0.5;
     pointLightDis[index] = 0.5;
     showDiffuse[index] = 1;
     showSpec[index] = 1;
     
-    //mouse stuff
+    //mouse 
     var canvas = document.getElementById( "gl-canvas" );
     canvas.addEventListener("mousemove", function(evt){
         if(mouseFlag === 1){
-            setMousePos(canvas, evt, index);//this function in "cube.js"
+            setMousePos(canvas, evt, index);
         }
     }, false);
     
 }
+
+
+//for show lights position
+
+function setLightMarkFill(index)
+{
+    var colorString = color2hex(lightColor[index]);
+    var lightMarkName = '#lightMark'+index;
+    $(lightMarkName).attr('fill', colorString);
+}
+
+function setLightMarkPosition(index)
+{
+    var lightPx = (mouseXY[index][0] + 0.5)*100 + "%";
+    var lightPy = (mouseXY[index][1] + 0.5)*100 + "%";
+
+    var lightMarkName = '#lightMark'+index;
+    $(lightMarkName).attr('cx', lightPx).attr('cy', lightPy);
+
+    console.log("inMark");
+}
+
+function drawLightMarkPosition(index){
+    var lightPx = (mouseXY[index][0] + 0.5)*100 + "%";
+    var lightPy = (mouseXY[index][1] + 0.5)*100 + "%";
+    var colorString = color2hex(lightColor[index]);
+    var lightMark = "lightMark" + index;
+    var circle= makeSVG('circle', {id:lightMark, cx: lightPx, cy: lightPy, fill: colorString, r:8, stroke: 'white', 'stroke-width': 1,});
+    document.getElementById('lightPosition_container').appendChild(circle);
+}
+
+function makeSVG(tag, attrs) {
+    var el= document.createElementNS('http://www.w3.org/2000/svg', tag);
+    for (var k in attrs)
+        el.setAttribute(k, attrs[k]);
+    return el;
+}
+
+//mouse functions
+
+function setMousePos(canvas, evt, i){
+    
+    if (currentLight == i)
+    {
+        mouseXY[i][0] = getMousePos(canvas, evt).x;
+        mouseXY[i][1] = getMousePos(canvas, evt).y;
+        setLightMarkPosition(i);
+        console.log(i+": "+mouseXY[i][0]+" "+mouseXY[i][1]);
+    }
+    
+}
+
+function getMousePos(canvas, evt) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+        x: (evt.clientX - rect.left)/(rect.right - rect.left) - 0.5,
+        y: (evt.clientY - rect.top)/(rect.bottom - rect.top) - 0.5
+    };
+}
+

@@ -84,7 +84,7 @@
 
         uniform int currentLight;
 
-        uniform int lightsOnly;
+        uniform bool lightsOnly;
 
         uniform vec3 lightColor[max_lights];
         uniform float lightIntensity[max_lights];
@@ -148,7 +148,7 @@
 
             vec4 colorFinal = c0 * (vec4 ( 1.0, 1.0, 1.0, 1.0) - T) + c1 * T;
             
-            if (lightsOnly ==1)
+            if (lightsOnly == true)
             {
                 return T;
             }else{
@@ -260,19 +260,15 @@
             vec4 finalColor = diffuse;
 
 
-            float a;
-            a = alphaControl.r;
-            finalColor = finalColor * (1.0 - a) + finalColor * alphaR * a; 
-            a = alphaControl.g;
-            finalColor = finalColor * (1.0 - a) + finalColor * alphaG * a; 
-            a = alphaControl.b;
-            finalColor = finalColor * (1.0 - a) + finalColor * alphaB * a; 
             
-
             finalColor += vec4(specular, 1.0); 
 
 
+            vec4 finalColor_showLightsOnly = finalColor;
+
             float alpha = diffuse.a;
+
+            float a;
             
             a = alphaControl.r;
             alpha = alpha * (1.0 - a) + alpha * alphaR * a; 
@@ -292,8 +288,17 @@
             a = nn.a  ;
             vec3 compBackground = backgroundColor * (1.0 - a) + finalColor.rgb * a;
             
+            if (lightsOnly == true)
+            {
+                finalColor = vec4(finalColor_showLightsOnly.rgb, 1.0);
+                compBackground = vec3(0,0,0) * (1.0 - a) + finalColor.rgb * a;
+            }
             
             gl_FragColor = vec4(compBackground.rgb, 1.0);
+
+            
+
+
             //gl_FragColor = vec4(diffuse.a,diffuse.a,diffuse.a, 1.0);
             
             //gl_FragColor = vec4(userMouse.x+0.5, -userMouse.y+0.5, 0.0, 1.0);
@@ -492,6 +497,13 @@
                     <canvas id="gl-canvas" >
                         Oops ... your browser doesn't support the HTML5 canvas element
                     </canvas>
+                    
+                    <svg id = "lightPosition_container" xmlns = " http://www.w3.org/2000/svg" >
+
+                        
+                    
+                    </svg>
+                    
                 </div>
         
             </div>
@@ -506,15 +518,15 @@
                 		    Light 
                         </a>
                         <div id = "lightControl" class= "inCollapse collapse" > 
-                            <!-- <div class = "checkbox">
+                            <div class = "checkbox">
                                 <label>
                          		    <span class="h6 inlineBlock" >Show lights Position</span>
                                     <div class = "checkbox_container pull-right">
-                             	        <input type="checkbox" >
+                             	        <input type="checkbox" id ="lightsPositionSelect" >
                                         <div class = "pseudoCheckbox"></div>
                                     </div>
                                 </label>
-                            </div> -->
+                            </div>
                             <div class = "checkbox">
                                 <label>
                                     <span class="h6 inlineBlock" >Show Lights Only</span>
