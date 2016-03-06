@@ -25,7 +25,7 @@
     <link href="css/mock3d.css" rel="stylesheet">
 
     <script id="vertex-shader" type="x-shader/x-vertex">
-        #define max_lights 15
+        #define max_lights 14
 
         attribute vec4 vPosition;
         attribute vec3 vNormal;
@@ -36,7 +36,8 @@
         
         varying vec3 pLight[max_lights];
         varying float lightN;// = lightNum
-        
+        varying vec2 mouseXYcopy[max_lights];
+
         uniform float lightNum;
         uniform vec2 mouseXY[max_lights];
         uniform float pointLightDis[max_lights];
@@ -54,10 +55,11 @@
             {
                 if (float(i)< float(lightNum))
                 {
-                    float x = mouseXY[i].x * 4.0 ;
-                    float y = mouseXY[i].y * 4.0;
+                    float x = mouseXY[i].x * 2.0 ;
+                    float y = mouseXY[i].y * 2.0;
                     float z = pointLightDis[i];
                     pLight[i] = vec3(x, -y, z + 0.05);
+                    mouseXYcopy[i] = mouseXY[i];
                 }else{
                     break;
                 }
@@ -69,7 +71,7 @@
     </script>
 
     <script id="fragment-shader" type="x-shader/x-fragment">
-        #define max_lights 15
+        #define max_lights 14
 
         precision mediump float;
 
@@ -79,6 +81,8 @@
         varying float lightN;
         
         varying vec3 pLight[max_lights];
+
+        varying vec2 mouseXYcopy[max_lights];
         
         uniform sampler2D uSamplerColor0, uSamplerColor1, uSamplerNormal, uSamplerForeground, uSamplerBackground, uSamplerAlpha;
 
@@ -88,6 +92,7 @@
 
         uniform vec3 lightColor[max_lights];
         uniform float lightIntensity[max_lights];
+        uniform float pointLightDecay[max_lights];
         
         uniform bool showDiffuse[max_lights];
         uniform bool showSpec[max_lights];
@@ -98,10 +103,18 @@
 
         uniform float reflectIntensity;
         uniform float FGdis;
-        uniform int mirror;
-        uniform float FGshiftLR;
+        uniform bool reflDisable;
+        uniform bool mirror;
+        uniform int reflMap;// 1: plane, 2:hemisphere
+        uniform float FGshiftX;
+        uniform float FGshiftY;
+        uniform float FGscaleX;
+        uniform float FGscaleY;
 
-        
+        uniform float fresnelB;
+        uniform float fresnelC;
+        uniform bool checkFresnel;
+
         vec4 normal()
         {
 
@@ -125,14 +138,15 @@
             {
                 if (float(i)< float(lightN))
                 {
-
                     vec3 vLight = normalize( pLight[i] - currentP);
                     float cosTheta = max( dot(n, vLight), 0.0);
                     float t = (cosTheta - styleDark) / (styleBright - styleDark);
                     if (t>1.0) t=1.0; if (t<0.0) t=0.0;
-                    if ( showDiffuse[i] == true )
+                    if ( showDiffuse[i] )
                     {
-                        color += (1.0 - t) * vec4(lightColor[i], 1.0) * lightIntensity[i] ;
+                        float dis = length( pLight[i] - currentP );
+                        
+                        color += (1.0 - t) * vec4(lightColor[i], 1.0) * lightIntensity[i] / ( 1.0 + pointLightDecay[i] * dis *4.0);
                         lightWeight+=lightIntensity[i] ;
                     };
 
@@ -148,7 +162,7 @@
 
             vec4 colorFinal = c0 * (vec4 ( 1.0, 1.0, 1.0, 1.0) - T) + c1 * T;
             
-            if (lightsOnly == true)
+            if (lightsOnly )
             {
                 return T;
             }else{
@@ -174,9 +188,8 @@
             {
                 if (float(i)< float(lightN))
                 {
-
                     vec3 vLight = normalize( pLight[i] - currentP);
-                    if (showSpec[i] == true)
+                    if (showSpec[i] )
                     {
                     vec3 specColor = lightColor[i];
                     vec3 viewVector = vec3(0.0, 0.0, 1.0);
@@ -193,27 +206,74 @@
             return finalSpec ;
         }
 
-        //Ergun's reflect
-        vec3 reflect(vec3 n)
+        // Reflected texture is treated as ultimate plane.
+        vec3 reflect1(vec3 n)
         {
-            
-            // Reflected texture is treated as ultimate plane.
+
             float reflectIntensity = 1.0;
             vec3 reflect = - 1.0 * vec3(0.0, 0.0, 1.0) + 2.0 * dot(n, vec3(0.0, 0.0, 1.0)) * n;
-            vec2 reflCoord = f_texcoord + (reflect.xy / reflect.z) * (FGdis * 3.0) + vec2( FGshiftLR * -2.0, 0.0);//+ vLight0.xy ;
+            vec2 reflCoord = f_texcoord + (reflect.xy / reflect.z) * FGdis + vec2( -mouseXYcopy[0].x * 0.5, mouseXYcopy[0].y * 0.5) ;//+ vLight0.xy ;
+            vec2 v = (reflCoord - vec2(0.5, 0.5)) / 0.5;
+                reflCoord.x = v.x * ( 1.0 - FGscaleX ) - FGshiftX +0.5;
+                reflCoord.y = v.y * ( 1.0 - FGscaleY ) - FGshiftY + 0.5;
+                if (reflCoord.x > 1.0 || reflCoord.x < 0.0)
+                {
+                    reflCoord.x = reflCoord.x - float(floor(reflCoord.x));
+                    if ( floor(reflCoord.x) / 2.0 == 0.0)
+                    {
+                        reflCoord.x = 1.0 - reflCoord.x;
+                    }
+                }
+                if (reflCoord.y > 1.0 || reflCoord.y < 0.0)
+                {
+                    reflCoord.y = reflCoord.y - float(floor(reflCoord.y));
+                    if ( floor(reflCoord.y) / 2.0 == 0.0)
+                    {
+                        reflCoord.y = 1.0 - reflCoord.y;
+                    }
+                }
             vec4 reflColor = texture2D(uSamplerForeground, reflCoord) ;
+            
+            if (checkFresnel )
+            {
+                reflColor = vec4(1.0,1.0,1.0,1.0);
+            }
             return reflColor.rgb * reflectIntensity;
         }
 
-        //conrad's reflect
+        // Reflected texture is treated as if it is on a hemisphere 1 unit
+            // away from the surface.
         vec3 reflect2(vec3 n)
         {
-            // Reflected texture is treated as if it is on a hemisphere 1 unit
-            // away from the surface.
-
+            
             float reflectIntensity = 1.0;
-            vec2 reflCoord = f_texcoord + n.xy * (FGdis * 2.0) + vec2( FGshiftLR * -2.0, 0.0) ;
+            vec2 reflCoord = f_texcoord + n.xy * FGdis + vec2( -mouseXYcopy[0].x * 0.5, mouseXYcopy[0].y * 0.5);
+            vec2 v = (reflCoord - vec2(0.5, 0.5)) / 0.5;
+                reflCoord.x = v.x * ( 1.0 - FGscaleX ) - FGshiftX +0.5;
+                reflCoord.y = v.y * ( 1.0 - FGscaleY ) - FGshiftY + 0.5;
+                if (reflCoord.x > 1.0 || reflCoord.x < 0.0)
+                {
+                    reflCoord.x = reflCoord.x - float(floor(reflCoord.x));
+                    if ( floor(reflCoord.x) / 2.0 == 0.0)
+                    {
+                        reflCoord.x = 1.0 - reflCoord.x;
+                    }
+                }
+                if (reflCoord.y > 1.0 || reflCoord.y < 0.0)
+                {
+                    reflCoord.y = reflCoord.y - float(floor(reflCoord.y));
+                    if ( floor(reflCoord.y) / 2.0 == 0.0)
+                    {
+                        reflCoord.y = 1.0 - reflCoord.y;
+                    }
+                }
+
             vec4 reflColor = texture2D(uSamplerForeground, reflCoord) ;
+            if (checkFresnel)
+            {
+                reflColor = vec4(1.0,1.0,1.0,1.0);
+            }
+
             return reflColor.rgb * reflectIntensity;
         }
         
@@ -227,15 +287,58 @@
             vec3 refract = -1.0 * ior * vec3(0, 0, 1.0) + (ior * cos1 - cos2) * n; // vec3(0,0,1) -> vLight
             vec2 refrCoord = f_texcoord + (refract.xy / refract.z ) * (2.0 * BGdis);
             vec4 refrColor = texture2D(uSamplerBackground, refrCoord);
+            if (checkFresnel == true)
+            {
+                refrColor = vec4(0,0,0,1.0);
+            }
             return refrColor.rgb * refractIntensity;
         }
         
 
         vec3 fresnelBlend(vec3 n, vec3 refl, vec3 refr)
         {
-            float cos = dot(n, vec3(0,0,1) );
-            return refl * (1.0 - cos) + refr * cos;
-            //return refl;
+            float cos = dot(n, vec3(0, 0, 1.0) );
+            float N = (logIOR + 1.0) / 2.0;
+            float Amin = 0.02, 
+                    Amax = 0.2;
+            float Cmin = 0.4, 
+                Cmax = 1.0;
+            
+            float A = Amin * ( 1.0 - N ) + Amax * N;
+            float B = 0.0;
+            float C = Cmin * ( 1.0 - N ) + Cmax * N;
+            float D = 1.0;
+
+            float num1 = sqrt( 1.0 - fresnelB * fresnelB );
+            float num2 = sqrt( 1.0 - fresnelC * fresnelC );
+
+            float fresnel;
+            float F;
+            if ( 1.0 > cos && cos > num1 ) {
+                F = ( cos - num1 ) / ( 1.0 - num1 );
+                fresnel = A * F  + B * ( 1.0 - F ) ;
+            }else if ( num1 > cos && cos > num2 ){
+                F = ( cos - num2 ) / ( num1 - num2 );
+                fresnel = B * F + C * ( 1.0 - F );
+            }else if ( num2 > cos && cos > 0.0){
+                F = ( cos - 0.0 ) / ( num2 - 0.0 );
+                fresnel = C * F + D * ( 1.0 - F );
+            }
+
+            fresnel = 1.0 * reflectIntensity + fresnel * ( 1.0 - reflectIntensity);
+
+            if (reflDisable )
+            {
+                return refr;
+            }
+
+            return refl * fresnel + refr * ( 1.0 - fresnel );
+
+
+            //vec3 reflTemp = refl * reflectIntensity ;
+            //vec3 refrTemp = refr * (1.0 - reflectIntensity);
+            //return reflTemp * (1.0 - cos) + refrTemp * cos;
+            
                
         }
 
@@ -251,17 +354,23 @@
             vec3 alphaControl = alphaControl();
             vec4 background = texture2D(uSamplerBackground, vec2(f_texcoord.s, f_texcoord.t) );
             vec3 backgroundColor = background.rgb;
-            vec3 refl = reflect2(n);
+            vec3 refl = vec3 (0,0,0); 
+            if (reflMap == 1)
+            {
+                refl = reflect1(n) + specular; //plane
+            }else if (reflMap == 2)
+            {
+                refl = reflect2(n) + specular; //hemisphere
+            }
             vec3 refr = refract(n);
-            refl = refl * reflectIntensity * 2.0;
-            refr = refr * (1.0 - reflectIntensity) * 2.0;
+            
             vec3 fresnel = fresnelBlend(n, refl, refr);
             
             vec4 finalColor = diffuse;
 
 
             
-            finalColor += vec4(specular, 1.0); 
+            //finalColor += vec4(specular, 1.0); 
 
 
             vec4 finalColor_showLightsOnly = finalColor;
@@ -280,15 +389,19 @@
             
             finalColor = vec4 (fresnel * (1.0 - alpha) + finalColor.rgb * alpha, 1.0) ;
             
-            if (mirror == 1)
+            if (mirror )
             {
                 finalColor = vec4 (refl, 1.0);
+            }
+            if (checkFresnel )
+            {
+                finalColor = vec4 (fresnel, 1.0);
             }
 
             a = nn.a  ;
             vec3 compBackground = backgroundColor * (1.0 - a) + finalColor.rgb * a;
             
-            if (lightsOnly == true)
+            if (lightsOnly )
             {
                 finalColor = vec4(finalColor_showLightsOnly.rgb, 1.0);
                 compBackground = vec3(0,0,0) * (1.0 - a) + finalColor.rgb * a;
@@ -520,7 +633,7 @@
                         <div id = "lightControl" class= "inCollapse collapse" > 
                             <div class = "checkbox">
                                 <label>
-                         		    <span class="h6 inlineBlock" >Show lights Position</span>
+                         		    <span class="h6 inlineBlock" >Show Lights Position</span>
                                     <div class = "checkbox_container pull-right">
                              	        <input type="checkbox" id ="lightsPositionSelect" >
                                         <div class = "pseudoCheckbox"></div>
@@ -589,6 +702,15 @@
                 	        Refraction
                         </a>
                         <div id = "refractionControl" class= "inCollapse collapse"> 
+                            <div class="checkbox">
+                                <label>
+                                    <span class = "h6 inlineBlock"> refraction only </span>
+                                    <div class = "checkbox_container pull-right">
+                                        <input type="checkbox" id ="reflDisableSelect">
+                                        <div class = "pseudoCheckbox"></div>
+                                    </div>
+                                </label>
+                            </div>
                	            <div class="imgbox_container">
                 		        <h6>Background image</h6>
                 		        <div>
@@ -637,7 +759,7 @@
                         <div id = "reflectionControl" class= "inCollapse collapse"> 
                	            <div class="checkbox">
                                 <label>
-                                    <span class = "h6 inlineBlock"> Toggle Mirror </span>
+                                    <span class = "h6 inlineBlock"> Full Reflection </span>
                                     <div class = "checkbox_container pull-right">
                                         <input type="checkbox" id ="mirrorSelect">
                                         <div class = "pseudoCheckbox"></div>
@@ -664,13 +786,56 @@
                                     </div>
                                 </div>
                 	        </div>
-                            <div class="slider_container">
-                                <span class="h6 inlineBlock"> FG shift </span>
+                            <div class="dropdown_container">
+                                <span class="h6 inlineBlock"> Wrap as </span>
                                 <div class="pull-right">
-                                    <input type="text" class="form-control mytextbox text-center" id="refl_FGshiftLR_val">
+                                     <div class="btn-group" id = "reflMap">
+                                        <button type="button" class="btn btn-default dropdown-toggle myDropdown" data-toggle="dropdown" aria-haspopup="true"  aria-expanded="false">
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-right">
+                                            <li><a id = "reflMap_plane">Plane</a></li>
+                                            <li><a id = "reflMap_hemisphere">Hemisphere</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                           
+                            <div class="slider_container">
+                                <span class="h6 inlineBlock"> Shift X</span>
+                                <div class="pull-right">
+                                    <input type="text" class="form-control mytextbox text-center" id="refl_FGshiftX_val">
                                 </div>
                                 <div class="slider_box">
-                                    <input id="refl_FGshiftLR_slider" data-slider-id='customSlider' type="text" />
+                                    <input id="refl_FGshiftX_slider" data-slider-id='customSlider' type="text" />
+                                </div>
+                            </div>
+                            <div class="slider_container">
+                                <span class="h6 inlineBlock"> Shift Y</span>
+                                <div class="pull-right">
+                                    <input type="text" class="form-control mytextbox text-center" id="refl_FGshiftY_val">
+                                </div>
+                                <div class="slider_box">
+                                    <input id="refl_FGshiftY_slider" data-slider-id='customSlider' type="text" />
+                                </div>
+                            </div>
+                            <div class="slider_container">
+                                <span class="h6 inlineBlock"> Scale X</span>
+                                <div class="pull-right">
+                                    <input type="text" class="form-control mytextbox text-center" id="refl_FGscaleX_val">
+                                </div>
+                                <div class="slider_box">
+                                    <input id="refl_FGscaleX_slider" data-slider-id='customSlider' type="text" />
+                                </div>
+                            </div>
+                            <div class="slider_container">
+                                <span class="h6 inlineBlock"> Scale Y</span>
+                                <div class="pull-right">
+                                    <input type="text" class="form-control mytextbox text-center" id="refl_FGscaleY_val">
+                                </div>
+                                <div class="slider_box">
+                                    <input id="refl_FGscaleY_slider" data-slider-id='customSlider' type="text" />
                                 </div>
                             </div>
                             <div class="slider_container">
@@ -692,6 +857,33 @@
                                 </div>
                             </div> -->
             	       </div>	
+                    </li>
+                    <!--Fresnel-->
+                    <li class="panel">
+                        <a class="myControlTitle collapsed" data-toggle="collapse" data-parent = "#accordion_R" href="#fresnelControl">
+                            Fresnel 
+                        </a>
+                        <div id = "fresnelControl" class= "inCollapse collapse"> 
+                            <div class="checkbox">
+                                <label>
+                                    <span class = "h6 inlineBlock"> check Fresnel </span>
+                                    <div class = "checkbox_container pull-right">
+                                        <input type="checkbox" id ="checkFresnelSelect">
+                                        <div class = "pseudoCheckbox"></div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div>
+                                <h6>Fresnel Position</h6>
+                                <div class="slider_box">
+                                    <input id="fresnelControl_slider" data-slider-id='customSlider' type="text" class=" span2" value="" />
+                                </div>
+                                 <div >
+                                    <div class = "h7 inlineBlock">center</div>   
+                                    <div class = "h7 pull-right">edge</div>
+                                 </div>
+                            </div>
+                        </div>  
                     </li>
                     <!--Ambient Occlusion-->
                     <!-- <li class="panel">
@@ -801,6 +993,15 @@
                     </div>
                     <div class="slider_box">
                         <input id="pointLGTdis_slider" data-slider-id='customSlider' type="text" />
+                    </div>
+                </div>
+                <div class="slider_container">
+                    <span class="h6 inlineBlock"> Light Decay </span>
+                    <div class="pull-right">
+                        <input type="text" class="form-control mytextbox text-center" id="pointLGTdecay_val">
+                    </div>
+                    <div class="slider_box">
+                        <input id="pointLGTdecay_slider" data-slider-id='customSlider' type="text" />
                     </div>
                 </div>
                 

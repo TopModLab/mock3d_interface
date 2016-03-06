@@ -3,15 +3,21 @@ $(document).ready(function () {
     
     /**************** init checkbox according to default parameters ******************/
     
+    var reflDisableElem = $('#reflDisableSelect');
+    initCheckbox(reflDisable, reflDisableElem);
+    
     var mirrorElem = $('#mirrorSelect');
     initCheckbox(mirror, mirrorElem);
-    
     
     var lightsOnlyElem = $('#lightsOnlySelect');
     initCheckbox(lightsOnly, lightsOnlyElem);
 
     var lightsPositionElem = $('#lightsPositionSelect');
     initCheckbox(lightsPosition, lightsPositionElem);
+
+    var checkFresnelElem = $('#checkFresnelSelect');
+    initCheckbox(checkFresnel, checkFresnelElem);
+    
 
     if (lightsPosition ==1)
     {
@@ -55,6 +61,13 @@ $(document).ready(function () {
     bindSliderValParam (alphaInBlue_slider, alphaInBlue_val, "alphaB");
 
 
+    /**Fresnel**/
+    $("#fresnelControl_slider").slider({ min: 0, max: 1, value: [fresnelB, fresnelC], step: 0.01, focus: true });
+    $("#fresnelControl_slider").on("slide", function(slideEvt) {
+        fresnelB = slideEvt.value[0];
+        fresnelC = slideEvt.value[1];
+    });
+
     /**Shadow**/
     $("#sha_sampleSize_slider").slider({min: 0, max: 1, value: 1, step: 0.01, focus: true});
     $("#sha_numberOfSample_slider").slider({min: 0, max: 1, value: 1, step: 0.01, focus: true});
@@ -86,6 +99,43 @@ $(document).ready(function () {
     
     /**Reflection**/
     
+    //reflMap dropdown
+    //init
+    var way;
+    if (reflMap == 1)
+    {
+        way = 'Plane ';
+    }else if (reflMap == 2)
+    {
+        way = 'Hemisphere ';
+    }
+    var mystring = way + '<span class=\"caret\"></span>';
+    $("#reflMap .btn").html(mystring);
+    
+        
+    
+
+    //events
+    $("#reflMap").on("hide.bs.dropdown", function(){
+        $("#reflMap .caret").removeClass("caret-up");
+    });
+    $("#reflMap").on("show.bs.dropdown", function(){
+        $("#reflMap .caret").addClass("caret-up");
+    });
+
+    $("#reflMap_plane").click(function(){
+        $("#reflMap .btn").html('Plane <span class="caret"></span>');
+        reflMap = 1;
+    })
+    $("#reflMap_hemisphere").click(function(){
+        $("#reflMap .btn").html('Hemisphere <span class="caret"></span>');
+        reflMap = 2;
+    })
+
+
+    // $("#reflMap .btn").html('Hemisphere <span class="caret caret-up"></span>');
+
+
     var refl_intensity_slider = $("#refl_intensity_slider");
     var refl_intensity_val = $("#refl_intensity_val");
     refl_intensity_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", reflectIntensity).attr("data-slider-tooltip","hide").slider({});
@@ -94,14 +144,29 @@ $(document).ready(function () {
 
     var refl_FGdis_slider = $("#refl_FGdis_slider");
     var refl_FGdis_val = $("#refl_FGdis_val");
-    refl_FGdis_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", FGdis).attr("data-slider-tooltip","hide").slider({});
+    refl_FGdis_slider.attr("data-slider-min", 0).attr("data-slider-max", 5).attr("data-slider-step", 0.01).attr("data-slider-value", FGdis).attr("data-slider-tooltip","hide").slider({});
     bindSliderValParam (refl_FGdis_slider, refl_FGdis_val, "FGdis");
 
 
-    var refl_FGshiftLR_slider = $("#refl_FGshiftLR_slider");
-    var refl_FGshiftLR_val = $("#refl_FGshiftLR_val");
-    refl_FGshiftLR_slider.attr("data-slider-min", -1).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", FGshiftLR).attr("data-slider-tooltip","hide").slider({});
-    bindSliderValParam (refl_FGshiftLR_slider, refl_FGshiftLR_val, "FGshiftLR");
+    var refl_FGshiftX_slider = $("#refl_FGshiftX_slider");
+    var refl_FGshiftX_val = $("#refl_FGshiftX_val");
+    refl_FGshiftX_slider.attr("data-slider-min", -1).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", FGshiftX).attr("data-slider-tooltip","hide").slider({});
+    bindSliderValParam (refl_FGshiftX_slider, refl_FGshiftX_val, "FGshiftX");
+
+    var refl_FGshiftY_slider = $("#refl_FGshiftY_slider");
+    var refl_FGshiftY_val = $("#refl_FGshiftY_val");
+    refl_FGshiftY_slider.attr("data-slider-min", -1).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", FGshiftY).attr("data-slider-tooltip","hide").slider({});
+    bindSliderValParam (refl_FGshiftY_slider, refl_FGshiftY_val, "FGshiftY");
+
+    var refl_FGscaleX_slider = $("#refl_FGscaleX_slider");
+    var refl_FGscaleX_val = $("#refl_FGscaleX_val");
+    refl_FGscaleX_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", FGscaleX).attr("data-slider-tooltip","hide").slider({});
+    bindSliderValParam (refl_FGscaleX_slider, refl_FGscaleX_val, "FGscaleX");
+
+    var refl_FGscaleY_slider = $("#refl_FGscaleY_slider");
+    var refl_FGscaleY_val = $("#refl_FGscaleY_val");
+    refl_FGscaleY_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", FGscaleY).attr("data-slider-tooltip","hide").slider({});
+    bindSliderValParam (refl_FGscaleY_slider, refl_FGscaleY_val, "FGscaleY");
 
 
     $("#bluriness_slider").slider({min: 0, max: 1, value: 1, step: 0.01, focus: true});
@@ -168,6 +233,14 @@ function setupLightFunctions(i)
     var pointLGTdis_val = $(textarea_pLightDis);
     pointLGTdis_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", pointLightDis[i]).attr("data-slider-tooltip","hide").slider({});
     bindSliderValParamIndex (pointLGTdis_slider, pointLGTdis_val, "pointLightDis", i);
+
+    //pointLightDecay
+    var sliderName_pLightDecay = "#lightPanel" + i + " #pointLGTdecay_slider";
+    var textarea_pLightDecay = "#lightPanel" + i + " #pointLGTdecay_val";
+    var pointLGTdecay_slider = $(sliderName_pLightDecay);
+    var pointLGTdecay_val = $(textarea_pLightDecay);
+    pointLGTdecay_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", pointLightDecay[i]).attr("data-slider-tooltip","hide").slider({});
+    bindSliderValParamIndex (pointLGTdecay_slider, pointLGTdecay_val, "pointLightDecay", i);
 
     ////init colorPicker & add events
     var colorPickerName = "#lightPanel" + i + " .colorPicker";

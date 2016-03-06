@@ -21,25 +21,86 @@ UPLOADinit = function()
 	image6 = new Image();	
 	
 	
-	//image1.src = "images/Eye/eye_dark.png"; //dark
-	//image2.src = "images/Eye/eye_bright.png"; //bright
-	//image3.src = "images/Eye/eye_shape_smooth.png"; //shape map
-	//image4.src = "images/Eye/eye_foreground.png";  //reflection
+	 
+
+	//eye
+	// image1.src = "images/Eye/eye_dark.jpg"; //dark
+	// image2.src = "images/Eye/eye_bright.jpg"; //bright
 	
-	//image1.src = "images/dark.png"; //dark
-	//image2.src = "images/white.png"; //bright
+	// image3.src = "images/Eye/eye_shape_smooth.png"; //shape map
+	// image4.src = "images/Eye/eye_foreground.png";  //reflection
+	// image5.src = "images/checker.jpg";//refraction
+	// image6.src = "images/eye/eye_alpha.jpg";
+	
+
+
+
+	//for fresnel test
+	// image1.src = "images/dark.png"; //dark
+	// image2.src = "images/light.png"; //bright
+	// image3.src = "images/cylinder.png"; //shape map
+	// image4.src = "images/white.png";  //reflection
+	// image5.src = "images/dark.png";  //refraction	
+	// image6.src = "images/white.png"; //alpha
+	
+
+
+	//Escher/eye
+	// image1.src = "images/Escher/eye/dark.jpg"; //dark
+	// image2.src = "images/Escher/eye/bright.jpg"; //bright
+	// image3.src = "images/Escher/eye/shape.png"; //shape map
+	// image4.src = "images/Escher/eye/reflect.png";  //reflection
+	// image5.src = "images/checker.jpg";//refraction
+	// image6.src = "images/Escher/eye/alphaControl.jpg";
+
+	//Escher/handWithSphere
+	image1.src = "images/Escher/handWithSphere/dark.jpg"; //dark
+	image2.src = "images/Escher/handWithSphere/bright.jpg"; //bright
+	image3.src = "images/Escher/handWithSphere/shape.png"; //shape map
+	image4.src = "images/Escher/handWithSphere/reflect2.jpg";  //reflection
+	image5.src = "images/dark.png";//refraction
+	image6.src = "images/Escher/handWithSphere/alphaControl.png";
+
+	//underWater
+	// image1.src = "images/underWater/dark.jpg"; //dark
+	// image2.src = "images/underWater/bright.jpg"; //bright
+	// image3.src = "images/underWater/shape.jpg"; //shape map
+	// image4.src = "images/white.png";  //reflection
+	// image5.src = "images/underWater/BG.jpg";//refraction
+	// image6.src = "images/underWater/alphaControl.jpg";
+
+
+
+	
+
+	// image1.src = "images/dark.png"; //dark
+	// image2.src = "images/light.png"; //bright
+	// image3.src = "images/bottle/shape.png"; //shape map
+	// //image4.src = "images/stripe_s.jpg";  //reflection
+	// image4.src = "images/reflect_red.png";  //reflection
+	
+	// image5.src = "images/checker.jpg";//refraction
+	// image6.src = "images/white.png";
+
 	//image2.src = "images/light.png"; //bright
 	
+	
+
 	//image1.src = "images/dark_(alpha50).png"; //dark
 	//image2.src = "images/light_(alpha50).png"; //bright
-	//image3.src = "images/normal.png"; //shape map
-	//image3.src = "images/Holmer/Holmer_shape_clean.png"; //shape map
-	image3.src = "images/Holmer/Holmer_new_shape.png"; //shape map
-	image1.src = "images/Holmer/Holmer_new_dark.png"; //dark
-	image2.src = "images/Holmer/Holmer_new_bright.png"; //bright
 	
-	//image1.src ="images/white.png";
-	//image2.src ="images/white.png";
+
+
+	//image3.src = "images/normal.png"; //shape map
+	
+
+
+	//image3.src = "images/Holmer/Holmer_shape_clean.png"; //shape map
+	// image3.src = "images/Holmer/Holmer_new_shape.png"; //shape map
+	//image1.src = "images/Holmer/Holmer_new_dark.png"; //dark
+	//image2.src = "images/Holmer/Holmer_new_bright.png"; //bright
+	
+	
 	
 	//image1.src = "images/Holmer/Holmer_dark.png"; //dark
 	//image2.src = "images/Holmer/Holmer_bright.png"; //bright
@@ -47,10 +108,10 @@ UPLOADinit = function()
 	
 
 	//image4.src = "images/reflect_red.png";//reflection
-	image4.src = "images/reflect_window2.png";//reflection
+	//image4.src = "images/reflect_window2.png";//reflection
 	//image4.src = "images/dark.png";
 
-	image5.src = "images/checker.jpg";  //refraction
+	//image5.src = "images/checker.jpg";  //refraction
 	//image5.src = "images/dark.png";  //refraction
 	//image5.src = "images/white.png";
 
@@ -62,7 +123,7 @@ UPLOADinit = function()
 	//image3.src = "images/bottle/shape.png"
 	//image5.src = "images/bottle/bg.png"
 	//image6.src = "images/eye/eye_alpha.jpg";
-	image6.src = "images/Holmer/Holmer_new_alphaControl.png";
+	//image6.src = "images/Holmer/Holmer_new_alphaControl.png";
 
 
 		

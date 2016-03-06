@@ -329,6 +329,10 @@ label{margin-bottom:0;}
   /*background: rgba(255, 0, 0, 0.5);*/
 }
 
+#lightPosition_container .highLight{
+  
+}
+
 
 
 
@@ -510,6 +514,28 @@ input[type="checkbox"] + .pseudoCheckbox{
 .inlineBlock{display:inline-block;}
 
 .mytextbox{width:44px; display:inline-block; padding:5px 5px; height:24px; margin-top:5px; margin-bottom: 5px;}
+
+
+.dropdown_container{
+  margin:7px 0;
+}
+
+.dropdown_container .caret.caret-up {
+    border-top-width: 0;
+    border-bottom: 4px solid #333;
+}
+.myDropdown{
+    padding: 1px 5px;
+    font-size: 12px;
+    line-height: 1.8;
+    border-radius: 3px;
+    margin: 3px 0;
+}
+
+.dropdown-menu{
+  margin-top: -1px;
+}
+
 
 .slider_container{padding-bottom:8px;}
 .slider_box{padding:0 10px;}
