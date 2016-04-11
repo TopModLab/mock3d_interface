@@ -189,7 +189,7 @@ function addLightParameters(index){
     lightColor[index] =[Math.random(), Math.random(), Math.random()];
     lightIntensity[index] = 0.5;
     pointLightDis[index] = 0.5;
-    pointLightDis[index] = 0.1;
+    pointLightDecay[index] = 0.1;
     showDiffuse[index] = 1;
     showSpec[index] = 1;
     

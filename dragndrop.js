@@ -19,9 +19,210 @@ UPLOADinit = function()
 	image4 = new Image();
 	image5 = new Image();	
 	image6 = new Image();	
+
+
+	//Holmer only
+	// image3.src = "images/Holmer/Holmer_shape.png"; //shape map
+	// image1.src = "images/Holmer/Holmer_dark.png"; //dark
+	// image2.src = "images/Holmer/Holmer_bright.png"; //bright
+	// image4.src = "images/reflect_window2.png";//reflection
+	// //image5.src = "images/dark.png";  //refraction
+	// image5.src = "images/checker.jpg";//refraction
+	// image6.src = "images/Holmer/Holmer_new_alphaControl.png";
+
 	
+
+	//Sphere for diffuse/fresnel
+		// alphaR = 0;
+		// reflMap = 1;
+		// fresnelB = 0.36;
+		// fresnelC = 0.73;
+		// image1.src = "images/dark.png"//dark
+		// image2.src = "images/white.png"//bright
+		// image3.src = "images/sphere.png";  //shape
+		// image4.src = "images/trees.png";  //reflection
+		// image6.src = "images/white.png"; //alpha
+		// image5.src = "images/checker.jpg";  //refraction	
+
+
+	//sphere for test
+	// image1.src = "images/dark.png"//dark
+	// image2.src = "images/white.png"//bright
+	// image3.src = "images/sphere.png";  //shape
+	// image4.src = "images/trees.png";  //reflection
+	// //image4.src = "images/bg_artMuseum.jpg";  //reflection
+	// //image4.src = "images/reflect_window2.png";//reflection
+	// image6.src = "images/white.png"; //alpha
+
+	// image5.src = "images/checker.jpg";//refraction
+	// image5.src = "images/light.png";  //refraction
+
+
 	
+
+	//Holmer with bubble
+	// image3.src = "images/Holmer/Holmer_new_shape.png"; //shape map
+	// image1.src = "images/Holmer/Holmer_new_dark.png"; //dark
+	// image2.src = "images/Holmer/Holmer_new_bright.png"; //bright
+	// image4.src = "images/reflect_window2.png";//reflection
+	// image5.src = "images/checker.jpg";  //refraction
+	// image6.src = "images/Holmer/Holmer_new_alphaControl.png";
 	 
+
+	
+	//Picasso
+
+	// alphaR = 1;
+	// image1.src = "images/Picasso/dark.jpg"; //dark
+	// image2.src = "images/Picasso/bright.jpg"; //bright
+	// image3.src = "images/Picasso/shape.png"; //shape map
+	// image4.src = "images/dark.png";  //reflection
+	// image5.src = "images/Picasso/original.jpg";  //refraction	
+	// image6.src = "images/white.png"; //alpha
+
+
+	
+
+
+	
+
+	//for fresnel test - newBottle
+	// image1.src = "images/dark.png"; //dark
+	// image2.src = "images/light.png"; //bright
+	// image3.src = "images/newBottleForFresnel.png"; //shape map
+	// image4.src = "images/white.png";  //reflection
+	// image6.src = "images/white.png"; //alpha
+	// image5.src = "images/checker.jpg";//refraction
+	
+
+	//Escher/eye
+	// alphaR = 1;
+	// image1.src = "images/Escher/eye/dark.jpg"; //dark
+	// image2.src = "images/Escher/eye/bright.jpg"; //bright
+	// image3.src = "images/Escher/eye/shape.png"; //shape map
+	// image4.src = "images/Escher/eye/reflect.png";  //reflection
+	// image5.src = "images/checker.jpg";//refraction
+	// image6.src = "images/Escher/eye/alphaControl.jpg";
+
+	//Escher/handWithSphere
+
+	// alphaR = 1;
+
+	// alphaR = 0;
+	// reflectIntensity = 1;
+	// FGshiftX = -0.09;
+	// FGshiftY = 0.08;
+	// FGscaleX = 0.8;
+	// FGscaleY = 0.52;
+	// reflMap =1;
+	// FGdis = 0.11;
+	// image1.src = "images/Escher/handWithSphere/dark.jpg"; //dark
+	// image2.src = "images/Escher/handWithSphere/bright.jpg"; //bright
+	// image3.src = "images/Escher/handWithSphere/shape.png"; //shape map
+	// image4.src = "images/Escher/handWithSphere/reflect2.jpg";  //reflection
+	// image5.src = "images/checker.jpg";//refraction
+	// image6.src = "images/Escher/handWithSphere/alphaControl.png";
+
+	//newBottle
+	alphaR = 0;
+	image1.src = "images/newBottle/diffuse.png"; //dark
+	image2.src = "images/newBottle/diffuse.png"; //bright
+	image3.src = "images/newBottle/shape.png"; //shape map
+	image4.src = "images/newBottle/reflect.png";  //reflection
+	image5.src = "images/newBottle/BG.png";//refraction
+	image6.src = "images/newBottle/alpha.png";
+
+
+
+	//underWater
+	// alphaR = 0;
+	// image1.src = "images/underWater/dark.jpg"; //dark
+	// image2.src = "images/underWater/bright.jpg"; //bright
+	// image3.src = "images/underWater/shape.jpg"; //shape map
+	// image4.src = "images/white.png";  //reflection
+	// image5.src = "images/underWater/BG.jpg";//refraction
+	// image6.src = "images/underWater/alphaControl.jpg";
+
+
+	//poly_girl
+	// image1.src = "images/dark.png"; //dark
+	// image2.src = "images/white.png"; //bright
+	// image3.src = "images/polyGirl/original.jpg"; //shape map
+	// image4.src = "images/dark.png";  //reflection
+	// image5.src = "images/dark.png";  //refraction	
+	// image6.src = "images/white.png"; //alpha
+
+
+	//poly_fragFace
+	// image1.src = "images/poly_fragFace/noise.jpg"; //dark
+	// image2.src = "images/poly_fragFace/dot.jpg"; //bright
+	// image3.src = "images/poly_fragFace/shape.jpg"; //shape map
+	// image4.src = "images/dark.png";  //reflection
+	// image5.src = "images/poly_fragFace/bg.jpg";  //refraction	
+	// image6.src = "images/poly_fragFace/alpha.jpg"; //alpha
+	
+	//impossible_triangle
+	// alphaR = 1;
+	// image1.src = "images/impossible_triangle/dark.png"; //dark
+	// image2.src = "images/impossible_triangle/bright.png"; //bright
+	// image3.src = "images/impossible_triangle/shape.png"; //shape map
+	// image4.src = "images/dark.png";  //reflection
+	// image5.src = "images/dark.png";  //refraction	
+	// image6.src = "images/white.png"; //alpha
+
+	//impossible_stair
+	// alphaR = 1;
+	// image1.src = "images/impossible_stair/dark.png"; //dark
+	// image2.src = "images/impossible_stair/bright.png"; //bright
+	// image3.src = "images/impossible_stair/shape.png"; //shape map
+	// image4.src = "images/dark.png";  //reflection
+	// image5.src = "images/dark.png";  //refraction	
+	// image6.src = "images/white.png"; //alpha
+
+	//impossible_gradient
+	// alphaR = 1;
+	// image1.src = "images/dark.png"; //dark
+	// image2.src = "images/white.png"; //bright
+	// image3.src = "images/impossible_gradient/shape.png"; //shape map
+	// image4.src = "images/dark.png";  //reflection
+	// image5.src = "images/dark.png";  //refraction	
+	// image6.src = "images/white.png"; //alpha
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	//for fresnel test - cylinder
+	// alphaR = 0;
+	// logIOR = 1;
+	// image1.src = "images/dark.png"; //dark
+	// image2.src = "images/light.png"; //bright
+	// image3.src = "images/cylinder.png"; //shape map
+	// image4.src = "images/trees.png";  //reflection
+	// image6.src = "images/white.png"; //alpha
+	
+	// image5.src = "images/dark.png";  //refraction	
+
+
+
 
 	//eye
 	// image1.src = "images/Eye/eye_dark.jpg"; //dark
@@ -35,43 +236,6 @@ UPLOADinit = function()
 
 
 
-	//for fresnel test
-	// image1.src = "images/dark.png"; //dark
-	// image2.src = "images/light.png"; //bright
-	// image3.src = "images/cylinder.png"; //shape map
-	// image4.src = "images/white.png";  //reflection
-	// image5.src = "images/dark.png";  //refraction	
-	// image6.src = "images/white.png"; //alpha
-	
-
-
-	//Escher/eye
-	// image1.src = "images/Escher/eye/dark.jpg"; //dark
-	// image2.src = "images/Escher/eye/bright.jpg"; //bright
-	// image3.src = "images/Escher/eye/shape.png"; //shape map
-	// image4.src = "images/Escher/eye/reflect.png";  //reflection
-	// image5.src = "images/checker.jpg";//refraction
-	// image6.src = "images/Escher/eye/alphaControl.jpg";
-
-	//Escher/handWithSphere
-	image1.src = "images/Escher/handWithSphere/dark.jpg"; //dark
-	image2.src = "images/Escher/handWithSphere/bright.jpg"; //bright
-	image3.src = "images/Escher/handWithSphere/shape.png"; //shape map
-	image4.src = "images/Escher/handWithSphere/reflect2.jpg";  //reflection
-	image5.src = "images/dark.png";//refraction
-	image6.src = "images/Escher/handWithSphere/alphaControl.png";
-
-	//underWater
-	// image1.src = "images/underWater/dark.jpg"; //dark
-	// image2.src = "images/underWater/bright.jpg"; //bright
-	// image3.src = "images/underWater/shape.jpg"; //shape map
-	// image4.src = "images/white.png";  //reflection
-	// image5.src = "images/underWater/BG.jpg";//refraction
-	// image6.src = "images/underWater/alphaControl.jpg";
-
-
-
-	
 
 	// image1.src = "images/dark.png"; //dark
 	// image2.src = "images/light.png"; //bright
@@ -94,24 +258,29 @@ UPLOADinit = function()
 	//image3.src = "images/normal.png"; //shape map
 	
 
+	
 
-	//image3.src = "images/Holmer/Holmer_shape_clean.png"; //shape map
-	// image3.src = "images/Holmer/Holmer_new_shape.png"; //shape map
-	//image1.src = "images/Holmer/Holmer_new_dark.png"; //dark
-	//image2.src = "images/Holmer/Holmer_new_bright.png"; //bright
 	
 	
 	
+	//for responsive display
+	// image1.src = "images/solid.png";
+	// image2.src = "images/solid.png";
+	// image3.src = "images/solid.png";
+	// image4.src = "images/solid.png";
+	// image5.src = "images/solid.png";
+	// image6.src = "images/solid.png";
+	
+	
+
 	//image1.src = "images/Holmer/Holmer_dark.png"; //dark
 	//image2.src = "images/Holmer/Holmer_bright.png"; //bright
 	//image3.src = "images/Holmer/Holmer_shape.png"; //shape map
 	
 
 	//image4.src = "images/reflect_red.png";//reflection
-	//image4.src = "images/reflect_window2.png";//reflection
 	//image4.src = "images/dark.png";
-
-	//image5.src = "images/checker.jpg";  //refraction
+	
 	//image5.src = "images/dark.png";  //refraction
 	//image5.src = "images/white.png";
 
@@ -123,7 +292,7 @@ UPLOADinit = function()
 	//image3.src = "images/bottle/shape.png"
 	//image5.src = "images/bottle/bg.png"
 	//image6.src = "images/eye/eye_alpha.jpg";
-	//image6.src = "images/Holmer/Holmer_new_alphaControl.png";
+	
 
 
 		
@@ -350,8 +519,9 @@ function fileUploaded(event, elemName)
 
 		// Update WebGL texture.
 		refractImage.src = image5.src;
-	}
 
+ 
+	}
 	else if(elemName === "container6")
 	{
 		image6 = new Image();

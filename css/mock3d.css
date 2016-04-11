@@ -57,7 +57,7 @@ label{margin-bottom:0;}
 	overflow-y: hidden;
 	 width:100%;
 	 height:auto;
-    padding: 20px calc(200px + 20px);
+    padding: 20px calc(160px + 20px);
 	padding-left:20px;
 }
 
@@ -75,7 +75,19 @@ label{margin-bottom:0;}
   }
   
 .sidebar-left{display: none; border-right: 1px solid #eee;}/* Hide for mobile, show later */
-.sidebar-right{right:0; border-left: 1px solid #eee;}
+.sidebar-right{right:0; border-left: 1px solid #eee;
+  width:25%;
+  min-width:160px;
+}
+
+/*just for main padding*/
+@media (min-width: 640px) {
+  .main {
+   padding-right: calc(25% + 20px);
+  }
+
+}
+
 
 /* left and right sidebar for large screen*/
 @media (min-width: 768px) {
@@ -88,7 +100,7 @@ label{margin-bottom:0;}
   
   .main {
    width:100%;
-   padding: 20px calc(25% + 10px);
+   padding: 20px calc(25% + 20px);
   }
 
   .main_button_container{
@@ -106,19 +118,15 @@ label{margin-bottom:0;}
 @media (min-width: 920px) {
   .main_button{width:50%; }
 
-  .main {
-   padding: 20px calc(25% + 0px);
-  }
-
 }
 
-@media (min-width: 992px) {
+@media (min-width: 1200px) {
   .sidebar-left{
-    width:250px;
+    width:300px;
   }
    
   .sidebar-right{
-    width:250px; 
+    width:300px; 
   }
 }
 
@@ -210,7 +218,7 @@ label{margin-bottom:0;}
 
 
 #btn_addLight {
-  padding:8px 12px; 
+  padding:8px 0px; 
   background: #E8E8E8;
   color:#500000; 
   font-weight: 400;
@@ -534,6 +542,7 @@ input[type="checkbox"] + .pseudoCheckbox{
 
 .dropdown-menu{
   margin-top: -1px;
+  font-size: 12px;
 }
 
 

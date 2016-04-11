@@ -34,9 +34,9 @@ showSpec[0] = 1;
 var styleBright = 0,
     styleDark = 1;
 
-var alphaR = 0,
-    alphaG = 1,
-    alphaB = 1;
+var alphaR = 1;
+var alphaG = 1;
+var alphaB = 1;
 
 var logIOR = 0.25;//[-1, 1]
 var BGdis = 0.6;
@@ -182,6 +182,13 @@ window.onload = function init()
 
     initTextures();
 
+    normalImage.src = image3.src;
+    lightImage.src = image2.src;
+    darkImage.src = image1.src;
+    refractImage.src = image5.src;
+    reflectImage.src = image4.src;
+    alphaImage.src = image6.src;
+
 
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, normalTexture);
@@ -274,12 +281,7 @@ function initTextures() {
     alphaImage = new Image();
     alphaImage.onload = function() { handleTextureLoaded(alphaImage, alphaTexture); }
     
-    normalImage.src = image3.src;
-    lightImage.src = image2.src;
-    darkImage.src = image1.src;
-    refractImage.src = image5.src;
-    reflectImage.src = image4.src;
-    alphaImage.src = image6.src;
+    
 
 }
 
@@ -293,6 +295,7 @@ function handleTextureLoaded(image, texture) {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     gl.generateMipmap(gl.TEXTURE_2D);
+    //gl.bindTexture(gl.TEXTURE_2D, 0);
     
 }
 
@@ -362,6 +365,8 @@ function render() {
     gl.uniform1i(checkFresnelLoc, checkFresnel);
 
     gl.drawArrays( gl.TRIANGLES, 0, numVertices );
+
+
     requestAnimFrame(render);
 }
 
