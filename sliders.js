@@ -3,12 +3,6 @@ $(document).ready(function () {
     
     /**************** init checkbox according to default parameters ******************/
     
-    var reflDisableElem = $('#reflDisableSelect');
-    initCheckbox(reflDisable, reflDisableElem);
-    
-    var mirrorElem = $('#mirrorSelect');
-    initCheckbox(mirror, mirrorElem);
-    
     var lightsOnlyElem = $('#lightsOnlySelect');
     initCheckbox(lightsOnly, lightsOnlyElem);
 
@@ -62,6 +56,11 @@ $(document).ready(function () {
 
 
     /**Fresnel**/
+    var fresnel_intensity_slider = $("#fresnel_intensity_slider");
+    var fresnel_intensity_val = $("#fresnel_intensity_val");
+    fresnel_intensity_slider.attr("data-slider-min", -1).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", fresnelIntensity).attr("data-slider-tooltip","hide").slider({});
+    bindSliderValParam (fresnel_intensity_slider, fresnel_intensity_val, "fresnelIntensity");
+
     $("#fresnelControl_slider").slider({ min: 0, max: 1, value: [fresnelB, fresnelC], step: 0.01, focus: true });
     $("#fresnelControl_slider").on("slide", function(slideEvt) {
         fresnelB = slideEvt.value[0];
@@ -134,12 +133,6 @@ $(document).ready(function () {
 
 
     // $("#reflMap .btn").html('Hemisphere <span class="caret caret-up"></span>');
-
-
-    var refl_intensity_slider = $("#refl_intensity_slider");
-    var refl_intensity_val = $("#refl_intensity_val");
-    refl_intensity_slider.attr("data-slider-min", 0).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", reflectIntensity).attr("data-slider-tooltip","hide").slider({});
-    bindSliderValParam (refl_intensity_slider, refl_intensity_val, "reflectIntensity");
 
 
     var refl_FGdis_slider = $("#refl_FGdis_slider");

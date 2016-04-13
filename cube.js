@@ -41,9 +41,6 @@ var alphaB = 1;
 var logIOR = 0.25;//[-1, 1]
 var BGdis = 0.6;
 
-var reflDisable = 0;
-var mirror = 0;
-var reflectIntensity = 0;
 var FGdis = 0.2;
 
 var reflMap = 1;//1: plane; 2:hemisphere
@@ -53,6 +50,7 @@ var FGshiftY = 0;
 var FGscaleX = 0.5;
 var FGscaleY = 0.5;
 
+var fresnelIntensity = 0;
 var fresnelB = 0.3; //cos = 0.95
 var fresnelC = 0.6; //cos = 0.7
 var checkFresnel = 0;
@@ -75,10 +73,11 @@ var showSpecLoc;
 var styleBrightLoc, styleDarkLoc;
 var alphaRLoc, alphaGLoc, alphaBLoc;
 var logIORLoc, BGdisLoc;
-var reflDisableLoc, mirrorLoc, FGdisLoc;
+var FGdisLoc;
 var reflMapLoc;
 var FGshiftXLoc, FGshiftYLoc, FGscaleXLoc, FGscaleXLoc;
-var reflectIntensityLoc;
+
+var fresnelIntensityLoc;
 var fresnelBLoc, fresnelCLoc;
 var checkFresnelLoc; 
 
@@ -239,14 +238,13 @@ window.onload = function init()
     logIORLoc = gl.getUniformLocation( program, "logIOR");
     BGdisLoc = gl.getUniformLocation( program, "BGdis");
     FGdisLoc = gl.getUniformLocation( program, "FGdis");
-    reflDisableLoc = gl.getUniformLocation (program, "reflDisable");
-    mirrorLoc = gl.getUniformLocation( program, "mirror");
-    reflectIntensityLoc = gl.getUniformLocation (program, "reflectIntensity");
     reflMapLoc = gl.getUniformLocation ( program, "reflMap");
     FGshiftXLoc = gl.getUniformLocation( program, "FGshiftX");
     FGshiftYLoc = gl.getUniformLocation( program, "FGshiftY");
     FGscaleXLoc = gl.getUniformLocation( program, "FGscaleX");
     FGscaleYLoc = gl.getUniformLocation( program, "FGscaleY");
+
+    fresnelIntensityLoc = gl.getUniformLocation ( program, "fresnelIntensity");
     fresnelBLoc = gl.getUniformLocation( program, "fresnelB");
     fresnelCLoc = gl.getUniformLocation( program, "fresnelC");
     checkFresnelLoc = gl.getUniformLocation( program, "checkFresnel");
@@ -303,12 +301,6 @@ function handleTextureLoaded(image, texture) {
 function render() {
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT );
 
-    var reflDisableElem = $('#reflDisableSelect:checked');
-    reflDisable = (reflDisableElem.val())?1:0;
-
-    var mirrorElem = $('#mirrorSelect:checked');
-    mirror = (mirrorElem.val())?1:0;
-
     var lightsOnlyElem = $ ('#lightsOnlySelect:checked');
     lightsOnly = (lightsOnlyElem.val())?1:0;
 
@@ -351,15 +343,13 @@ function render() {
     gl.uniform1f(logIORLoc, logIOR);
     gl.uniform1f(BGdisLoc, BGdis);
     gl.uniform1f(FGdisLoc, FGdis);
-    gl.uniform1i(reflDisableLoc, reflDisable);
-    gl.uniform1i(mirrorLoc, mirror);
-    gl.uniform1f(reflectIntensityLoc, reflectIntensity);
     gl.uniform1i(reflMapLoc, reflMap);
     gl.uniform1f(FGshiftXLoc, FGshiftX);
     gl.uniform1f(FGshiftYLoc, FGshiftY);
     gl.uniform1f(FGscaleXLoc, FGscaleX);
     gl.uniform1f(FGscaleYLoc, FGscaleY);
 
+    gl.uniform1f(fresnelIntensityLoc, fresnelIntensity);
     gl.uniform1f(fresnelBLoc, fresnelB);
     gl.uniform1f(fresnelCLoc, fresnelC);
     gl.uniform1i(checkFresnelLoc, checkFresnel);
