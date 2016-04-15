@@ -55,18 +55,6 @@ $(document).ready(function () {
     bindSliderValParam (alphaInBlue_slider, alphaInBlue_val, "alphaB");
 
 
-    /**Fresnel**/
-    var fresnel_intensity_slider = $("#fresnel_intensity_slider");
-    var fresnel_intensity_val = $("#fresnel_intensity_val");
-    fresnel_intensity_slider.attr("data-slider-min", -1).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", fresnelIntensity).attr("data-slider-tooltip","hide").slider({});
-    bindSliderValParam (fresnel_intensity_slider, fresnel_intensity_val, "fresnelIntensity");
-
-    $("#fresnelControl_slider").slider({ min: 0, max: 1, value: [fresnelB, fresnelC], step: 0.01, focus: true });
-    $("#fresnelControl_slider").on("slide", function(slideEvt) {
-        fresnelB = slideEvt.value[0];
-        fresnelC = slideEvt.value[1];
-    });
-
     /**Shadow**/
     $("#sha_sampleSize_slider").slider({min: 0, max: 1, value: 1, step: 0.01, focus: true});
     $("#sha_numberOfSample_slider").slider({min: 0, max: 1, value: 1, step: 0.01, focus: true});
@@ -91,10 +79,21 @@ $(document).ready(function () {
 
 
 
+    /**Fresnel**/
+
+    var fresnel_intensity_slider = $("#fresnel_intensity_slider");
+    var fresnel_intensity_val = $("#fresnel_intensity_val");
+    fresnel_intensity_slider.attr("data-slider-min", -1).attr("data-slider-max", 1).attr("data-slider-step", 0.01).attr("data-slider-value", fresnelIntensity).attr("data-slider-tooltip","hide").slider({});
+    bindSliderValParam (fresnel_intensity_slider, fresnel_intensity_val, "fresnelIntensity");
+
+    $("#fresnelControl_slider").slider({ min: 0, max: 1, value: [fresnelB, fresnelC], step: 0.01, focus: true });
+    $("#fresnelControl_slider").on("slide", function(slideEvt) {
+        fresnelB = slideEvt.value[0];
+        fresnelC = slideEvt.value[1];
+    });
 
 
-
-    $("#translucency_slider").slider({min: 0, max: 1, value: 1, step: 0.01, focus: true});
+    //$("#translucency_slider").slider({min: 0, max: 1, value: 1, step: 0.01, focus: true});
     
     /**Reflection**/
     

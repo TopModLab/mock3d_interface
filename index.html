@@ -674,7 +674,7 @@
                     <!--Additional Alpha Control-->
                     <li class="panel">
                         <a class="myControlTitle collapsed" data-toggle="collapse" data-parent = "#accordion_R" href="#alphaControl">
-                            Transparency
+                            Diffuse Alpha
                         </a>
                         <div id = "alphaControl" class= "inCollapse collapse"> 
                             <div class="imgbox_container">
@@ -751,6 +751,48 @@
                                 </div>
                                 <div class="slider_box">
                                     <input id="refr_BGdis_slider" data-slider-id='customSlider' type="text" />
+                                </div>
+                            </div>
+                            <div class = "fresnel_container">
+                                <div class = "fresnelPanel">
+                                    <div class = "myFresnelTitle"> 
+                                        FRESNEL CONTROL
+                                    </div>
+                                    <div class = "fresnelBox">
+                                        <div class="checkbox">
+                                            <label>
+                                                <span class = "h6 inlineBlock"> Check Fresnel </span>
+                                                <div class = "checkbox_container pull-right">
+                                                    <input type="checkbox" id ="checkFresnelSelect">
+                                                    <div class = "pseudoCheckbox"></div>
+                                                </div>
+                                            </label>
+                                        </div>
+                                        <div >
+                                            <span class="h6 inlineBlock"> Fresnel Control </span>
+                                            <div class="pull-right">
+                                                <input type="text" class="form-control mytextbox text-center" id="fresnel_intensity_val">
+                                            </div>
+                                            <div class="slider_box">
+                                                <input id="fresnel_intensity_slider" data-slider-id='customSlider' type="text" />
+                                            </div>
+                                            <div>
+                                                <div class = "h7 inlineBlock">Full Refract</div>   
+                                                <div class = "h7 pull-right">Full Reflect</div>
+                                             </div>
+                                        </div>
+                                        <div>
+                                            <h6>Fresnel Position</h6>
+                                            <div class="slider_box">
+                                                <input id="fresnelControl_slider" data-slider-id='customSlider' type="text" class=" span2" value="" />
+                                            </div>
+                                            <div>
+                                                <div class = "h7 inlineBlock">Center</div>   
+                                                <div class = "h7 pull-right">Edge</div>
+                                            </div>
+                                        </div>        
+                                    </div>
+                                    
                                 </div>
                             </div>
                             <!-- <div class="slider_container">
@@ -852,43 +894,6 @@
                                 </div>
                             </div> -->
             	       </div>	
-                    </li>
-                    <!--Fresnel-->
-                    <li class="panel">
-                        <a class="myControlTitle collapsed" data-toggle="collapse" data-parent = "#accordion_R" href="#fresnelControl">
-                            Fresnel 
-                        </a>
-                        <div id = "fresnelControl" class= "inCollapse collapse"> 
-                            <div class="checkbox">
-                                <label>
-                                    <span class = "h6 inlineBlock"> check Fresnel </span>
-                                    <div class = "checkbox_container pull-right">
-                                        <input type="checkbox" id ="checkFresnelSelect">
-                                        <div class = "pseudoCheckbox"></div>
-                                    </div>
-                                </label>
-                            </div>
-                            <div class="slider_container">
-                                <span class="h6 inlineBlock"> Fresnel Control </span>
-                                <div class="slider_box">
-                                    <input id="fresnel_intensity_slider" data-slider-id='customSlider' type="text" />
-                                </div>
-                                <div>
-                                    <div class = "h7 inlineBlock">Full Refract</div>   
-                                    <div class = "h7 pull-right">Full Reflect</div>
-                                 </div>
-                            </div>
-                            <div>
-                                <h6>Fresnel Position</h6>
-                                <div class="slider_box">
-                                    <input id="fresnelControl_slider" data-slider-id='customSlider' type="text" class=" span2" value="" />
-                                </div>
-                                <div>
-                                    <div class = "h7 inlineBlock">center</div>   
-                                    <div class = "h7 pull-right">edge</div>
-                                </div>
-                            </div>
-                        </div>  
                     </li>
                     <!--Ambient Occlusion-->
                     <!-- <li class="panel">
