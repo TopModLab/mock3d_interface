@@ -32,18 +32,38 @@ UPLOADinit = function()
 
 	
 
-	//Sphere for diffuse/fresnel
-		// alphaR = 0;
-		// reflMap = 1;
-		// fresnelB = 0.36;
-		// fresnelC = 0.73;
-		// image1.src = "images/dark.png"//dark
-		// image2.src = "images/white.png"//bright
-		// image3.src = "images/sphere.png";  //shape
-		// image4.src = "images/trees.png";  //reflection
-		// image6.src = "images/white.png"; //alpha
-		// image5.src = "images/checker.jpg";  //refraction	
+	//Sphere for fresnel
+		alphaR = 0;
+		reflMap = 1;
+		fresnelB = 0.36;
+		fresnelC = 0.73;
+		image1.src = "images/dark.png"//dark
+		image2.src = "images/white.png"//bright
+		image3.src = "images/sphere.png";  //shape
+		image4.src = "images/trees.jpg";  //reflection
+		image6.src = "images/white.png"; //alpha
+		image5.src = "images/checker2.png";  //refraction	
 
+	//newBottle for Fresnel
+		alphaR = 0;
+		reflMap = 1;
+		logIOR = 0.1;
+		mouseXY[0] = [0.32, -0.06];
+		fresnelB = 0.36;
+		fresnelC = 0.73;
+		FGshiftX = 0.1;
+		FGshiftY = -0.05;
+		FGscaleX = 0.92;
+		FGscaleY = 0.67;
+		FGdis = 0.27;
+		image1.src = "images/dark.png"//dark
+		image2.src = "images/white.png"//bright
+		//image3.src = "images/sphere.png";  //shape
+		image4.src = "images/indoor.jpg";  //reflection
+		image6.src = "images/white.png"; //alpha
+		image5.src = "images/checker2.png";  //refraction	
+		image3.src = "images/newBottleForFresnel.png"; //shape map
+	
 
 	//sphere for test
 	// image1.src = "images/dark.png"//dark
@@ -124,13 +144,13 @@ UPLOADinit = function()
 	// image6.src = "images/Escher/handWithSphere/alphaControl.png";
 
 	//newBottle
-	alphaR = 0;
-	image1.src = "images/newBottle/diffuse.png"; //dark
-	image2.src = "images/newBottle/diffuse.png"; //bright
-	image3.src = "images/newBottle/shape.png"; //shape map
-	image4.src = "images/newBottle/reflect.png";  //reflection
-	image5.src = "images/newBottle/BG.png";//refraction
-	image6.src = "images/newBottle/alpha.png";
+	// alphaR = 0;
+	// image1.src = "images/newBottle/diffuse.png"; //dark
+	// image2.src = "images/newBottle/diffuse.png"; //bright
+	// image3.src = "images/newBottle/shape.png"; //shape map
+	// image4.src = "images/newBottle/reflect.png";  //reflection
+	// image5.src = "images/newBottle/BG.png";//refraction
+	// image6.src = "images/newBottle/alpha.png";
 
 
 
