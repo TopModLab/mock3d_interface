@@ -82,13 +82,28 @@ $(function() {
             var canvas = document.getElementById( "gl-canvas" );
             canvas.addEventListener("mousedown", function(evt){
                 mouseFlag = 1;
+                evt.preventDefault();
             }, false);
-            canvas.addEventListener("mousemove", function(evt){
+            canvas.addEventListener("touchstart", function(evt){
+                mouseFlag = 1;
+            }, false);
+            
+            document.addEventListener("mousemove", function(evt){
                 if(mouseFlag === 1){
                     setMousePos(canvas, evt, 0);//add default light event;
                 }
             }, false);
-            canvas.addEventListener("mouseup", function(){
+            document.addEventListener("touchmove", function(evt){
+                if(mouseFlag === 1){
+                    setMousePos(canvas, evt, 0);//add default light event;
+                }
+            }, false);
+
+            document.addEventListener("mouseup", function(){
+                mouseFlag = 0;
+                //mouseFlag = (mouseFlag ==0)?1:0;
+            }, false);
+            document.addEventListener("touchend", function(){
                 mouseFlag = 0;
                 //mouseFlag = (mouseFlag ==0)?1:0;
             }, false);
@@ -195,7 +210,12 @@ function addLightParameters(index){
     
     //mouse 
     var canvas = document.getElementById( "gl-canvas" );
-    canvas.addEventListener("mousemove", function(evt){
+    document.addEventListener("mousemove", function(evt){
+        if(mouseFlag === 1){
+            setMousePos(canvas, evt, index);
+        }
+    }, false);
+    document.addEventListener("touchmove", function(evt){
         if(mouseFlag === 1){
             setMousePos(canvas, evt, index);
         }
@@ -215,13 +235,12 @@ function setLightMarkFill(index)
 
 function setLightMarkPosition(index)
 {
+
     var lightPx = (mouseXY[index][0] + 0.5)*100 + "%";
     var lightPy = (mouseXY[index][1] + 0.5)*100 + "%";
 
     var lightMarkName = '#lightMark'+index;
     $(lightMarkName).attr('cx', lightPx).attr('cy', lightPy);
-
-    console.log("inMark");
 }
 
 function drawLightMarkPosition(index){
@@ -243,9 +262,10 @@ function makeSVG(tag, attrs) {
 //mouse functions
 
 function setMousePos(canvas, evt, i){
-    
+    var rect = canvas.getBoundingClientRect();
+
     if (currentLight == i)
-    {
+    {   
         mouseXY[i][0] = getMousePos(canvas, evt).x;
         mouseXY[i][1] = getMousePos(canvas, evt).y;
         setLightMarkPosition(i);
@@ -256,9 +276,26 @@ function setMousePos(canvas, evt, i){
 
 function getMousePos(canvas, evt) {
     var rect = canvas.getBoundingClientRect();
+
+    var newX, newY;
+    if(evt.type == 'touchstart' || evt.type == 'touchmove' || evt.type == 'touchend' || evt.type == 'touchcancel'){
+        var touch = evt.touches[0] || evt.changedTouches[0];
+        newX = touch.pageX;
+        newY = touch.pageY;
+      } else if (evt.type == 'mousedown' || evt.type == 'mouseup' || evt.type == 'mousemove' || evt.type == 'mouseover'|| evt.type=='mouseout' || evt.type=='mouseenter' || evt.type=='mouseleave') {
+        newX = evt.pageX;
+        newY = evt.pageY;
+      }
+
+      if (newY < rect.top) newY = rect.top;
+      if (newY > rect.bottom) newY = rect.bottom;
+      if (newX < rect.left) newX = rect.left;
+      if (newX > rect.right) newX = rect.right;
+        
+
     return {
-        x: (evt.clientX - rect.left)/(rect.right - rect.left) - 0.5,
-        y: (evt.clientY - rect.top)/(rect.bottom - rect.top) - 0.5
+        x: (newX - rect.left)/(rect.right - rect.left) - 0.5,
+        y: (newY - rect.top)/(rect.bottom - rect.top) - 0.5
     };
 }
 

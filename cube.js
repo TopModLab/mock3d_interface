@@ -1,8 +1,10 @@
-/****************** For SliderBar Parameter ******************/
+/****************** For SlideBar Parameter ******************/
 var mouseFlag = 0;// 0 : moving ; 1: stop
 var currentLight = 0;
 var lightNum = 1;
 
+
+//light section parameters
 var mouseXY = [];
 mouseXY[0] = [0.3, -0.3];     //default light
   
@@ -20,7 +22,7 @@ var pointLightDis = [];
 pointLightDis[0] = 0.5;
 
 var pointLightDecay = [];
-pointLightDecay[0] = 0.1;
+pointLightDecay[0] = 0.0;
 
 var showDiffuse = [];
 showDiffuse[0] = 1;
@@ -29,18 +31,21 @@ var showSpec = [];
 showSpec[0] = 1;
 
 
-
+//style section parameters
 
 var styleBright = 0,
     styleDark = 1;
 
+//Diffuse Alpha parameters
 var alphaR = 1;
 var alphaG = 1;
 var alphaB = 1;
 
+//refraction parameters
 var logIOR = 0.25;//[-1, 1]
 var BGdis = 0.6;
 
+//reflection parameters
 var FGdis = 0.2;
 
 var reflMap = 1;//1: plane; 2:hemisphere
@@ -50,10 +55,20 @@ var FGshiftY = 0;
 var FGscaleX = 0.5;
 var FGscaleY = 0.5;
 
+
+//Fresnel parameters
 var fresnelIntensity = 0;
 var fresnelB = 0.3; //cos = 0.95
 var fresnelC = 0.6; //cos = 0.7
 var checkFresnel = 0;
+
+
+
+
+
+
+
+
 
 //Locs
 

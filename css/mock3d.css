@@ -355,6 +355,7 @@ label{margin-bottom:0;}
 	position: relative;
   	top: 50%;
   	transform: translateY(-50%);
+    cursor: none;
 }
 
 #lightPosition_container{

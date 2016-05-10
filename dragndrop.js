@@ -26,43 +26,64 @@ UPLOADinit = function()
 	// image1.src = "images/Holmer/Holmer_dark.png"; //dark
 	// image2.src = "images/Holmer/Holmer_bright.png"; //bright
 	// image4.src = "images/reflect_window2.png";//reflection
-	// //image5.src = "images/dark.png";  //refraction
-	// image5.src = "images/checker.jpg";//refraction
+	// image5.src = "images/dark.png";  //refraction
+	// //image5.src = "images/checker.jpg";//refraction
 	// image6.src = "images/Holmer/Holmer_new_alphaControl.png";
 
 	
 
 	//Sphere for fresnel
-		alphaR = 0;
-		reflMap = 1;
-		fresnelB = 0.36;
-		fresnelC = 0.73;
-		image1.src = "images/dark.png"//dark
-		image2.src = "images/white.png"//bright
-		image3.src = "images/sphere.png";  //shape
-		image4.src = "images/trees.jpg";  //reflection
-		image6.src = "images/white.png"; //alpha
-		image5.src = "images/checker2.png";  //refraction	
+		// alphaR = 0;
+		// reflMap = 1;
+		// fresnelB = 0.36;
+		// fresnelC = 0.73;
+		// image1.src = "images/dark.png"//dark
+		// image2.src = "images/white.png"//bright
+		// image3.src = "images/sphere.png";  //shape
+		// image4.src = "images/trees.jpg";  //reflection
+		// image6.src = "images/white.png"; //alpha
+		// image5.src = "images/tree_blurry.jpg";  //refraction	
+
+
+	//Bubble for fresnel
+		// mouseXY[0] = [0.27, -0.323];
+		// FGshiftX = 0.0;
+		// FGshiftY = -0.03;
+		// FGscaleX = 0.72;
+		// FGscaleY = 0.83;
+		// logIOR = 0.08;
+		// FGdis = 0.27;
+		// alphaR = 0;
+		// reflMap = 1;
+		// fresnelB = 0.39;
+		// fresnelC = 0.63;
+		// image1.src = "images/dark.png"//dark
+		// image2.src = "images/white.png"//bright
+		// image3.src = "images/bubble.png";  //shape
+		// image4.src = "images/trees.jpg";  //reflection
+		// image6.src = "images/white.png"; //alpha
+		// image5.src = "images/tree_blurry.jpg";  //refraction	
+	
 
 	//newBottle for Fresnel
-		alphaR = 0;
-		reflMap = 1;
-		logIOR = 0.1;
-		mouseXY[0] = [0.32, -0.06];
-		fresnelB = 0.36;
-		fresnelC = 0.73;
-		FGshiftX = 0.1;
-		FGshiftY = -0.05;
-		FGscaleX = 0.92;
-		FGscaleY = 0.67;
-		FGdis = 0.27;
-		image1.src = "images/dark.png"//dark
-		image2.src = "images/white.png"//bright
-		//image3.src = "images/sphere.png";  //shape
-		image4.src = "images/indoor.jpg";  //reflection
-		image6.src = "images/white.png"; //alpha
-		image5.src = "images/checker2.png";  //refraction	
-		image3.src = "images/newBottleForFresnel.png"; //shape map
+		// alphaR = 0;
+		// reflMap = 1;
+		// logIOR = 0.1;
+		// mouseXY[0] = [0.32, -0.06];
+		// fresnelB = 0.36;
+		// fresnelC = 0.73;
+		// FGshiftX = 0.1;
+		// FGshiftY = -0.05;
+		// FGscaleX = 0.92;
+		// FGscaleY = 0.67;
+		// FGdis = 0.27;
+		// image1.src = "images/dark.png"//dark
+		// image2.src = "images/white.png"//bright
+		// //image3.src = "images/sphere.png";  //shape
+		// image4.src = "images/indoor.jpg";  //reflection
+		// image6.src = "images/white.png"; //alpha
+		// image5.src = "images/checker2.png";  //refraction	
+		// image3.src = "images/newBottleForFresnel.png"; //shape map
 	
 
 	//sphere for test
@@ -112,16 +133,22 @@ UPLOADinit = function()
 	// image3.src = "images/newBottleForFresnel.png"; //shape map
 	// image4.src = "images/white.png";  //reflection
 	// image6.src = "images/white.png"; //alpha
-	// image5.src = "images/checker.jpg";//refraction
+	// image5.src = "images/checker2.png";//refraction
 	
 
 	//Escher/eye
 	// alphaR = 1;
+	// mouseXY[0] = [0.27, -0.41];
+	// FGshiftX = -0.21;
+	// FGshiftY = -0.17;
+	// FGscaleX = 0.62;
+	// FGscaleY = 0.64;
+	// FGdis = 0.2;
 	// image1.src = "images/Escher/eye/dark.jpg"; //dark
 	// image2.src = "images/Escher/eye/bright.jpg"; //bright
 	// image3.src = "images/Escher/eye/shape.png"; //shape map
 	// image4.src = "images/Escher/eye/reflect.png";  //reflection
-	// image5.src = "images/checker.jpg";//refraction
+	// image5.src = "images/dark.png";//refraction
 	// image6.src = "images/Escher/eye/alphaControl.jpg";
 
 	//Escher/handWithSphere
@@ -133,23 +160,32 @@ UPLOADinit = function()
 	// FGshiftX = -0.09;
 	// FGshiftY = 0.08;
 	// FGscaleX = 0.8;
-	// FGscaleY = 0.52;
+	// FGscaleY = 0.6;
 	// reflMap =1;
 	// FGdis = 0.11;
 	// image1.src = "images/Escher/handWithSphere/dark.jpg"; //dark
 	// image2.src = "images/Escher/handWithSphere/bright.jpg"; //bright
 	// image3.src = "images/Escher/handWithSphere/shape.png"; //shape map
 	// image4.src = "images/Escher/handWithSphere/reflect2.jpg";  //reflection
-	// image5.src = "images/checker.jpg";//refraction
+	// image5.src = "images/dark.png";//refraction
 	// image6.src = "images/Escher/handWithSphere/alphaControl.png";
 
 	//newBottle
 	// alphaR = 0;
+	// FGshiftX = -0.11;
+	// FGshiftY = -0.0;
+	// FGscaleX = 0.6;
+	// FGscaleY = 0.67;
+	// FGdis = 0.22;
+	// mouseXY[0] = [0.34, -0.0746];
+	// fresnelB = 0.3;
+	// fresnelC = 0.53;
+	// logIOR = 0.27;
 	// image1.src = "images/newBottle/diffuse.png"; //dark
-	// image2.src = "images/newBottle/diffuse.png"; //bright
+	// image2.src = "images/newBottle/diffuse_bright.png"; //bright
 	// image3.src = "images/newBottle/shape.png"; //shape map
-	// image4.src = "images/newBottle/reflect.png";  //reflection
-	// image5.src = "images/newBottle/BG.png";//refraction
+	// image4.src = "images/newBottle/reflect.jpg";  //reflection
+	// image5.src = "images/newBottle/bg.png";//refraction
 	// image6.src = "images/newBottle/alpha.png";
 
 
@@ -159,7 +195,7 @@ UPLOADinit = function()
 	// image1.src = "images/underWater/dark.jpg"; //dark
 	// image2.src = "images/underWater/bright.jpg"; //bright
 	// image3.src = "images/underWater/shape.jpg"; //shape map
-	// image4.src = "images/white.png";  //reflection
+	// image4.src = "images/dark.png";  //reflection
 	// image5.src = "images/underWater/BG.jpg";//refraction
 	// image6.src = "images/underWater/alphaControl.jpg";
 
@@ -200,13 +236,13 @@ UPLOADinit = function()
 	// image6.src = "images/white.png"; //alpha
 
 	//impossible_gradient
-	// alphaR = 1;
-	// image1.src = "images/dark.png"; //dark
-	// image2.src = "images/white.png"; //bright
-	// image3.src = "images/impossible_gradient/shape.png"; //shape map
-	// image4.src = "images/dark.png";  //reflection
-	// image5.src = "images/dark.png";  //refraction	
-	// image6.src = "images/white.png"; //alpha
+	alphaR = 1;
+	image1.src = "images/dark.png"; //dark
+	image2.src = "images/white.png"; //bright
+	image3.src = "images/impossible_gradient/shape.png"; //shape map
+	image4.src = "images/dark.png";  //reflection
+	image5.src = "images/dark.png";  //refraction	
+	image6.src = "images/white.png"; //alpha
 
 
 
