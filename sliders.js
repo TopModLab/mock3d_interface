@@ -347,6 +347,7 @@ function bindSliderValParam(slider, val, param){
             val.val(window[param]);
         });
     });
+    
 
     //textarea allSelected when on focus;
     val.focus(function() {
@@ -360,6 +361,8 @@ function bindSliderValParam(slider, val, param){
             return false;
         });
     });
+
+
 
     //textarea restrict only input number
     val.keydown(function(e){onlyNumber(e)});

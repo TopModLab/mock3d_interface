@@ -22,13 +22,13 @@ UPLOADinit = function()
 
 
 	//Holmer only
-	// image3.src = "images/Holmer/Holmer_shape.png"; //shape map
-	// image1.src = "images/Holmer/Holmer_dark.png"; //dark
-	// image2.src = "images/Holmer/Holmer_bright.png"; //bright
-	// image4.src = "images/reflect_window2.png";//reflection
-	// image5.src = "images/dark.png";  //refraction
-	// //image5.src = "images/checker.jpg";//refraction
-	// image6.src = "images/Holmer/Holmer_new_alphaControl.png";
+	image3.src = "images/Holmer/Holmer_shape.png"; //shape map
+	image1.src = "images/Holmer/Holmer_dark.png"; //dark
+	image2.src = "images/Holmer/Holmer_bright.png"; //bright
+	image4.src = "images/reflect_window2.png";//reflection
+	image5.src = "images/dark.png";  //refraction
+	//image5.src = "images/checker.jpg";//refraction
+	image6.src = "images/Holmer/Holmer_new_alphaControl.png";
 
 	
 
@@ -236,13 +236,15 @@ UPLOADinit = function()
 	// image6.src = "images/white.png"; //alpha
 
 	//impossible_gradient
-	alphaR = 1;
-	image1.src = "images/dark.png"; //dark
-	image2.src = "images/white.png"; //bright
-	image3.src = "images/impossible_gradient/shape.png"; //shape map
-	image4.src = "images/dark.png";  //reflection
-	image5.src = "images/dark.png";  //refraction	
-	image6.src = "images/white.png"; //alpha
+	// alphaR = 1;
+	// FGshiftX = 1.0;
+	// lightIntensity[0] = 0.5;
+	// image1.src = "images/dark.png"; //dark
+	// image2.src = "images/white.png"; //bright
+	// image3.src = "images/impossible_gradient/shape.png"; //shape map
+	// image4.src = "images/dark.png";  //reflection
+	// image5.src = "images/dark.png";  //refraction	
+	// image6.src = "images/white.png"; //alpha
 
 
 
